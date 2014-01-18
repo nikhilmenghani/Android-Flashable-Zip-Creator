@@ -48,7 +48,7 @@ import org.apache.commons.collections.map.MultiValueMap;
 public class AromaInstaller extends javax.swing.JFrame{
     public AromaInstaller(){
         op.CSDArrayList = new ArrayList<>();
-        op.CSDArrayList.add("Samsung Galaxy R(i9103)");
+        op.CSDArrayList.add("Samsung Galaxy R");
         op.CSDArrayList.add("Samsung Galaxy Nexus");
         op.CSDArrayList.add("Samsung Galaxy Note II(N7100)");
         initComponents();
@@ -94,10 +94,12 @@ public class AromaInstaller extends javax.swing.JFrame{
         btnCreateNormalZip = new JButton();
         btnCreateAromaZip = new JButton();
         textFieldUpdateBinary = new JTextField();
+        textFieldUpdateBinary.setEditable(false);
         btnBrowseUpdateBinary = new JButton();
         lblTitle = new JLabel();
         lblZipDestination = new JLabel();
         textFieldZipDestination = new JTextField();
+        textFieldZipDestination.setEditable(false);
         btnBrowseZipDestination = new JButton();
         btnBootAnimGroup = new JButton();
         btnRingtonesGroup = new JButton();
@@ -280,7 +282,11 @@ public class AromaInstaller extends javax.swing.JFrame{
         btnCreateNormalZip.setActionCommand("Create Normal Flashable Zip");
         btnCreateNormalZip.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCreateNormalZipActionPerformed(evt);
+                try {
+                    btnCreateNormalZipActionPerformed(evt);
+                } catch (IOException ex) {
+                    Logger.getLogger(AromaInstaller.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
 
@@ -634,7 +640,7 @@ public class AromaInstaller extends javax.swing.JFrame{
             .addGroup(layout.createSequentialGroup()
                 .addGap(391, 391, 391)
                 .addComponent(addGroupPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(536, Short.MAX_VALUE))
+                .addContainerGap(494, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -755,16 +761,16 @@ public class AromaInstaller extends javax.swing.JFrame{
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(353, 353, 353)
+                .addGap(420, 420, 420)
                 .addComponent(addGroupPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(565, Short.MAX_VALUE))
+                .addContainerGap(456, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(129, 129, 129)
+                .addGap(130, 130, 130)
                 .addComponent(addGroupPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(253, Short.MAX_VALUE))
+                .addContainerGap(252, Short.MAX_VALUE))
         );
 
         pack();
@@ -777,7 +783,7 @@ public class AromaInstaller extends javax.swing.JFrame{
             }
         });
         dialog.pack();
-        dialog.setLocationRelativeTo(null);
+        dialog.setLocationRelativeTo(this);
         dialog.setVisible(true);
     }
     
@@ -901,7 +907,7 @@ public class AromaInstaller extends javax.swing.JFrame{
             .addGroup(layout.createSequentialGroup()
                 .addGap(255, 255, 255)
                 .addComponent(CSD_panel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(334, Short.MAX_VALUE))
+                .addContainerGap(292, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -922,7 +928,7 @@ public class AromaInstaller extends javax.swing.JFrame{
             }
         });
         dialog.pack();
-        dialog.setLocationRelativeTo(null);
+        dialog.setLocationRelativeTo(this);
         dialog.setVisible(true);
         //dialog.setLocationRelativeTo(null);
     }
@@ -1105,19 +1111,16 @@ public class AromaInstaller extends javax.swing.JFrame{
         System.out.println();
     }                                           
 
-    public void btnCreateNormalZipActionPerformed(java.awt.event.ActionEvent evt) {                                                   
-        System.out.println();
+    public void btnCreateNormalZipActionPerformed(java.awt.event.ActionEvent evt) throws IOException {                                                   
+        System.out.println("normal Zip Action Performed..");
     }                                                  
 
     public void btnCreateAromaZipActionPerformed(java.awt.event.ActionEvent evt) throws IOException {                                                  
         System.out.println("Create Aroma Zip Clicked..");
-        System.out.println();
-        op.createUpdaterScriptFile();
-        System.out.println(op.updater_script);
-        System.out.println();
-        op.createAromaConfigFile();
-        System.out.println(op.aroma_config);
-        op.createZipAt(op.zipDestination);
+        if(this.checkIfEverythingIsOkay()){
+            op.createZipAt(op.zipDestination);
+        }
+        JOptionPane.showMessageDialog(this, "Zip File Successfully Created..!! Enjoy..!!");
     }
     
     public void groupListSelection(ListSelectionEvent lse){
@@ -1154,6 +1157,26 @@ public class AromaInstaller extends javax.swing.JFrame{
     /**
      * Custom Functions Here..
      */
+    
+    public boolean checkIfEverythingIsOkay(){
+        if(op.selectedDevice.equals("")&&this.textFieldUpdateBinary.getText().equals("Click Here To Select updater-binary....")){
+            JOptionPane.showMessageDialog(this, "update-binary not imported..!!");
+            return false;
+        }
+        else if(op.zipDestination.equals("")){
+            JOptionPane.showMessageDialog(this, "You Forgot to enter destination path of Zip file..!!");
+            return false;
+        }
+        else if(op.groupArrayList.isEmpty()){
+            JOptionPane.showMessageDialog(this, "Zip cannot be created without group..\nFirst create one..!!");
+            return false;
+        }
+        else if(op.map.isEmpty()){
+            JOptionPane.showMessageDialog(this, "Add Files to group..\nWithout files, nothing can be done with Zip file..!!");
+            return false;
+        }
+        return true;
+    }
     
     public void updateFileList(){
         try{

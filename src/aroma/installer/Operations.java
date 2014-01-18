@@ -7,9 +7,12 @@
 package aroma.installer;
 
 import java.awt.Component;
+import java.io.BufferedWriter;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -52,40 +55,13 @@ public class Operations {
     ArrayList<String> advancedList = new ArrayList<>();
     ArrayList<String> deleteApkList = new ArrayList<>();
     ArrayList<String> arrayList = new ArrayList<>();
+    ArrayList<String> jarFileList = new ArrayList<>();
     
     MultiValueMap map = new MultiValueMap();
     
     
     
     Operations(){
-        
-    }
-    
-    public void copyFromJarToZip(String source, String destination) throws IOException{
-        byte[] buffer = new byte[1024];
-        File dest = new File(destination);
-        if(!dest.exists()){
-            dest.createNewFile();
-        }
-        InputStream in = null;
-        try{
-            in = this.getClass().getResourceAsStream(source);
-            FileOutputStream fos = new FileOutputStream(dest);
-            ZipOutputStream zos = new ZipOutputStream(fos);
-            System.out.println("Output To : " + dest);
-                ZipEntry ze = new ZipEntry("META-INF\\com\\google\\android\\updater-script");
-                zos.putNextEntry(ze);
-                int len;
-                while ((len = in.read(buffer)) > 0) {
-                    zos.write(buffer, 0, len);
-                }
-        zos.closeEntry();
-        zos.close();
-        System.out.println("Folder successfully compressed");    
-        }
-        finally{
-            in.close();
-        }
         
     }
     
@@ -97,26 +73,74 @@ public class Operations {
             fileDest.createNewFile();
             System.out.println("File Created");
         }
+        InputStream in = null;
         OutputStream out = null;
             out = new FileOutputStream(fileDest);
             ZipOutputStream zos = new ZipOutputStream(out);
         System.out.println("Output To : " + destination);
+        
+        //Write Apk, Zip, etc files to ZIP..
+        
         for(String groupName: this.groupArrayList){
             for(String file: returnPathArray(groupName, map)){
-                FileInputStream in = new FileInputStream(new File(file));
-                System.out.println("File Added : " + file);
+                FileInputStream fin = new FileInputStream(new File(file));
                 file = getNameFromPath(file);
                 file = "customize/" + groupName + "/" + removeExtension(file) + "/" + file;
-                System.out.println("Zip Entry : " + file);
                 ZipEntry ze = new ZipEntry(file);
                 zos.putNextEntry(ze);
                 int len;
-                while ((len = in.read(buffer)) > 0) {
+                while ((len = fin.read(buffer)) > 0) {
                     zos.write(buffer, 0, len);
                 }
-                in.close();
+                fin.close();
             }
-        }    
+        }
+        
+        //Write Jar Files to ZIP..
+        
+        for(String jarFileName : jarFileList()){
+            System.out.println("File Name : " + jarFileName);
+            in = this.getClass().getResourceAsStream(jarFileName);
+            ZipEntry ze = new ZipEntry(jarFileName);
+            zos.putNextEntry(ze);
+            int len;
+            while ((len = in.read(buffer)) > 0) {
+                zos.write(buffer, 0, len);
+            }
+        }
+        in.close();
+        //Write updater script, aroma config, update binary file to ZIP..
+        this.createAromaConfigFile();
+        this.createUpdaterScriptFile();
+        buffer = this.updater_script.getBytes();
+        InputStream is = new ByteArrayInputStream(this.updater_script.getBytes());
+        ZipEntry ze = new ZipEntry("META-INF/com/google/android/updater-script");
+            zos.putNextEntry(ze);
+            int len;
+            while ((len = is.read(buffer)) > 0) {
+                zos.write(buffer, 0, len);
+            }
+         buffer = this.aroma_config.getBytes();
+         is = new ByteArrayInputStream(this.aroma_config.getBytes());
+         ze = new ZipEntry("META-INF/com/google/android/aroma-config");
+         zos.putNextEntry(ze);
+         while ((len = is.read(buffer)) > 0) {
+             zos.write(buffer, 0, len);
+         }
+         is.close();
+         if(!this.selectedDevice.equals("")){
+             in = this.getClass().getResourceAsStream("META-INF/com/google/android/binary files/" + this.selectedDevice + "/update-binary-installer");
+         }
+         else{
+             in = new FileInputStream(new File(this.updateBinaryPath));
+         }
+         ze = new ZipEntry("META-INF/com/google/android/update-binary-installer");
+         zos.putNextEntry(ze);
+         while ((len = in.read(buffer)) > 0) {
+             zos.write(buffer, 0, len);
+         }
+         in.close();
+        //Closing Zip file..
         zos.closeEntry();
         zos.close();
         System.out.println("Folder successfully compressed");
@@ -146,7 +170,7 @@ public class Operations {
         
         if(!arrayList.isEmpty()){
             this.aroma_config = this.aroma_config + heading;
-            for(String list : this.dataList){
+            for(String list : this.arrayList){
                 this.aroma_config = this.aroma_config + ",\n\"" + list + "\", \"\", 2";
                 //System.out.println("................" + this.returnPathArray(data_list, map));
                 for(String list_files : this.returnPathArray(list, map)){
@@ -401,5 +425,94 @@ public class Operations {
         else{
             JOptionPane.showMessageDialog(null, "No Group Exists, Add Group First..!!");
         }
+    }
+    
+    public void writeStringToFile(String script, File scriptFile) throws IOException{
+        if(!scriptFile.exists()){
+            scriptFile.createNewFile();
+        }
+        BufferedWriter writer = null;
+        writer = new BufferedWriter(new FileWriter(scriptFile));
+        writer.write(script);
+        if(writer!= null){
+            writer.close();
+        }
+        System.out.println("String Written Successfully..!!");
+    }
+    
+    public ArrayList<String> jarFileList() throws IOException{
+        this.jarFileList.add("utils/umount");
+        this.jarFileList.add("utils/mount");
+
+        this.jarFileList.add("META-INF/com/google/android/update-binary");
+        this.jarFileList.add("META-INF/com/google/android/aroma/fonts/big.png");
+        this.jarFileList.add("META-INF/com/google/android/aroma/fonts/small.png");
+        
+        this.jarFileList.add("META-INF/com/google/android/aroma/icons/agreement.png");
+        this.jarFileList.add("META-INF/com/google/android/aroma/icons/alert.png");
+        this.jarFileList.add("META-INF/com/google/android/aroma/icons/apps.png");
+        this.jarFileList.add("META-INF/com/google/android/aroma/icons/confirm.png");
+        this.jarFileList.add("META-INF/com/google/android/aroma/icons/customize.png");
+        this.jarFileList.add("META-INF/com/google/android/aroma/icons/default.png");
+        this.jarFileList.add("META-INF/com/google/android/aroma/icons/info.png");
+        this.jarFileList.add("META-INF/com/google/android/aroma/icons/install.png");
+        this.jarFileList.add("META-INF/com/google/android/aroma/icons/license.png");
+        this.jarFileList.add("META-INF/com/google/android/aroma/icons/personalize.png");
+        this.jarFileList.add("META-INF/com/google/android/aroma/icons/update.png");
+        this.jarFileList.add("META-INF/com/google/android/aroma/icons/welcome.png");
+        
+        this.jarFileList.add("META-INF/com/google/android/aroma/langs/ar.lang");
+        this.jarFileList.add("META-INF/com/google/android/aroma/langs/cn.lang");
+        this.jarFileList.add("META-INF/com/google/android/aroma/langs/de.lang");
+        this.jarFileList.add("META-INF/com/google/android/aroma/langs/en.lang");
+        this.jarFileList.add("META-INF/com/google/android/aroma/langs/fr.lang");
+        this.jarFileList.add("META-INF/com/google/android/aroma/langs/he.lang");
+        this.jarFileList.add("META-INF/com/google/android/aroma/langs/id.lang");
+        this.jarFileList.add("META-INF/com/google/android/aroma/langs/it.lang");
+        this.jarFileList.add("META-INF/com/google/android/aroma/langs/ru.lang");
+        this.jarFileList.add("META-INF/com/google/android/aroma/langs/es.lang");
+        
+        this.jarFileList.add("META-INF/com/google/android/aroma/themes/miui4/bg.png");
+        this.jarFileList.add("META-INF/com/google/android/aroma/themes/miui4/button.9.png");
+        this.jarFileList.add("META-INF/com/google/android/aroma/themes/miui4/button_focus.9.png");
+        this.jarFileList.add("META-INF/com/google/android/aroma/themes/miui4/button_press.9.png");
+        this.jarFileList.add("META-INF/com/google/android/aroma/themes/miui4/cb.png");
+        this.jarFileList.add("META-INF/com/google/android/aroma/themes/miui4/cb_focus.png");
+        this.jarFileList.add("META-INF/com/google/android/aroma/themes/miui4/cb_on.png");
+        this.jarFileList.add("META-INF/com/google/android/aroma/themes/miui4/cb_on_focus.png");
+        this.jarFileList.add("META-INF/com/google/android/aroma/themes/miui4/cb_on_press.png");
+        this.jarFileList.add("META-INF/com/google/android/aroma/themes/miui4/cb_press.png");
+        this.jarFileList.add("META-INF/com/google/android/aroma/themes/miui4/dialog.9.png");
+        this.jarFileList.add("META-INF/com/google/android/aroma/themes/miui4/dialog_titlebar.9.png");
+        this.jarFileList.add("META-INF/com/google/android/aroma/themes/miui4/font.roboto.big.png");
+        this.jarFileList.add("META-INF/com/google/android/aroma/themes/miui4/font.roboto.small.png");
+        this.jarFileList.add("META-INF/com/google/android/aroma/themes/miui4/icon.agreement.png");
+        this.jarFileList.add("META-INF/com/google/android/aroma/themes/miui4/icon.alert.png");
+        this.jarFileList.add("META-INF/com/google/android/aroma/themes/miui4/icon.apps.png");
+        this.jarFileList.add("META-INF/com/google/android/aroma/themes/miui4/icon.confirm.png");
+        this.jarFileList.add("META-INF/com/google/android/aroma/themes/miui4/icon.customize.png");
+        this.jarFileList.add("META-INF/com/google/android/aroma/themes/miui4/icon.default.png");
+        this.jarFileList.add("META-INF/com/google/android/aroma/themes/miui4/icon.info.png");
+        this.jarFileList.add("META-INF/com/google/android/aroma/themes/miui4/icon.install.png");
+        this.jarFileList.add("META-INF/com/google/android/aroma/themes/miui4/icon.license.png");
+        this.jarFileList.add("META-INF/com/google/android/aroma/themes/miui4/icon.personalize.png");
+        this.jarFileList.add("META-INF/com/google/android/aroma/themes/miui4/icon.update.png");
+        this.jarFileList.add("META-INF/com/google/android/aroma/themes/miui4/icon.welcome.png");
+        this.jarFileList.add("META-INF/com/google/android/aroma/themes/miui4/list.9.png");
+        this.jarFileList.add("META-INF/com/google/android/aroma/themes/miui4/navbar.png");
+        this.jarFileList.add("META-INF/com/google/android/aroma/themes/miui4/radio.png");
+        this.jarFileList.add("META-INF/com/google/android/aroma/themes/miui4/radio_focus.png");
+        this.jarFileList.add("META-INF/com/google/android/aroma/themes/miui4/radio_on.png");
+        this.jarFileList.add("META-INF/com/google/android/aroma/themes/miui4/radio_on_focus.png");
+        this.jarFileList.add("META-INF/com/google/android/aroma/themes/miui4/radio_on_press.png");
+        this.jarFileList.add("META-INF/com/google/android/aroma/themes/miui4/radio_press.png");
+        this.jarFileList.add("META-INF/com/google/android/aroma/themes/miui4/theme.prop");
+        this.jarFileList.add("META-INF/com/google/android/aroma/themes/miui4/titlebar.9.png");
+        
+        this.jarFileList.add("META-INF/com/google/android/aroma/ttf/DroidSans.ttf");
+        this.jarFileList.add("META-INF/com/google/android/aroma/ttf/DroidSansArabic.ttf");
+        this.jarFileList.add("META-INF/com/google/android/aroma/ttf/DroidSansFallback.ttf");
+        this.jarFileList.add("META-INF/com/google/android/aroma/ttf/Roboto-Regular.ttf");
+        return this.jarFileList;
     }
 }

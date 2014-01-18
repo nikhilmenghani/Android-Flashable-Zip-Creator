@@ -87,7 +87,7 @@ public class AddAllGroupsUI extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(391, 391, 391)
                 .addComponent(addGroupPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(536, Short.MAX_VALUE))
+                .addContainerGap(494, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
