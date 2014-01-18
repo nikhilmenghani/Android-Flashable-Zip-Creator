@@ -122,7 +122,6 @@
   <SyntheticProperties>
     <SyntheticProperty name="menuBar" type="java.lang.String" value="menuBar"/>
     <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
-    <SyntheticProperty name="generateCenter" type="boolean" value="true"/>
   </SyntheticProperties>
   <AuxValues>
     <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
@@ -140,99 +139,115 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" attributes="0">
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="headingPanel" max="32767" attributes="0"/>
                   <Group type="102" alignment="1" attributes="0">
-                      <Component id="btnSelectDevice" min="-2" pref="410" max="-2" attributes="0"/>
-                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Component id="lblTitle" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="textFieldUpdateBinary" min="-2" pref="375" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="btnSelectDevice" pref="410" max="32767" attributes="0"/>
+                      <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblTitle" max="32767" attributes="0"/>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <Component id="textFieldUpdateBinary" pref="375" max="32767" attributes="0"/>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Component id="btnBrowseUpdateBinary" max="32767" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
-                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="btnApkGroup" alignment="0" max="32767" attributes="0"/>
-                          <Component id="btnBootAnimGroup" alignment="0" pref="182" max="32767" attributes="0"/>
-                          <Component id="btnRingtonesGroup" alignment="0" pref="182" max="32767" attributes="0"/>
-                          <Component id="btnNotifGroup" alignment="0" pref="182" max="32767" attributes="0"/>
-                          <Component id="btnKernelGroup" alignment="0" pref="182" max="32767" attributes="0"/>
-                          <Component id="btnDeleteSystemFilesGroup" alignment="0" pref="182" max="32767" attributes="0"/>
+                          <Component id="btnBootAnimGroup" alignment="0" max="32767" attributes="0"/>
+                          <Component id="btnRingtonesGroup" alignment="0" max="32767" attributes="0"/>
+                          <Component id="btnNotifGroup" alignment="0" max="32767" attributes="0"/>
+                          <Component id="btnKernelGroup" alignment="0" max="32767" attributes="0"/>
+                          <Component id="btnDeleteSystemFilesGroup" alignment="0" max="32767" attributes="0"/>
                           <Component id="btnResetAll" alignment="0" max="32767" attributes="0"/>
                           <Component id="btnAdvancedGroup" max="32767" attributes="0"/>
                           <Component id="btnLoadAromaFlashableZip" alignment="1" max="32767" attributes="0"/>
                       </Group>
-                      <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" attributes="0">
-                              <Component id="lblZipDestination" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="textFieldZipDestination" min="-2" pref="743" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="btnBrowseZipDestination" max="32767" attributes="0"/>
+                          <Group type="102" alignment="0" attributes="0">
+                              <EmptySpace min="-2" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Group type="102" attributes="0">
+                                      <Component id="lblZipDestination" max="32767" attributes="0"/>
+                                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                                      <Component id="textFieldZipDestination" pref="771" max="32767" attributes="0"/>
+                                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                                      <Component id="btnBrowseZipDestination" pref="170" max="32767" attributes="0"/>
+                                  </Group>
+                                  <Component id="contentPanel" max="32767" attributes="0"/>
+                              </Group>
                           </Group>
-                          <Group type="102" attributes="0">
-                              <Component id="btnCreateNormalZip" min="-2" pref="494" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="btnCreateAromaZip" min="-2" pref="485" max="-2" attributes="0"/>
-                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                          <Group type="102" alignment="0" attributes="0">
+                              <EmptySpace min="-2" pref="31" max="-2" attributes="0"/>
+                              <Component id="btnCreateNormalZip" pref="506" max="32767" attributes="0"/>
+                              <EmptySpace min="-2" pref="36" max="-2" attributes="0"/>
+                              <Component id="btnCreateAromaZip" pref="498" max="32767" attributes="0"/>
                           </Group>
-                          <Component id="contentPanel" max="32767" attributes="0"/>
                       </Group>
                   </Group>
               </Group>
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace min="-2" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
-              <EmptySpace max="-2" attributes="0"/>
-              <Component id="headingPanel" min="-2" max="-2" attributes="0"/>
-              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <EmptySpace min="-2" max="-2" attributes="0"/>
+              <Component id="headingPanel" max="32767" attributes="0"/>
+              <EmptySpace type="separate" min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="lblTitle" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="textFieldUpdateBinary" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="btnBrowseUpdateBinary" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="btnSelectDevice" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Group type="102" alignment="3" attributes="0">
+                      <EmptySpace min="9" pref="9" max="-2" attributes="0"/>
+                      <Component id="lblTitle" max="32767" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="3" attributes="0">
+                      <EmptySpace min="3" pref="3" max="-2" attributes="0"/>
+                      <Component id="textFieldUpdateBinary" max="32767" attributes="0"/>
+                  </Group>
+                  <Component id="btnBrowseUpdateBinary" alignment="3" max="32767" attributes="0"/>
+                  <Component id="btnSelectDevice" alignment="3" max="32767" attributes="0"/>
               </Group>
-              <EmptySpace type="unrelated" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                  <Component id="contentPanel" min="-2" max="-2" attributes="0"/>
+              <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="contentPanel" max="32767" attributes="0"/>
                   <Group type="102" attributes="0">
-                      <Component id="btnApkGroup" min="-2" pref="40" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="btnBootAnimGroup" min="-2" pref="40" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="btnRingtonesGroup" min="-2" pref="40" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="btnNotifGroup" min="-2" pref="40" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="btnKernelGroup" min="-2" pref="40" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="btnDeleteSystemFilesGroup" min="-2" pref="40" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="btnAdvancedGroup" min="-2" pref="40" max="-2" attributes="0"/>
-                      <EmptySpace max="32767" attributes="0"/>
-                      <Component id="btnLoadAromaFlashableZip" min="-2" pref="40" max="-2" attributes="0"/>
+                      <Component id="btnApkGroup" pref="40" max="32767" attributes="0"/>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <Component id="btnBootAnimGroup" pref="40" max="32767" attributes="0"/>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <Component id="btnRingtonesGroup" pref="40" max="32767" attributes="0"/>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <Component id="btnNotifGroup" pref="40" max="32767" attributes="0"/>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <Component id="btnKernelGroup" pref="40" max="32767" attributes="0"/>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <Component id="btnDeleteSystemFilesGroup" pref="40" max="32767" attributes="0"/>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <Component id="btnAdvancedGroup" pref="40" max="32767" attributes="0"/>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <Component id="btnLoadAromaFlashableZip" pref="40" max="32767" attributes="0"/>
                   </Group>
               </Group>
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="lblZipDestination" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="textFieldZipDestination" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="btnBrowseZipDestination" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Group type="102" alignment="3" attributes="0">
+                      <EmptySpace min="9" pref="9" max="-2" attributes="0"/>
+                      <Component id="lblZipDestination" max="32767" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="3" attributes="0">
+                      <EmptySpace min="3" pref="3" max="-2" attributes="0"/>
+                      <Component id="textFieldZipDestination" max="32767" attributes="0"/>
+                  </Group>
+                  <Component id="btnBrowseZipDestination" alignment="3" max="32767" attributes="0"/>
               </Group>
-              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="btnCreateNormalZip" alignment="3" min="-2" pref="43" max="-2" attributes="0"/>
-                  <Component id="btnCreateAromaZip" alignment="3" min="-2" pref="43" max="-2" attributes="0"/>
-                  <Component id="btnResetAll" alignment="3" min="-2" pref="43" max="-2" attributes="0"/>
+                  <Component id="btnCreateNormalZip" alignment="3" pref="43" max="32767" attributes="0"/>
+                  <Component id="btnCreateAromaZip" alignment="3" pref="43" max="32767" attributes="0"/>
+                  <Component id="btnResetAll" alignment="3" pref="43" max="32767" attributes="0"/>
               </Group>
-              <EmptySpace pref="15" max="32767" attributes="0"/>
+              <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -254,20 +269,20 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="1" max="-2" attributes="0">
                       <Component id="btnAddGroup" alignment="0" max="32767" attributes="0"/>
-                      <Component id="btnRemoveGroup" alignment="0" pref="213" max="32767" attributes="0"/>
                       <Component id="groupListScrollPane" alignment="0" max="32767" attributes="0"/>
+                      <Component id="btnRemoveGroup" pref="262" max="32767" attributes="0"/>
                   </Group>
-                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
-                          <Component id="fileListScrollPane" min="-2" pref="668" max="-2" attributes="0"/>
+                          <Component id="fileListScrollPane" min="-2" pref="611" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="btnAddFile" max="32767" attributes="0"/>
                               <Component id="btnRemoveFile" max="32767" attributes="0"/>
+                              <Component id="btnAddFile" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                       <Group type="102" attributes="0">
@@ -275,42 +290,43 @@
                               <Component id="lblNote" min="-2" pref="312" max="-2" attributes="0"/>
                               <Component id="lblGroup" min="-2" pref="300" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                          <EmptySpace min="0" pref="463" max="32767" attributes="0"/>
                       </Group>
                   </Group>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
-                  <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                  <Group type="103" groupAlignment="1" attributes="0">
                       <Group type="102" alignment="1" attributes="0">
                           <EmptySpace min="-2" pref="16" max="-2" attributes="0"/>
                           <Component id="lblGroup" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Component id="lblNote" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                          <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" attributes="0">
-                                  <Component id="btnAddFile" min="-2" pref="38" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="btnRemoveFile" min="-2" pref="37" max="-2" attributes="0"/>
+                                  <Component id="btnAddFile" pref="37" max="32767" attributes="0"/>
+                                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                                  <Component id="btnRemoveFile" pref="37" max="32767" attributes="0"/>
+                                  <EmptySpace min="-2" pref="205" max="-2" attributes="0"/>
                               </Group>
-                              <Component id="fileListScrollPane" min="-2" pref="285" max="-2" attributes="0"/>
+                              <Component id="fileListScrollPane" pref="285" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                       <Group type="102" alignment="1" attributes="0">
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="groupListScrollPane" max="32767" attributes="0"/>
-                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                          <Component id="btnAddGroup" min="-2" pref="33" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="btnRemoveGroup" min="-2" pref="33" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" max="-2" attributes="0"/>
+                          <Component id="groupListScrollPane" pref="254" max="32767" attributes="0"/>
+                          <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
+                          <Component id="btnAddGroup" pref="33" max="32767" attributes="0"/>
+                          <EmptySpace min="-2" max="-2" attributes="0"/>
+                          <Component id="btnRemoveGroup" pref="34" max="32767" attributes="0"/>
                       </Group>
                   </Group>
-                  <EmptySpace max="32767" attributes="0"/>
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -381,6 +397,9 @@
         </Component>
         <Component class="javax.swing.JButton" name="btnRemoveFile">
           <Properties>
+            <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="d1" green="b4" red="99" type="rgb"/>
+            </Property>
             <Property name="text" type="java.lang.String" value="Remove File..."/>
           </Properties>
           <Events>
@@ -397,6 +416,9 @@
         </Component>
         <Component class="javax.swing.JButton" name="btnAddGroup">
           <Properties>
+            <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="d1" green="b4" red="99" type="rgb"/>
+            </Property>
             <Property name="text" type="java.lang.String" value="Add Group..."/>
           </Properties>
           <Events>
@@ -405,6 +427,9 @@
         </Component>
         <Component class="javax.swing.JButton" name="btnRemoveGroup">
           <Properties>
+            <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="d1" green="b4" red="99" type="rgb"/>
+            </Property>
             <Property name="text" type="java.lang.String" value="Remove Group..."/>
           </Properties>
           <Events>
