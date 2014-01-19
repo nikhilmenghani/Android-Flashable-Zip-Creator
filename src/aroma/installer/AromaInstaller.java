@@ -6,16 +6,12 @@
 
 package aroma.installer;
 
-import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ButtonGroup;
@@ -34,11 +30,11 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import org.apache.commons.collections.map.MultiValueMap;
 
 /**
  *
@@ -57,7 +53,6 @@ public class AromaInstaller extends javax.swing.JFrame{
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
     public void initComponents() {
-
         jMenuBar1 = new JMenuBar();
         jMenu1 = new JMenu();
         jMenu2 = new JMenu();
@@ -945,7 +940,7 @@ public class AromaInstaller extends javax.swing.JFrame{
     }
     
     public void btnApkGroupActionPerformed(java.awt.event.ActionEvent evt) {                                               
-        System.out.println("Add Apk Group Clicked.." + evt.getActionCommand());
+        System.out.println("Add Apk Group Clicked.. " + evt.getActionCommand());
         
         removeHighlight(this.lastSelected);
         btnApkGroup.setSelected(true);
@@ -1020,14 +1015,14 @@ public class AromaInstaller extends javax.swing.JFrame{
 
     public void btnAdvancedGroupActionPerformed(java.awt.event.ActionEvent evt) {                                                    
         System.out.println("Add Advanced Group Clicked..");
-        removeHighlight(this.lastSelected);
-        btnDeleteSystemFilesGroup.setSelected(true);
-        this.lastSelected = evt.getActionCommand();
-        
-        refreshGroupList(this.lastSelected);
-        this.lblGroup.setText("Advanced Group");
-        
-        updateFileList();
+//        removeHighlight(this.lastSelected);
+//        btnDeleteSystemFilesGroup.setSelected(true);
+//        this.lastSelected = evt.getActionCommand();
+//        
+//        refreshGroupList(this.lastSelected);
+//        this.lblGroup.setText("Advanced Group");
+//        
+//        updateFileList();
     }                                                   
 
     public void btnLoadAromaFlashableZipActionPerformed(java.awt.event.ActionEvent evt) {                                                         
@@ -1046,6 +1041,13 @@ public class AromaInstaller extends javax.swing.JFrame{
 
     public void btnRemoveGroupActionPerformed(java.awt.event.ActionEvent evt) {
         System.out.println(this.lastSelected + " Clicked Remove Group");
+        try{
+            removeGroup(this.groupList.getSelectedValue().toString());
+        }catch(NullPointerException npe){
+            System.out.println("Exception Caught while Removing Group..!!");
+            JOptionPane.showMessageDialog(this, "Select Group First..!!");
+        }
+        
     }                                              
 
     public void btnBrowseUpdateBinaryActionPerformed(java.awt.event.ActionEvent evt) {                                                      
@@ -1104,23 +1106,35 @@ public class AromaInstaller extends javax.swing.JFrame{
     }                                          
 
     public void btnRemoveFileActionPerformed(java.awt.event.ActionEvent evt) {                                              
-        System.out.println();
+        System.out.println("Remove File Clicked..!!");
+        try{
+            removeFile(this.fileList.getSelectedValue().toString());
+        }catch(NullPointerException npe){
+            JOptionPane.showMessageDialog(this, "Select File To Remove..!!");
+        }
     }                                             
 
     public void btnResetAllActionPerformed(java.awt.event.ActionEvent evt) {                                            
         System.out.println();
+        contentPanel.setVisible(false);        
     }                                           
 
     public void btnCreateNormalZipActionPerformed(java.awt.event.ActionEvent evt) throws IOException {                                                   
         System.out.println("normal Zip Action Performed..");
+        if(this.checkIfEverythingIsOkay()){
+            op.flashableZipType = evt.getActionCommand();
+            op.createZipAt(op.zipDestination);
+            JOptionPane.showMessageDialog(this, "Zip File Successfully Created..!! Enjoy..!!");
+        }
     }                                                  
 
     public void btnCreateAromaZipActionPerformed(java.awt.event.ActionEvent evt) throws IOException {                                                  
         System.out.println("Create Aroma Zip Clicked..");
         if(this.checkIfEverythingIsOkay()){
+            op.flashableZipType = evt.getActionCommand();
             op.createZipAt(op.zipDestination);
+            JOptionPane.showMessageDialog(this, "Zip File Successfully Created..!! Enjoy..!!");
         }
-        JOptionPane.showMessageDialog(this, "Zip File Successfully Created..!! Enjoy..!!");
     }
     
     public void groupListSelection(ListSelectionEvent lse){
@@ -1157,6 +1171,67 @@ public class AromaInstaller extends javax.swing.JFrame{
     /**
      * Custom Functions Here..
      */
+    
+    public void removeFile(String fileName){
+        if(!this.fileList.isSelectionEmpty()){
+            //this.fileList.setSelectionModel(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+            
+            op.map.remove(this.groupList.getSelectedValue().toString(), op.getFilePath(this.groupList.getSelectedValue().toString(), fileName, op.map));
+            this.fileModel.removeAllElements();
+            op.updateFileListWithSelectedGroupList(this.groupList.getSelectedValue().toString(), this.fileModel, op.map);
+            //refreshGroupList(this.lastSelected);
+        }
+        else{
+            JOptionPane.showMessageDialog(this, "Select Group First..!!");
+        }
+    }
+    
+    public void removeGroup(String groupName){
+        System.out.println(this.lastSelected + " is last selected");
+        if(!this.groupList.isSelectionEmpty()){
+            switch(this.lastSelected){
+                case "APKs Group":
+                    if(op.systemList.contains(groupName)){
+                        op.systemList.remove(groupName);
+                        op.map.remove(groupName);
+                    }
+                    if(op.dataList.contains(groupName)){
+                        op.dataList.remove(groupName);
+                        op.map.remove(groupName);
+                    }
+                    break;
+                case "Boot Animation Group":
+                    op.bootAnimList.remove(groupName);
+                    op.map.remove(groupName);
+                    break;
+                case "Ringtones Group":
+                    op.ringtoneList.remove(groupName);
+                    op.map.remove(groupName);
+                    break;
+                case "Notifications Group":
+                    op.notifList.remove(groupName);
+                    op.map.remove(groupName);
+                    break;
+                case "Kernel Group":
+                    op.kernelList.remove(groupName);
+                    op.map.remove(groupName);
+                    break;
+                case "Advanced Group":
+                    op.advancedList.remove(groupName);
+                    op.map.remove(groupName);
+                    break;
+                case "Delete System Files Group":
+                    op.deleteApkList.remove(groupName);
+                    op.map.remove(groupName);
+                Default:
+                System.out.println("Something Went Wrong..!!");
+            }
+            refreshGroupList(this.lastSelected);
+        }
+        else{
+            JOptionPane.showMessageDialog(this, "Select Group First..!!");
+        }
+    }
     
     public boolean checkIfEverythingIsOkay(){
         if(op.selectedDevice.equals("")&&this.textFieldUpdateBinary.getText().equals("Click Here To Select updater-binary....")){
@@ -1414,7 +1489,7 @@ public class AromaInstaller extends javax.swing.JFrame{
                 btnKernelGroup.setSelected(false);
                 break;
             case "Advanced Group":
-                btnAdvancedGroup.setSelected(false);
+                //btnAdvancedGroup.setSelected(false);
                 break;
             case "Delete System Files Group":
                 btnDeleteSystemFilesGroup.setSelected(false);
