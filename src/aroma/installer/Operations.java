@@ -7,19 +7,19 @@
 package aroma.installer;
 
 import java.awt.Component;
-import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 import javax.swing.DefaultListModel;
@@ -42,6 +42,7 @@ public class Operations {
     String aroma_config = "";
     String updater_script = "";
     String flashableZipType = "";
+    String jarFileName = "";
     
     ArrayList<String> CSDArrayList;
     ArrayList<String> groupArrayList = new ArrayList<>();
@@ -96,31 +97,55 @@ public class Operations {
         switch(this.flashableZipType){
             case "Create Flashable Zip With Aroma Installer":
                 writeFileToZip(in, zos, "META-INF/com/google/android/update-binary-installer");
-                for(String jarFileName : jarFileList()){
-                    System.out.println("File Name : " + jarFileName);
-                    in = this.getClass().getResourceAsStream(jarFileName);
-                    writeFileToZip(in, zos, jarFileName);
+                for(String fileName : jarFileList()){
+                    System.out.println("File Name : " + fileName);
+                    in = this.getClass().getResourceAsStream(fileName);
+                    writeFileToZip(in, zos, fileName);
                 }
                 this.createAromaConfigFile();
                 in = new ByteArrayInputStream(this.aroma_config.getBytes());
                 writeFileToZip(in, zos, "META-INF/com/google/android/aroma-config");
+                in = this.getClass().getResourceAsStream("META-INF/com/google/android/update-binary");
+                writeFileToZip(in, zos, "META-INF/com/google/android/update-binary");
                 break;
             case "Create Normal Flashable Zip":
                 writeFileToZip(in, zos, "META-INF/com/google/android/update-binary");
-                in = this.getClass().getResourceAsStream("utils/mount");
-                writeFileToZip(in, zos, "utils/mount");
-                in = this.getClass().getResourceAsStream("utils/umount");
-                writeFileToZip(in, zos, "utils/umount");
                 break;
             default:
                 JOptionPane.showMessageDialog(null, "Something Went Wrong..!! Restart Tool and Try Again..");
         }
+        in = this.getClass().getResourceAsStream("utils/mount");
+        writeFileToZip(in, zos, "utils/mount");
+        in = this.getClass().getResourceAsStream("utils/umount");
+        writeFileToZip(in, zos, "utils/umount");
         this.createUpdaterScriptFile();
         in = new ByteArrayInputStream(this.updater_script.getBytes());
         writeFileToZip(in, zos, "META-INF/com/google/android/updater-script");
         zos.closeEntry();
         zos.close();
         System.out.println("Folder successfully compressed");
+    }
+    
+    public void getJarFileName(){
+        //Yet to define.. here jar file name will be returned so that if user renames source jar file, we dont get exception..
+    }
+    
+    public ArrayList<String> getJarFileList(){
+        try{
+            JarFile jarFile = new JarFile("Aroma-Installer.jar");
+            for(Enumeration em = jarFile.entries(); em.hasMoreElements();) {
+                String s= em.nextElement().toString();
+                if(s.startsWith("aroma/installer/META-INF/")){
+                    s = s.substring("aroma/installer/".length(), s.length());
+                    if(s.endsWith(".ttf")||s.endsWith(".png")||s.endsWith(".prop")||s.endsWith(".lang"))
+                        this.jarFileList.add(s);
+                    }
+            }
+            jarFile.close();
+        }catch (IOException e){
+            System.err.println("Error: " + e.getMessage());
+        }
+        return this.jarFileList;
     }
     
     public void writeFileToZip(InputStream in, ZipOutputStream zos, String writeAt) throws IOException{
@@ -416,45 +441,9 @@ public class Operations {
         return false;
     }
     
-    public void removeGroup(String groupName){
-        if(this.groupArrayList.contains(groupName)){
-            this.groupArrayList.remove(groupName);
-            Boolean flag = this.systemList.contains(groupName)?this.systemList.remove(groupName):this.dataList.contains(groupName)?this.dataList.remove(groupName):false;
-            flag = (!flag)?this.ringtoneList.contains(groupName)?this.ringtoneList.remove(groupName):this.notifList.contains(groupName)?this.notifList.remove(groupName):false:false;
-            flag = (!flag)?this.kernelList.contains(groupName)?this.kernelList.remove(groupName):this.advancedList.contains(groupName)?this.advancedList.remove(groupName):false:false;
-            flag = (!flag)?(this.deleteApkList.contains(groupName)?this.deleteApkList.remove(groupName):true):false;
-            if(flag){
-                JOptionPane.showMessageDialog(null, "Group Removed..");
-            }
-            //this.aromaGroupModel.removeAllElements();
-            for(String group: this.groupArrayList){
-            //    this.aromaGroupModel.addElement(group);
-            }
-            
-        }
-        else{
-            JOptionPane.showMessageDialog(null, "No Group Exists, Add Group First..!!");
-        }
-    }
-    
-    public void writeStringToFile(String script, File scriptFile) throws IOException{
-        if(!scriptFile.exists()){
-            scriptFile.createNewFile();
-        }
-        BufferedWriter writer = null;
-        writer = new BufferedWriter(new FileWriter(scriptFile));
-        writer.write(script);
-        if(writer!= null){
-            writer.close();
-        }
-        System.out.println("String Written Successfully..!!");
-    }
+    //This function will not be needed once final product is ready.
     
     public ArrayList<String> jarFileList() throws IOException{
-        this.jarFileList.add("utils/umount");
-        this.jarFileList.add("utils/mount");
-
-        this.jarFileList.add("META-INF/com/google/android/update-binary");
         this.jarFileList.add("META-INF/com/google/android/aroma/fonts/big.png");
         this.jarFileList.add("META-INF/com/google/android/aroma/fonts/small.png");
         

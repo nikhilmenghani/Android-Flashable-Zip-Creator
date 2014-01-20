@@ -1116,7 +1116,6 @@ public class AromaInstaller extends javax.swing.JFrame{
 
     public void btnResetAllActionPerformed(java.awt.event.ActionEvent evt) {                                            
         System.out.println();
-        contentPanel.setVisible(false);        
     }                                           
 
     public void btnCreateNormalZipActionPerformed(java.awt.event.ActionEvent evt) throws IOException {                                                   
