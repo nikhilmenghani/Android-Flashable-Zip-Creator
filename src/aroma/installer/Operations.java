@@ -26,8 +26,6 @@ import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
-import javax.swing.filechooser.FileFilter;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import org.apache.commons.collections.map.MultiValueMap;
 
 /**
@@ -43,6 +41,7 @@ public class Operations {
     String selectedDevice = "";
     String aroma_config = "";
     String updater_script = "";
+    String flashableZipType = "";
     
     ArrayList<String> CSDArrayList;
     ArrayList<String> groupArrayList = new ArrayList<>();
@@ -66,84 +65,73 @@ public class Operations {
     }
     
     public void createZipAt(String destination) throws IOException{
-        byte[] buffer = new byte[1024];
         File fileDest = new File(destination);
         System.out.println("Entered Create Zip");
         if(!fileDest.exists()){
             fileDest.createNewFile();
             System.out.println("File Created");
         }
-        InputStream in = null;
-        OutputStream out = null;
-            out = new FileOutputStream(fileDest);
-            ZipOutputStream zos = new ZipOutputStream(out);
+        InputStream in;
+        OutputStream out;
+        out = new FileOutputStream(fileDest);
+        ZipOutputStream zos = new ZipOutputStream(out);
         System.out.println("Output To : " + destination);
         
         //Write Apk, Zip, etc files to ZIP..
         
         for(String groupName: this.groupArrayList){
             for(String file: returnPathArray(groupName, map)){
-                FileInputStream fin = new FileInputStream(new File(file));
+                in = new FileInputStream(new File(file));
                 file = getNameFromPath(file);
                 file = "customize/" + groupName + "/" + removeExtension(file) + "/" + file;
-                ZipEntry ze = new ZipEntry(file);
-                zos.putNextEntry(ze);
-                int len;
-                while ((len = fin.read(buffer)) > 0) {
-                    zos.write(buffer, 0, len);
+                writeFileToZip(in, zos, file);
+            }
+        }
+        if(!this.selectedDevice.equals("")){
+            in = this.getClass().getResourceAsStream("META-INF/com/google/android/binary files/" + this.selectedDevice + "/update-binary");
+        }
+        else{
+            in = new FileInputStream(new File(this.updateBinaryPath));
+        }
+        switch(this.flashableZipType){
+            case "Create Flashable Zip With Aroma Installer":
+                writeFileToZip(in, zos, "META-INF/com/google/android/update-binary-installer");
+                for(String jarFileName : jarFileList()){
+                    System.out.println("File Name : " + jarFileName);
+                    in = this.getClass().getResourceAsStream(jarFileName);
+                    writeFileToZip(in, zos, jarFileName);
                 }
-                fin.close();
-            }
+                this.createAromaConfigFile();
+                in = new ByteArrayInputStream(this.aroma_config.getBytes());
+                writeFileToZip(in, zos, "META-INF/com/google/android/aroma-config");
+                break;
+            case "Create Normal Flashable Zip":
+                writeFileToZip(in, zos, "META-INF/com/google/android/update-binary");
+                in = this.getClass().getResourceAsStream("utils/mount");
+                writeFileToZip(in, zos, "utils/mount");
+                in = this.getClass().getResourceAsStream("utils/umount");
+                writeFileToZip(in, zos, "utils/umount");
+                break;
+            default:
+                JOptionPane.showMessageDialog(null, "Something Went Wrong..!! Restart Tool and Try Again..");
         }
-        
-        //Write Jar Files to ZIP..
-        
-        for(String jarFileName : jarFileList()){
-            System.out.println("File Name : " + jarFileName);
-            in = this.getClass().getResourceAsStream(jarFileName);
-            ZipEntry ze = new ZipEntry(jarFileName);
-            zos.putNextEntry(ze);
-            int len;
-            while ((len = in.read(buffer)) > 0) {
-                zos.write(buffer, 0, len);
-            }
-        }
-        in.close();
-        //Write updater script, aroma config, update binary file to ZIP..
-        this.createAromaConfigFile();
         this.createUpdaterScriptFile();
-        buffer = this.updater_script.getBytes();
-        InputStream is = new ByteArrayInputStream(this.updater_script.getBytes());
-        ZipEntry ze = new ZipEntry("META-INF/com/google/android/updater-script");
-            zos.putNextEntry(ze);
-            int len;
-            while ((len = is.read(buffer)) > 0) {
-                zos.write(buffer, 0, len);
-            }
-         buffer = this.aroma_config.getBytes();
-         is = new ByteArrayInputStream(this.aroma_config.getBytes());
-         ze = new ZipEntry("META-INF/com/google/android/aroma-config");
-         zos.putNextEntry(ze);
-         while ((len = is.read(buffer)) > 0) {
-             zos.write(buffer, 0, len);
-         }
-         is.close();
-         if(!this.selectedDevice.equals("")){
-             in = this.getClass().getResourceAsStream("META-INF/com/google/android/binary files/" + this.selectedDevice + "/update-binary-installer");
-         }
-         else{
-             in = new FileInputStream(new File(this.updateBinaryPath));
-         }
-         ze = new ZipEntry("META-INF/com/google/android/update-binary-installer");
-         zos.putNextEntry(ze);
-         while ((len = in.read(buffer)) > 0) {
-             zos.write(buffer, 0, len);
-         }
-         in.close();
-        //Closing Zip file..
+        in = new ByteArrayInputStream(this.updater_script.getBytes());
+        writeFileToZip(in, zos, "META-INF/com/google/android/updater-script");
         zos.closeEntry();
         zos.close();
         System.out.println("Folder successfully compressed");
+    }
+    
+    public void writeFileToZip(InputStream in, ZipOutputStream zos, String writeAt) throws IOException{
+        byte[] buffer = new byte[1024];
+        ZipEntry ze = new ZipEntry(writeAt);
+        zos.putNextEntry(ze);
+        int len;
+        while ((len = in.read(buffer)) > 0) {
+            zos.write(buffer, 0, len);
+        }
+        in.close();
     }
     
     public String removeExtension(String str){
@@ -170,7 +158,7 @@ public class Operations {
         
         if(!arrayList.isEmpty()){
             this.aroma_config = this.aroma_config + heading;
-            for(String list : this.arrayList){
+            for(String list : arrayList){
                 this.aroma_config = this.aroma_config + ",\n\"" + list + "\", \"\", 2";
                 //System.out.println("................" + this.returnPathArray(data_list, map));
                 for(String list_files : this.returnPathArray(list, map)){
@@ -288,16 +276,26 @@ public class Operations {
     }
     
     public void extractFilesUpdaterScript(ArrayList<String> arrayList, String title, String propFile, String location){
+        
         if(!arrayList.isEmpty()){
             this.updater_script = this.updater_script + "ui_print(\"@" + title + "\");\n";
             int s = 1;
             for(String list : arrayList){
                 int i = 1;
                 for(String system_list_files : this.returnPathArray(list, map)){
-                    this.updater_script = this.updater_script + "if (file_getprop(\"/tmp/aroma/" + propFile + "\", \"item." + s + "." + i + "\")==\"1\") then ui_print(\"Installing " + this.removeExtension(getNameFromPath(system_list_files)) + "\");\n";
-                    this.updater_script = this.updater_script + "package_extract_dir(\"customize/" + list + "/" + this.removeExtension(getNameFromPath(system_list_files)) + "\", \"" + location + "\");\n";
-                    this.updater_script = this.updater_script + "endif;\n";
-                    i++;
+                    switch(this.flashableZipType){
+                        case "Create Flashable Zip With Aroma Installer":
+                            this.updater_script = this.updater_script + "if (file_getprop(\"/tmp/aroma/" + propFile + "\", \"item." + s + "." + i + "\")==\"1\") then ui_print(\"Installing " + this.removeExtension(getNameFromPath(system_list_files)) + "\");\n";
+                            this.updater_script = this.updater_script + "package_extract_dir(\"customize/" + list + "/" + this.removeExtension(getNameFromPath(system_list_files)) + "\", \"" + location + "\");\n";
+                            this.updater_script = this.updater_script + "endif;\n";
+                            i++;
+                            break;
+                        case "Create Normal Flashable Zip":
+                            this.updater_script = this.updater_script + "package_extract_dir(\"customize/" + list + "/" + this.removeExtension(getNameFromPath(system_list_files)) + "\", \"" + location + "\");\n";
+                            break;
+                        default:
+                            JOptionPane.showMessageDialog(null, "Something Went Wrong..!! Restart Tool and Try Again..");
+                    }
                 }
                 s++;
             }
@@ -314,22 +312,16 @@ public class Operations {
                 "run_program(\"/tmp/mount\", \"/data\");\n" +
                 "run_program(\"/tmp/mount\", \"/system\");\n";
         
-        if(!this.systemList.isEmpty())
         extractFilesUpdaterScript(this.systemList, "Installing System Apps", "system_app_choices.prop", "/system/app");
         
-        if(!this.dataList.isEmpty())
         extractFilesUpdaterScript(this.dataList, "Installing Apps", "app_choices.prop", "/data/app");
         
-        if(!this.bootAnimList.isEmpty())
         extractFilesUpdaterScript(this.bootAnimList, "Installing Boot Animation", "boot_anim_choices.prop", "/system/media");
         
-        //if(!this.kernelList.isEmpty())
         //extractFilesUpdaterScript(this.kernelList, "Flashing Kernel", "kernel_choices.prop", aroma_config);
         
-        if(!this.ringtoneList.isEmpty())
         extractFilesUpdaterScript(this.ringtoneList, "Adding Ringtones", "ringtone_choices.prop", "/system/media/audio/ringtones");
         
-        if(!this.notifList.isEmpty())
         extractFilesUpdaterScript(this.notifList, "Adding Notification Tones", "notification_choices.prop", "/system/media/audio/notifications");
         
         this.updater_script = this.updater_script + "set_perm_recursive(1000, 1000, 0771, 0644, \"/data/app\");\n";
@@ -343,7 +335,7 @@ public class Operations {
         this.updater_script = this.updater_script + "ui_print(\"@Finished Install\");\n";
         this.updater_script = this.updater_script + "set_progress(1);\n";
     }
-    
+   
     public void fillListModelWithArrayList(DefaultListModel model, ArrayList<String> list){
         for(String temp : list){
             model.addElement(temp);
@@ -354,6 +346,24 @@ public class Operations {
         String tempString[] = str.split("\\\\");
         System.out.println("Successfully Splitted from " + str + " to " + tempString[tempString.length-1]);
         return tempString[tempString.length-1];
+    }
+    
+    public String getFilePath(String key, String name, MultiValueMap mvm){
+        ArrayList<String> arrayList = new ArrayList<>();
+        Set entrySet = mvm.entrySet();
+        Iterator it = entrySet.iterator();
+        while(it.hasNext()){
+            Map.Entry mapEntry = (Map.Entry) it.next();
+            if(key.equals(mapEntry.getKey())){
+                arrayList = (ArrayList<String>) mvm.get(mapEntry.getKey());
+                for(String path: arrayList){
+                    if(path.contains(name)){
+                        return path;
+                    }
+                }
+            }
+        }
+        return "";
     }
     
     public void updateFileListWithSelectedGroupList(String str, DefaultListModel model, MultiValueMap mvm){
