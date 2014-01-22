@@ -28,7 +28,6 @@ import javax.swing.JFileChooser;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import org.apache.commons.collections4.map.MultiValueMap;
-
 /**
  *
  * @author Nikhil
@@ -66,6 +65,28 @@ public class Operations {
         
     }
     
+    public String getListName(String groupName){
+        if(this.systemList.contains(groupName)){
+            return "APKs_System";
+        }
+        else if(this.dataList.contains(groupName)){
+            return "APKs_Data";
+        }
+        else if(this.bootAnimList.contains(groupName)){
+            return "Boot Animations";
+        }
+        else if(this.kernelList.contains(groupName)){
+            return "Kernels";
+        }
+        else if(this.ringtoneList.contains(groupName)){
+            return "Ringtones";
+        }
+        else if(this.notifList.contains(groupName)){
+            return "Notifications";
+        }
+        return "";
+    }
+    
     public void createZipAt(String destination) throws IOException{
         File fileDest = new File(destination);
         System.out.println("Entered Create Zip");
@@ -82,11 +103,18 @@ public class Operations {
         //Write Apk, Zip, etc files to ZIP..
         
         for(String groupName: this.groupArrayList){
-            for(String file: returnPathArray(groupName, map)){
-                in = new FileInputStream(new File(file));
-                file = getNameFromPath(file);
-                file = "customize/" + groupName + "/" + removeExtension(file) + "/" + file;
-                writeFileToZip(in, zos, file);
+            System.out.println("Now Group under consideration is : " + groupName);
+            if(map.containsKey(groupName)){
+                for(String file: returnPathArray(groupName, map)){
+                    System.out.println("Group Name : " +groupName + " File Name : " + file);
+                    in = new FileInputStream(new File(file));
+                    file = getNameFromPath(file);
+                    file = "customize/" + getListName(groupName) + "/" + groupName + "/" + file;
+                    writeFileToZip(in, zos, file);
+                }
+            }
+            else{
+                JOptionPane.showMessageDialog(null, "Removed Empty Group : " + groupName);
             }
         }
         if(!this.selectedDevice.equals("")){
@@ -169,15 +197,18 @@ public class Operations {
     }
     
     public ArrayList<String> returnPathArray(String str, MultiValueMap mvm){
-        Set entrySet = mvm.entrySet();
+        if(mvm.containsKey(str)){
+            System.out.println("Yes, map contains : " + str + " and proof is : " + mvm);
+            Set entrySet = mvm.entrySet();
             Iterator it = entrySet.iterator();
             while(it.hasNext()){
                 Map.Entry mapEntry = (Map.Entry) it.next();
                 if(str.equals(mapEntry.getKey())){
-                arrayList = (ArrayList<String>) map.get(mapEntry.getKey());
+                arrayList = (ArrayList<String>) mvm.get(mapEntry.getKey());
                 }
             }
-            return arrayList;
+        }
+        return arrayList;
     }
     
     public void displayListInAroma(String heading, ArrayList<String> arrayList){
@@ -185,14 +216,27 @@ public class Operations {
         if(!arrayList.isEmpty()){
             this.aroma_config = this.aroma_config + heading;
             for(String list : arrayList){
-                this.aroma_config = this.aroma_config + ",\n\"" + list + "\", \"\", 2";
-                //System.out.println("................" + this.returnPathArray(data_list, map));
-                for(String list_files : this.returnPathArray(list, map)){
-                    this.aroma_config = this.aroma_config + ",\n\"" + this.removeExtension(getNameFromPath(list_files)) + "\", \"\", 0";
+                if(map.containsKey(list)){
+                    this.aroma_config = this.aroma_config + ",\n\"" + list + "\", \"\", 2";
+                    //System.out.println("................" + this.returnPathArray(data_list, map));
+                    for(String list_files : this.returnPathArray(list, map)){
+                        this.aroma_config = this.aroma_config + ",\n\"" + this.removeExtension(getNameFromPath(list_files)) + "\", \"\", 0";
+                    }
                 }
             }
             this.aroma_config = this.aroma_config + ");\n";
         }
+    }
+    
+    public void listFilesInAromaConfig(ArrayList<String> groupType, String groupName, String propFile, int count, MultiValueMap mvm){
+        int i = 1;
+            if(groupType.contains(groupName)){
+                for(String file_list: this.returnPathArray(groupName, mvm)){
+                    this.aroma_config = this.aroma_config + "appendvar(\"installer_title\",iif(prop(\"" + propFile + "\",\"item." + count + "." + i + "\")==\"1\",\"" + this.removeExtension(getNameFromPath(file_list)) + "\",\"\"));\n";
+                    i++;
+                }
+                count++;
+            }
     }
     
     public void createAromaConfigFile(){
@@ -227,68 +271,22 @@ public class Operations {
         int s = 1, d = 1, k = 1, ba = 1, r = 1, n = 1, da = 1;
         
         for(String grouplist : groupArrayList){
-            int i = 1;
-            if(systemList.contains(grouplist)){
-                for(String system_list: this.returnPathArray(grouplist, map)){
-                    this.aroma_config = this.aroma_config + "appendvar(\"installer_title\",iif(prop(\"system_app_choices.prop\",\"item." + s + "." + i + "\")==\"1\",\"" + this.removeExtension(getNameFromPath(system_list)) + "\",\"\"));\n";
-                    i++;
-                }
-                s++;
+            if(map.containsKey(grouplist)){
+                listFilesInAromaConfig(systemList, grouplist, "system_app_choices.prop", s, map);
+
+                listFilesInAromaConfig(dataList, grouplist, "app_choices.prop", d, map);
+
+                listFilesInAromaConfig(bootAnimList, grouplist, "boot_anim_choices.prop", ba, map);
+
+                listFilesInAromaConfig(kernelList, grouplist, "kernel_choices.prop", k, map);
+
+                listFilesInAromaConfig(ringtoneList, grouplist, "ringtone_choices.prop", r, map);
+
+                listFilesInAromaConfig(notifList, grouplist, "notification_choices.prop", n, map);
+
+                listFilesInAromaConfig(deleteApkList, grouplist, "delete_choices.prop", da, map);
             }
             
-            i = 1;
-            if(dataList.contains(grouplist)){
-                for(String data_list: this.returnPathArray(grouplist, map)){
-                    this.aroma_config = this.aroma_config + "appendvar(\"installer_title\",iif(prop(\"app_choices.prop\",\"item." + d + "." + i + "\")==\"1\",\"" + this.removeExtension(getNameFromPath(data_list)) + "\",\"\"));\n";
-                    i++;
-                }
-                d++;
-            }
-            
-            i = 1;
-            if(bootAnimList.contains(grouplist)){
-                for(String list: this.returnPathArray(grouplist, map)){
-                    this.aroma_config = this.aroma_config + "appendvar(\"installer_title\",iif(prop(\"boot_anim_choices.prop\",\"item." + ba + "." + i + "\")==\"1\",\"" + this.removeExtension(getNameFromPath(list)) + "\",\"\"));\n";
-                    i++;
-                }
-                ba++;
-            }
-            
-            i = 1;
-            if(kernelList.contains(grouplist)){
-                for(String list: this.returnPathArray(grouplist, map)){
-                    this.aroma_config = this.aroma_config + "appendvar(\"installer_title\",iif(prop(\"kernel_choices.prop\",\"item." + k + "." + i + "\")==\"1\",\"" + this.removeExtension(getNameFromPath(list)) + "\",\"\"));\n";
-                    i++;
-                }
-                k++;
-            }
-            
-            i = 1;
-            if(ringtoneList.contains(grouplist)){
-                for(String list: this.returnPathArray(grouplist, map)){
-                    this.aroma_config = this.aroma_config + "appendvar(\"installer_title\",iif(prop(\"ringtone_choices.prop\",\"item." + d + "." + i + "\")==\"1\",\"" + this.removeExtension(getNameFromPath(list)) + "\",\"\"));\n";
-                    i++;
-                }
-                r++;
-            }
-            
-            i = 1;
-            if(notifList.contains(grouplist)){
-                for(String list: this.returnPathArray(grouplist, map)){
-                    this.aroma_config = this.aroma_config + "appendvar(\"installer_title\",iif(prop(\"notification_choices.prop\",\"item." + d + "." + i + "\")==\"1\",\"" + this.removeExtension(getNameFromPath(list)) + "\",\"\"));\n";
-                    i++;
-                }
-                n++;
-            }
-            
-            i = 1;
-            if(deleteApkList.contains(grouplist)){
-                for(String list: this.returnPathArray(grouplist, map)){
-                    this.aroma_config = this.aroma_config + "appendvar(\"installer_title\",iif(prop(\"delete_choices.prop\",\"item." + d + "." + i + "\")==\"1\",\"" + this.removeExtension(getNameFromPath(list)) + "\",\"\"));\n";
-                    i++;
-                }
-                da++;
-            }
         }
         this.aroma_config = this.aroma_config + "writetmpfile(\"app_choices.prop\",readtmpfile(\"app_choices.prop\"));\n";
         this.aroma_config = this.aroma_config + "writetmpfile(\"system_app_choices.prop\",readtmpfile(\"system_app_choices.prop\"));\n";
@@ -307,23 +305,25 @@ public class Operations {
             this.updater_script = this.updater_script + "ui_print(\"@" + title + "\");\n";
             int s = 1;
             for(String list : arrayList){
-                int i = 1;
-                for(String system_list_files : this.returnPathArray(list, map)){
-                    switch(this.flashableZipType){
-                        case "Create Flashable Zip With Aroma Installer":
-                            this.updater_script = this.updater_script + "if (file_getprop(\"/tmp/aroma/" + propFile + "\", \"item." + s + "." + i + "\")==\"1\") then ui_print(\"Installing " + this.removeExtension(getNameFromPath(system_list_files)) + "\");\n";
-                            this.updater_script = this.updater_script + "package_extract_dir(\"customize/" + list + "/" + this.removeExtension(getNameFromPath(system_list_files)) + "\", \"" + location + "\");\n";
-                            this.updater_script = this.updater_script + "endif;\n";
-                            i++;
-                            break;
-                        case "Create Normal Flashable Zip":
-                            this.updater_script = this.updater_script + "package_extract_dir(\"customize/" + list + "/" + this.removeExtension(getNameFromPath(system_list_files)) + "\", \"" + location + "\");\n";
-                            break;
-                        default:
-                            JOptionPane.showMessageDialog(null, "Something Went Wrong..!! Restart Tool and Try Again..");
+                if(map.containsKey(list)){
+                    int i = 1;
+                    for(String system_list_files : this.returnPathArray(list, map)){
+                        switch(this.flashableZipType){
+                            case "Create Flashable Zip With Aroma Installer":
+                                this.updater_script = this.updater_script + "if (file_getprop(\"/tmp/aroma/" + propFile + "\", \"item." + s + "." + i + "\")==\"1\") then ui_print(\"Installing " + this.removeExtension(getNameFromPath(system_list_files)) + "\");\n";
+                                this.updater_script = this.updater_script + "package_extract_dir(\"customize/" + getListName(list) + "/" + list + "\", \"" + location + "\");\n";
+                                this.updater_script = this.updater_script + "endif;\n";
+                                i++;
+                                break;
+                            case "Create Normal Flashable Zip":
+                                this.updater_script = this.updater_script + "package_extract_dir(\"customize/" + getListName(list) + "/" + list + "\", \"" + location + "\");\n";
+                                break;
+                            default:
+                                JOptionPane.showMessageDialog(null, "Something Went Wrong..!! Restart Tool and Try Again..");
+                        }
                     }
+                    s++;
                 }
-                s++;
             }
         }
     }
@@ -425,21 +425,43 @@ public class Operations {
         }
     }
     
-    public boolean keyExistInMap(String str, MultiValueMap mvm){
+    //The following function will extract the whole zip file and return a multivaluemap which contains Group Name as a key and file name as its values
+    public MultiValueMap extractZip (String source) throws IOException{ 
+        byte[] buffer = new byte[1024];
+        MultiValueMap mvm = new MultiValueMap();
         try{
-            Set entrySet = mvm.entrySet();
-            Iterator it = entrySet.iterator();
-            while(it.hasNext()){
-                Map.Entry mapEntry = (Map.Entry) it.next();
-                if(str.equals(mapEntry.getKey())){
-                    return true;
-                }
+            File folder = new File("Temp");
+            if(!folder.exists()){
+                folder.mkdir();
             }
-        }catch (NullPointerException npe){
-            System.out.println("Exception Caught");
-            return false;
+            ZipInputStream zis = new ZipInputStream(new FileInputStream(source));
+            ZipEntry ze = zis.getNextEntry();
+            while(ze!=null){
+                String fileName = ze.getName();
+                File newFile = new File("Temp" + File.separator + fileName);
+                String filePath = ze.getName();
+                System.out.println(filePath);
+                if(filePath.startsWith("customize")){
+                    String temp = filePath.replace("customize/", "");
+                    String splitName[] = temp.split("/");
+                    mvm.put(splitName[0], splitName[2]);
+                }
+                new File(newFile.getParent()).mkdirs();
+                FileOutputStream fos = new FileOutputStream(newFile);             
+                int len;
+                while ((len = zis.read(buffer)) > 0) {
+                    fos.write(buffer, 0, len);
+                }
+                fos.close();   
+                ze = zis.getNextEntry();
+            }
+            zis.closeEntry();
+            zis.close();
+            System.out.println("Done");
+        }catch(IOException ex){
+            ex.printStackTrace(); 
         }
-        return false;
+        return mvm;
     }
     
     //This function will not be needed once final product is ready.
@@ -515,44 +537,4 @@ public class Operations {
         this.jarFileList.add("META-INF/com/google/android/aroma/ttf/Roboto-Regular.ttf");
         return this.jarFileList;
     }
-    
-    //The following function will extract the whole zip file and return a multivaluemap which contains Group Name as a key and file name as its values
-    public MultiValueMap extractZip (String source) throws IOException{ 
-        byte[] buffer = new byte[1024];
-        MultiValueMap mvm = new MultiValueMap();
-        try{
-            File folder = new File("Temp");
-            if(!folder.exists()){
-                folder.mkdir();
-            }
-            ZipInputStream zis = new ZipInputStream(new FileInputStream(source));
-            ZipEntry ze = zis.getNextEntry();
-            while(ze!=null){
-                String fileName = ze.getName();
-                File newFile = new File("Temp" + File.separator + fileName);
-                String filePath = ze.getName();
-                System.out.println(filePath);
-                if(filePath.startsWith("customize")){
-                    String temp = filePath.replace("customize/", "");
-                    String splitName[] = temp.split("/");
-                    mvm.put(splitName[0], splitName[2]);
-                }
-                new File(newFile.getParent()).mkdirs();
-                FileOutputStream fos = new FileOutputStream(newFile);             
-                int len;
-                while ((len = zis.read(buffer)) > 0) {
-                    fos.write(buffer, 0, len);
-                }
-                fos.close();   
-                ze = zis.getNextEntry();
-            }
-            zis.closeEntry();
-            zis.close();
-            System.out.println("Done");
-        }catch(IOException ex){
-            ex.printStackTrace(); 
-        }
-        return mvm;
-    }
-    
 }

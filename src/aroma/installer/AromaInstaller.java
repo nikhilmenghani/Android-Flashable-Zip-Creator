@@ -30,11 +30,11 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
-import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import org.apache.commons.collections4.map.MultiValueMap;
 
 /**
  *
@@ -1115,7 +1115,8 @@ public class AromaInstaller extends javax.swing.JFrame{
     }                                             
 
     public void btnResetAllActionPerformed(java.awt.event.ActionEvent evt) {                                            
-        System.out.println();
+        System.out.println("Reset All Button Clicked..");
+        resetAll();
     }                                           
 
     public void btnCreateNormalZipActionPerformed(java.awt.event.ActionEvent evt) throws IOException {                                                   
@@ -1185,8 +1186,46 @@ public class AromaInstaller extends javax.swing.JFrame{
         }
     }
     
+    public void resetAll(){
+        op.lastActionCommand = "";
+        op.updateBinaryPath = "";
+        op.zipDestination = "";
+        op.tempFolderPath = "";
+        op.selectedDevice = "";
+        op.aroma_config = "";
+        op.updater_script = "";
+        op.flashableZipType = "";
+        op.jarFileName = "";
+
+        op.groupArrayList = new ArrayList<>();
+        op.systemList = new ArrayList<>();
+        op.dataList = new ArrayList<>();
+        op.bootAnimList = new ArrayList<>();
+        op.ringtoneList = new ArrayList<>();
+        op.notifList = new ArrayList<>();
+        op.kernelList = new ArrayList<>();
+        op.advancedList = new ArrayList<>();
+        op.deleteApkList = new ArrayList<>();
+        op.arrayList = new ArrayList<>();
+        op.jarFileList = new ArrayList<>();
+
+        op.map = new MultiValueMap();
+        
+        removeHighlight(this.lastSelected);
+        
+        this.lastSelected = "APKs Group";
+        this.btnApkGroup.setSelected(true);
+        
+        this.refreshGroupList(this.lastSelected);
+        
+        this.textFieldUpdateBinary.setText("Click Here To Select updater-binary....");
+        this.textFieldZipDestination.setText("Click Here To Select Zip Destination....");
+    }
+    
     public void removeGroup(String groupName){
         System.out.println(this.lastSelected + " is last selected");
+        System.out.println("Map Before : " + op.map);
+        System.out.println("Group List Contains : " + op.groupArrayList);
         if(!this.groupList.isSelectionEmpty()){
             switch(this.lastSelected){
                 case "APKs Group":
@@ -1225,7 +1264,10 @@ public class AromaInstaller extends javax.swing.JFrame{
                 Default:
                 System.out.println("Something Went Wrong..!!");
             }
+            op.groupArrayList.remove(groupName);
             refreshGroupList(this.lastSelected);
+            System.out.println("Map After : " + op.map);
+            System.out.println("Group List Contains : " + op.groupArrayList);
         }
         else{
             JOptionPane.showMessageDialog(this, "Select Group First..!!");
@@ -1254,7 +1296,7 @@ public class AromaInstaller extends javax.swing.JFrame{
     
     public void updateFileList(){
         try{
-            if(op.keyExistInMap(this.groupList.getSelectedValue().toString(), op.map)){
+            if(op.map.containsKey(this.groupList.getSelectedValue().toString())){
             System.out.println("Working!!" );
             fileModel.removeAllElements();
             op.updateFileListWithSelectedGroupList(groupList.getSelectedValue().toString(), fileModel, op.map);
