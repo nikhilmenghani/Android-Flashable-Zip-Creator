@@ -1,0 +1,54 @@
+fontresload("0", "ttf/Roboto-Regular.ttf", "12");
+fontresload("1", "ttf/Roboto-Regular.ttf", "18");
+theme("miui4");
+checkbox("App List","Choose the apps to be installed to data","@personalize","app_choices.prop",
+"ASD", "", 2,
+"AlloyUIBlue1.1_2", "", 0,
+"BrothersInArms®2Free+_v1.1.8", "", 0,
+"CTW5 v3.2.0 apkmania.com", "", 0,
+"Chrome_18.0.1025308", "", 0,
+"Dolphin_Browser_HD_8.6.1", "", 0,
+"ES_File_Explorer_File_Manager_1.6.1.9", "", 0,
+"ADF", "", 2,
+"AirDroid_1.1.0", "", 0,
+"Analytics_1.1.7", "", 0,
+"App Lock_1.61", "", 0,
+"Appy Geek_2.4.0", "", 0);
+checkbox("Ringtone List","Choose Ringtones to include in Rom","@personalize","ringtone_choices.prop",
+"Ring", "", 2,
+"[Songs.PK] Student Of The Year - 02 - Radha", "", 0,
+"[Songs.PK] Student Of The Year - 03 - Ishq Wala Love", "", 0,
+"[Songs.PK] Zila Ghaziabad - 04 - Tu Hai Rab Mera", "", 0,
+"_Instrumental_Wedding_Songs_-_Piano_-_First_Love", "", 0);
+checkbox("Notification tone List","Choose Notification Tones to include in Rom","@personalize","notification_choices.prop",
+"Notif", "", 2,
+"01 - Ek Tha Tiger - Mashallah [DM]", "", 0,
+"01 - Oh My God - Go Go Govinda [DM]", "", 0);
+setvar("installer_title","You are about to install the following:");
+appendvar("installer_title","\n\n");
+appendvar("installer_title",iif(prop("app_choices.prop","item.1.1")=="1","AlloyUIBlue1.1_2",""));
+appendvar("installer_title",iif(prop("app_choices.prop","item.1.2")=="1","BrothersInArms®2Free+_v1.1.8",""));
+appendvar("installer_title",iif(prop("app_choices.prop","item.1.3")=="1","CTW5 v3.2.0 apkmania.com",""));
+appendvar("installer_title",iif(prop("app_choices.prop","item.1.4")=="1","Chrome_18.0.1025308",""));
+appendvar("installer_title",iif(prop("app_choices.prop","item.1.5")=="1","Dolphin_Browser_HD_8.6.1",""));
+appendvar("installer_title",iif(prop("app_choices.prop","item.1.6")=="1","ES_File_Explorer_File_Manager_1.6.1.9",""));
+appendvar("installer_title",iif(prop("app_choices.prop","item.2.1")=="1","AirDroid_1.1.0",""));
+appendvar("installer_title",iif(prop("app_choices.prop","item.2.2")=="1","Analytics_1.1.7",""));
+appendvar("installer_title",iif(prop("app_choices.prop","item.2.3")=="1","App Lock_1.61",""));
+appendvar("installer_title",iif(prop("app_choices.prop","item.2.4")=="1","Appy Geek_2.4.0",""));
+appendvar("installer_title",iif(prop("ringtone_choices.prop","item.3.1")=="1","[Songs.PK] Student Of The Year - 02 - Radha",""));
+appendvar("installer_title",iif(prop("ringtone_choices.prop","item.3.2")=="1","[Songs.PK] Student Of The Year - 03 - Ishq Wala Love",""));
+appendvar("installer_title",iif(prop("ringtone_choices.prop","item.3.3")=="1","[Songs.PK] Zila Ghaziabad - 04 - Tu Hai Rab Mera",""));
+appendvar("installer_title",iif(prop("ringtone_choices.prop","item.3.4")=="1","_Instrumental_Wedding_Songs_-_Piano_-_First_Love",""));
+appendvar("installer_title",iif(prop("notification_choices.prop","item.3.1")=="1","01 - Ek Tha Tiger - Mashallah [DM]",""));
+appendvar("installer_title",iif(prop("notification_choices.prop","item.3.2")=="1","01 - Oh My God - Go Go Govinda [DM]",""));
+writetmpfile("app_choices.prop",readtmpfile("app_choices.prop"));
+writetmpfile("system_app_choices.prop",readtmpfile("system_app_choices.prop"));
+writetmpfile("boot_anim_choices.prop",readtmpfile("boot_anim_choices.prop"));
+writetmpfile("kernel_choices.prop",readtmpfile("kernel_choices.prop"));
+writetmpfile("ringtone_choices.prop",readtmpfile("ringtone_choices.prop"));
+writetmpfile("notification_choices.prop",readtmpfile("notification_choices.prop"));
+writetmpfile("delete_choices.prop",readtmpfile("delete_choices.prop"));
+if confirm("Installing",getvar("installer_title") + "\n\nStart Installation?", "@confirm")=="no" then back(1);
+endif;
+install("Installing", "Your selected files are being installed. Please Wait...", "@install");

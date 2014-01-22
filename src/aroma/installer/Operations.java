@@ -21,12 +21,13 @@ import java.util.Map;
 import java.util.Set;
 import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
-import org.apache.commons.collections.map.MultiValueMap;
+import org.apache.commons.collections4.map.MultiValueMap;
 
 /**
  *
@@ -514,4 +515,44 @@ public class Operations {
         this.jarFileList.add("META-INF/com/google/android/aroma/ttf/Roboto-Regular.ttf");
         return this.jarFileList;
     }
+    
+    //The following function will extract the whole zip file and return a multivaluemap which contains Group Name as a key and file name as its values
+    public MultiValueMap extractZip (String source) throws IOException{ 
+        byte[] buffer = new byte[1024];
+        MultiValueMap mvm = new MultiValueMap();
+        try{
+            File folder = new File("Temp");
+            if(!folder.exists()){
+                folder.mkdir();
+            }
+            ZipInputStream zis = new ZipInputStream(new FileInputStream(source));
+            ZipEntry ze = zis.getNextEntry();
+            while(ze!=null){
+                String fileName = ze.getName();
+                File newFile = new File("Temp" + File.separator + fileName);
+                String filePath = ze.getName();
+                System.out.println(filePath);
+                if(filePath.startsWith("customize")){
+                    String temp = filePath.replace("customize/", "");
+                    String splitName[] = temp.split("/");
+                    mvm.put(splitName[0], splitName[2]);
+                }
+                new File(newFile.getParent()).mkdirs();
+                FileOutputStream fos = new FileOutputStream(newFile);             
+                int len;
+                while ((len = zis.read(buffer)) > 0) {
+                    fos.write(buffer, 0, len);
+                }
+                fos.close();   
+                ze = zis.getNextEntry();
+            }
+            zis.closeEntry();
+            zis.close();
+            System.out.println("Done");
+        }catch(IOException ex){
+            ex.printStackTrace(); 
+        }
+        return mvm;
+    }
+    
 }
