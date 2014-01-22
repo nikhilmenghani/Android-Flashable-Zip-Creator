@@ -1175,7 +1175,7 @@ public class AromaInstaller extends javax.swing.JFrame{
         if(!this.fileList.isSelectionEmpty()){
             //this.fileList.setSelectionModel(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
             
-            op.map.remove(this.groupList.getSelectedValue().toString(), op.getFilePath(this.groupList.getSelectedValue().toString(), fileName, op.map));
+            op.map.removeMapping(this.groupList.getSelectedValue().toString(), op.getFilePath(this.groupList.getSelectedValue().toString(), fileName, op.map));
             this.fileModel.removeAllElements();
             op.updateFileListWithSelectedGroupList(this.groupList.getSelectedValue().toString(), this.fileModel, op.map);
             //refreshGroupList(this.lastSelected);
