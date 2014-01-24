@@ -233,7 +233,7 @@ public class Operations {
         }
     }
     
-    public void listFilesInAromaConfig(ArrayList<String> groupType, String groupName, String propFile, int count, MultiValueMap mvm){
+    public int listFilesInAromaConfig(ArrayList<String> groupType, String groupName, String propFile, int count, MultiValueMap mvm){
         int i = 1;
             if(groupType.contains(groupName)){
                 for(String file_list: this.returnPathArray(groupName, mvm)){
@@ -242,6 +242,7 @@ public class Operations {
                 }
                 count++;
             }
+            return count;
     }
     
     public void createAromaConfigFile(){
@@ -277,19 +278,19 @@ public class Operations {
         
         for(String grouplist : groupArrayList){
             if(map.containsKey(grouplist)){
-                listFilesInAromaConfig(systemList, grouplist, "system_app_choices.prop", s, map);
+                s = listFilesInAromaConfig(systemList, grouplist, "system_app_choices.prop", s, map);
 
-                listFilesInAromaConfig(dataList, grouplist, "app_choices.prop", d, map);
+                d = listFilesInAromaConfig(dataList, grouplist, "app_choices.prop", d, map);
 
-                listFilesInAromaConfig(bootAnimList, grouplist, "boot_anim_choices.prop", ba, map);
+                ba = listFilesInAromaConfig(bootAnimList, grouplist, "boot_anim_choices.prop", ba, map);
 
-                listFilesInAromaConfig(kernelList, grouplist, "kernel_choices.prop", k, map);
+                k = listFilesInAromaConfig(kernelList, grouplist, "kernel_choices.prop", k, map);
 
-                listFilesInAromaConfig(ringtoneList, grouplist, "ringtone_choices.prop", r, map);
+                r = listFilesInAromaConfig(ringtoneList, grouplist, "ringtone_choices.prop", r, map);
 
-                listFilesInAromaConfig(notifList, grouplist, "notification_choices.prop", n, map);
+                n = listFilesInAromaConfig(notifList, grouplist, "notification_choices.prop", n, map);
 
-                listFilesInAromaConfig(deleteApkList, grouplist, "delete_choices.prop", da, map);
+                da = listFilesInAromaConfig(deleteApkList, grouplist, "delete_choices.prop", da, map);
             }
             
         }
@@ -371,11 +372,6 @@ public class Operations {
         for(String temp : list){
             String finalStr = temp.replace(listType+"_", "");
             if(!model.contains(finalStr)){
-                // i think this adds group name to group list..!! right?
-                //yeah...i added that if part, coz it was conflicting
-                // is it normal that APKs System repeats ?
-                //no...it should be there only once
-                // hmm need to see about that..
                 model.addElement(finalStr);
             }
         }
