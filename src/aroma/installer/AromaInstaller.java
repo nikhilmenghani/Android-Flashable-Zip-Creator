@@ -1107,6 +1107,7 @@ public class AromaInstaller extends javax.swing.JFrame{
 
     public void btnRemoveFileActionPerformed(java.awt.event.ActionEvent evt) {                                              
         System.out.println("Remove File Clicked..!!");
+        //this.lastSelected = evt.getActionCommand();
         try{
             removeFile(this.fileList.getSelectedValue().toString());
         }catch(NullPointerException npe){
@@ -1116,7 +1117,12 @@ public class AromaInstaller extends javax.swing.JFrame{
 
     public void btnResetAllActionPerformed(java.awt.event.ActionEvent evt) {                                            
         System.out.println("Reset All Button Clicked..");
-        resetAll();
+        try {
+            //resetAll();
+            this.updateUIwithZIPdata();
+        } catch (IOException ex) {
+            Logger.getLogger(AromaInstaller.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }                                           
 
     public void btnCreateNormalZipActionPerformed(java.awt.event.ActionEvent evt) throws IOException {                                                   
@@ -1175,11 +1181,49 @@ public class AromaInstaller extends javax.swing.JFrame{
     public void removeFile(String fileName){
         if(!this.fileList.isSelectionEmpty()){
             //this.fileList.setSelectionModel(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-            
-            op.map.removeMapping(this.groupList.getSelectedValue().toString(), op.getFilePath(this.groupList.getSelectedValue().toString(), fileName, op.map));
-            this.fileModel.removeAllElements();
-            op.updateFileListWithSelectedGroupList(this.groupList.getSelectedValue().toString(), this.fileModel, op.map);
-            //refreshGroupList(this.lastSelected);
+            switch(lastSelected){
+                case "APKs Group":
+                    if(op.map.containsKey("APKs-System_"+this.groupList.getSelectedValue().toString())){// && op.map.values().contains(fileName)){
+                        op.map.removeMapping("APKs-System_"+this.groupList.getSelectedValue().toString(), op.getFilePath("APKs-System_"+this.groupList.getSelectedValue().toString(), fileName, op.map));
+                        this.fileModel.removeAllElements();
+                        op.updateFileListWithSelectedGroupList("APKs-System_"+this.groupList.getSelectedValue().toString(), this.fileModel, op.map);                       
+                    }else{
+                        op.map.removeMapping("APKs-Data_"+this.groupList.getSelectedValue().toString(), op.getFilePath("APKs-Data_"+this.groupList.getSelectedValue().toString(), fileName, op.map));
+                        this.fileModel.removeAllElements();
+                        op.updateFileListWithSelectedGroupList("APKs-Data_"+this.groupList.getSelectedValue().toString(), this.fileModel, op.map);                       
+                    }
+                    break;
+                case "Boot Animation Group":
+                    op.map.removeMapping("BootAnimations_"+this.groupList.getSelectedValue().toString(), op.getFilePath("BootAnimations_"+this.groupList.getSelectedValue().toString(), fileName, op.map));
+                    this.fileModel.removeAllElements();
+                    op.updateFileListWithSelectedGroupList("BootAnimations_"+this.groupList.getSelectedValue().toString(), this.fileModel, op.map);
+                    break;
+                case "Ringtones Group":
+                    op.map.removeMapping("Ringtones_"+this.groupList.getSelectedValue().toString(), op.getFilePath("Ringtones_"+this.groupList.getSelectedValue().toString(), fileName, op.map));
+                    this.fileModel.removeAllElements();
+                    op.updateFileListWithSelectedGroupList("Ringtones_"+this.groupList.getSelectedValue().toString(), this.fileModel, op.map);
+                    break;
+                case "Notifications Group":
+                    op.map.removeMapping("Notifications_"+this.groupList.getSelectedValue().toString(), op.getFilePath("Notifications_"+this.groupList.getSelectedValue().toString(), fileName, op.map));
+                    this.fileModel.removeAllElements();
+                    op.updateFileListWithSelectedGroupList("Notifications_"+this.groupList.getSelectedValue().toString(), this.fileModel, op.map);
+                    break;
+                case "Kernel Group":
+                    op.map.removeMapping("Kernel_"+this.groupList.getSelectedValue().toString(), op.getFilePath("Kernel_"+this.groupList.getSelectedValue().toString(), fileName, op.map));
+                    this.fileModel.removeAllElements();
+                    op.updateFileListWithSelectedGroupList("Kernel_"+this.groupList.getSelectedValue().toString(), this.fileModel, op.map);
+                    break;
+                case "Advanced Group":
+                    op.map.removeMapping(this.groupList.getSelectedValue().toString(), op.getFilePath(this.groupList.getSelectedValue().toString(), fileName, op.map));
+                    this.fileModel.removeAllElements();
+                    op.updateFileListWithSelectedGroupList(this.groupList.getSelectedValue().toString(), this.fileModel, op.map);
+                    break;
+                case "Delete System Files Group":
+                    op.map.removeMapping(this.groupList.getSelectedValue().toString(), op.getFilePath(this.groupList.getSelectedValue().toString(), fileName, op.map));
+                    this.fileModel.removeAllElements();
+                    op.updateFileListWithSelectedGroupList(this.groupList.getSelectedValue().toString(), this.fileModel, op.map);
+                    break;
+            }
         }
         else{
             JOptionPane.showMessageDialog(this, "Select Group First..!!");
@@ -1229,30 +1273,36 @@ public class AromaInstaller extends javax.swing.JFrame{
         if(!this.groupList.isSelectionEmpty()){
             switch(this.lastSelected){
                 case "APKs Group":
-                    if(op.systemList.contains(groupName)){
-                        op.systemList.remove(groupName);
-                        op.map.remove(groupName);
+                    if(op.systemList.contains("APKs-System_"+groupName)){
+                        op.systemList.remove("APKs-System_"+groupName);
+                        op.groupArrayList.remove("APKs-System_"+groupName);
+                        op.map.remove("APKs-System_"+groupName);
                     }
-                    if(op.dataList.contains(groupName)){
-                        op.dataList.remove(groupName);
-                        op.map.remove(groupName);
+                    if(op.dataList.contains("APKs-Data_"+groupName)){
+                        op.dataList.remove("APKs-Data_"+groupName);
+                        op.groupArrayList.remove("APKs-Data_"+groupName);
+                        op.map.remove("APKs-Data_"+groupName);
                     }
                     break;
                 case "Boot Animation Group":
-                    op.bootAnimList.remove(groupName);
-                    op.map.remove(groupName);
+                    op.bootAnimList.remove("BootAnimations_"+groupName);
+                    op.groupArrayList.remove("BootAnimations_"+groupName);
+                    op.map.remove("BootAnimations_"+groupName);
                     break;
                 case "Ringtones Group":
-                    op.ringtoneList.remove(groupName);
-                    op.map.remove(groupName);
+                    op.ringtoneList.remove("Ringtones_"+groupName);
+                    op.groupArrayList.remove("Ringtones_"+groupName);
+                    op.map.remove("Ringtones_"+groupName);
                     break;
                 case "Notifications Group":
-                    op.notifList.remove(groupName);
-                    op.map.remove(groupName);
+                    op.notifList.remove("Notifications_"+groupName);
+                    op.groupArrayList.remove("Notifications_"+groupName);
+                    op.map.remove("Notifications_"+groupName);
                     break;
                 case "Kernel Group":
-                    op.kernelList.remove(groupName);
-                    op.map.remove(groupName);
+                    op.kernelList.remove("Kernel_"+groupName);
+                    op.groupArrayList.remove("Kernel_"+groupName);
+                    op.map.remove("Kernel_"+groupName);
                     break;
                 case "Advanced Group":
                     op.advancedList.remove(groupName);
@@ -1264,7 +1314,7 @@ public class AromaInstaller extends javax.swing.JFrame{
                 Default:
                 System.out.println("Something Went Wrong..!!");
             }
-            op.groupArrayList.remove(groupName);
+            //op.groupArrayList.remove(groupName);
             refreshGroupList(this.lastSelected);
             System.out.println("Map After : " + op.map);
             System.out.println("Group List Contains : " + op.groupArrayList);
@@ -1296,20 +1346,74 @@ public class AromaInstaller extends javax.swing.JFrame{
     
     public void updateFileList(){
         try{
-            if(op.map.containsKey(this.groupList.getSelectedValue().toString())){
-            System.out.println("Working!!" );
-            fileModel.removeAllElements();
-            op.updateFileListWithSelectedGroupList(groupList.getSelectedValue().toString(), fileModel, op.map);
-        }
-        else{
-            fileModel.removeAllElements();
-            System.out.println("Not Working!!");
-        }
+            switch(lastSelected){
+                case "APKs Group":
+                    if(op.groupArrayList.contains("APKs-System_"+this.groupList.getSelectedValue().toString()) && op.groupArrayList.contains("APKs-Data_"+this.groupList.getSelectedValue().toString())){
+                        //BIG FAULT HERE......NO SOLUTION AVAILABLE
+                        break;
+                    }
+                    if(op.map.containsKey("APKs-System_"+this.groupList.getSelectedValue().toString()) || op.groupArrayList.contains("APKs-System_"+this.groupList.getSelectedValue().toString())){
+                        System.out.println("Working!!" );
+                        this.fileModel.removeAllElements();
+                        op.updateFileListWithSelectedGroupList("APKs-System_"+groupList.getSelectedValue().toString(), this.fileModel, op.map);
+                    }
+                    else if(op.map.containsKey("APKs-Data_"+this.groupList.getSelectedValue().toString()) || op.groupArrayList.contains("APKs-Data_"+this.groupList.getSelectedValue().toString())){
+                        System.out.println("Working!!" );
+                        this.fileModel.removeAllElements();
+                        op.updateFileListWithSelectedGroupList("APKs-Data_"+groupList.getSelectedValue().toString(), this.fileModel, op.map); 
+                    }
+                    break;
+                case "Boot Animation Group":
+                    if(op.map.containsKey("BootAnimations_"+this.groupList.getSelectedValue().toString())){
+                        System.out.println("Working!!" );
+                        fileModel.removeAllElements();
+                        op.updateFileListWithSelectedGroupList("BootAnimations_"+groupList.getSelectedValue().toString(), fileModel, op.map);
+                    }
+                    break;
+                case "Ringtones Group":
+                    if(op.map.containsKey("Ringtones_"+this.groupList.getSelectedValue().toString())){
+                        System.out.println("Working!!" );
+                        fileModel.removeAllElements();
+                        op.updateFileListWithSelectedGroupList("Ringtones_"+groupList.getSelectedValue().toString(), fileModel, op.map);
+                    }
+                    break;
+                case "Notifications Group":
+                    if(op.map.containsKey("Notifications_"+this.groupList.getSelectedValue().toString())){
+                        System.out.println("Working!!" );
+                        fileModel.removeAllElements();
+                        op.updateFileListWithSelectedGroupList("Notifications_"+groupList.getSelectedValue().toString(), fileModel, op.map);
+                    }
+                    break;
+                case "Kernel Group":
+                    if(op.map.containsKey("Kernel_"+this.groupList.getSelectedValue().toString())){
+                        System.out.println("Working!!" );
+                        fileModel.removeAllElements();
+                        op.updateFileListWithSelectedGroupList("Kernel_"+groupList.getSelectedValue().toString(), fileModel, op.map);
+                    }
+                    break;
+                case "Advanced Group":
+                    if(op.map.containsKey("Advanced_"+this.groupList.getSelectedValue().toString())){
+                        System.out.println("Working!!" );
+                        fileModel.removeAllElements();
+                        op.updateFileListWithSelectedGroupList("Advanced_"+groupList.getSelectedValue().toString(), fileModel, op.map);
+                    }
+                    break;
+                case "Delete System Files Group":
+                    if(op.map.containsKey("DeleteApk_"+this.groupList.getSelectedValue().toString())){
+                        System.out.println("Working!!" );
+                        fileModel.removeAllElements();
+                        op.updateFileListWithSelectedGroupList("DeleteApk_"+groupList.getSelectedValue().toString(), fileModel, op.map);
+                    }
+                Default:
+                    System.out.println("in Default....");
+                    fileModel.removeAllElements();
+                    System.out.println("Not Working!!");
+            }
         }catch(NullPointerException npe){
             System.out.println("Exception Caught in updateFileList");
+            //npe.printStackTrace();
             fileModel.removeAllElements();
         }
-        
     }
     
     public void chooseFile(String lastSelected){
@@ -1324,32 +1428,37 @@ public class AromaInstaller extends javax.swing.JFrame{
             case "APKs Group":
                 filter = new FileNameExtensionFilter(".apk", "apk");
                 fileChooser.addChoosableFileFilter(filter);
-                op.filterFile(fileChooser, btnAddFile, groupList, fileModel);
-                System.out.println("Map contains : " + op.map);
+                if(op.groupArrayList.contains("APKs-System_"+groupList.getSelectedValue().toString())){
+                    op.filterFile(fileChooser, btnAddFile, groupList, fileModel, "APKs-System");
+                    System.out.println("Map contains : " + op.map);
+                }else{
+                    op.filterFile(fileChooser, btnAddFile, groupList, fileModel, "APKs-Data");
+                    System.out.println("Map contains : " + op.map);
+                }
                 break;
             case "Boot Animation Group":
                 filter = new FileNameExtensionFilter(".zip", "zip");
                 fileChooser.addChoosableFileFilter(filter);
-                op.filterFile(fileChooser, btnAddFile, groupList, fileModel);
+                op.filterFile(fileChooser, btnAddFile, groupList, fileModel, "BootAnimations");
                 System.out.println("Aroma Map contains : " + op.map);
                 break;
             case "Ringtones Group":
                 //filter = new FileNameExtensionFilter(".apk", "apk");
                 fileChooser.addChoosableFileFilter(new AudioFilter());
-                op.filterFile(fileChooser, btnAddFile, groupList, fileModel);
+                op.filterFile(fileChooser, btnAddFile, groupList, fileModel, "Ringtones");
                 System.out.println("Aroma Map contains : " + op.map);
                 break;
             case "Notifications Group":
                 //filter = new FileNameExtensionFilter(".apk", "apk");
                 //fileChooser.addChoosableFileFilter(filter);
                 fileChooser.addChoosableFileFilter(new AudioFilter());
-                op.filterFile(fileChooser, btnAddFile, groupList, fileModel);
+                op.filterFile(fileChooser, btnAddFile, groupList, fileModel, "Notifications");
                 System.out.println("Aroma Map contains : " + op.map);
                 break;
             case "Kernel Group":
                 filter = new FileNameExtensionFilter(".img", "img");
                 fileChooser.addChoosableFileFilter(filter);
-                op.filterFile(fileChooser, btnAddFile, groupList, fileModel);
+                op.filterFile(fileChooser, btnAddFile, groupList, fileModel, "Kernel");
                 System.out.println("Aroma Map contains : " + op.map);
                 break;
             case "Advanced Group":
@@ -1366,60 +1475,100 @@ public class AromaInstaller extends javax.swing.JFrame{
     
     public void updateGroupList(String lastSelected){
         if(!this.groupName.getText().equals("")){
-            if(!op.groupArrayList.contains(this.groupName)){
-                op.groupArrayList.add(this.groupName.getText());
                 switch(lastSelected){
                     case "APKs Group":
-                        if(this.buttonGroup.getSelection().getActionCommand().equals("Add System Apk Group")){
-                            op.systemList.add(this.groupName.getText());
+                        if(op.groupArrayList.contains("APKs-System_"+this.groupName.getText()) || op.groupArrayList.contains("APKs-Data_"+this.groupName.getText())){
+                            JOptionPane.showMessageDialog(null, "Group Name Already Exists..!!");
+                            break;
                         }
-                        else{
-                            op.dataList.add(this.groupName.getText());
+                        else if(this.buttonGroup.getSelection().getActionCommand().equals("Add System Apk Group")){ //&& !op.groupArrayList.contains("APKs-System_"+this.groupName.getText())
+                            op.groupArrayList.add("APKs-System_"+this.groupName.getText());
+                            System.out.println(op.groupArrayList.toString());
+                            op.systemList.add("APKs-System_"+this.groupName.getText());
+                            groupModel.addElement(this.groupName.getText());
+                            groupList.setSelectedIndex(groupModel.getSize()-1);
+                            frame.dispose();
+                            break;
                         }
-                        groupModel.addElement(this.groupName.getText());
-                        groupList.setSelectedIndex(groupModel.getSize()-1);
-                        break;
+                        else if(!this.buttonGroup.getSelection().getActionCommand().equals("Add System Apk Group") ){//&& !op.groupArrayList.contains("APKs-Data_"+this.groupName.getText())){
+                            op.groupArrayList.add("APKs-Data_"+this.groupName.getText());
+                            System.out.println(op.groupArrayList.toString());
+                            op.dataList.add("APKs-Data_"+this.groupName.getText());
+                            groupModel.addElement(this.groupName.getText());
+                            groupList.setSelectedIndex(groupModel.getSize()-1);
+                            frame.dispose();
+                            break;
+                        }else{
+                            JOptionPane.showMessageDialog(null, "Group Name Already Exists..!!");
+                            break;
+                        }
                     case "Boot Animation Group":
-                        op.bootAnimList.add(this.groupName.getText());
-                        groupModel.addElement(this.groupName.getText());
-                        groupList.setSelectedIndex(groupModel.getSize()-1);
-                        break;
+                        if(!op.groupArrayList.contains("BootAnimations_"+this.groupName.getText())){
+                            op.groupArrayList.add("BootAnimations_"+this.groupName.getText());
+                            System.out.println(op.groupArrayList.toString());
+                            op.bootAnimList.add("BootAnimations_"+this.groupName.getText());
+                            groupModel.addElement(this.groupName.getText());
+                            groupList.setSelectedIndex(groupModel.getSize()-1);
+                            frame.dispose();
+                            break;
+                        }else{
+                            JOptionPane.showMessageDialog(null, "Group Name Already Exists..!!");
+                            break;
+                        }
+                        
                     case "Ringtones Group":
-                        op.ringtoneList.add(this.groupName.getText());
-                        groupModel.addElement(this.groupName.getText());
-                        groupList.setSelectedIndex(groupModel.getSize()-1);
-                        break;
+                        if(!op.groupArrayList.contains("Ringtones_"+this.groupName.getText())){
+                            op.groupArrayList.add("Ringtones_"+this.groupName.getText());
+                            System.out.println(op.groupArrayList.toString());
+                            op.ringtoneList.add("Ringtones_"+this.groupName.getText());
+                            groupModel.addElement(this.groupName.getText());
+                            groupList.setSelectedIndex(groupModel.getSize()-1);
+                            frame.dispose();
+                            break; 
+                        }else{
+                            JOptionPane.showMessageDialog(null, "Group Name Already Exists..!!");
+                            break;
+                        }
                     case "Notifications Group":
-                        op.notifList.add(this.groupName.getText());
-                        groupModel.addElement(this.groupName.getText());
-                        groupList.setSelectedIndex(groupModel.getSize()-1);
-                        break;
+                        if(!op.groupArrayList.contains("Notifications_"+this.groupName.getText())){
+                            op.groupArrayList.add("Notifications_"+this.groupName.getText());
+                            System.out.println(op.groupArrayList.toString());
+                            op.notifList.add("Notifications_"+this.groupName.getText());
+                            groupModel.addElement(this.groupName.getText());
+                            groupList.setSelectedIndex(groupModel.getSize()-1);
+                            frame.dispose();
+                            break;
+                        }else{
+                            JOptionPane.showMessageDialog(null, "Group Name Already Exists..!!");
+                            break;
+                        }   
                     case "Kernel Group":
-                        op.kernelList.add(this.groupName.getText());
-                        groupModel.addElement(this.groupName.getText());
-                        groupList.setSelectedIndex(groupModel.getSize()-1);
-                        break;
+                        if(!op.groupArrayList.contains("Kernel_"+this.groupName.getText())){
+                            op.groupArrayList.add("Kernel_"+this.groupName.getText());
+                            System.out.println(op.groupArrayList.toString());
+                            op.kernelList.add("Kernel_"+this.groupName.getText());
+                            groupModel.addElement(this.groupName.getText());
+                            groupList.setSelectedIndex(groupModel.getSize()-1);
+                            frame.dispose();
+                            break;
+                        }else{
+                            JOptionPane.showMessageDialog(null, "Group Name Already Exists..!!");
+                            break;
+                        }
                     case "Advanced Group":
                         op.advancedList.add(this.groupName.getText());
                         groupModel.addElement(this.groupName.getText());
                         groupList.setSelectedIndex(groupModel.getSize()-1);
+                        frame.dispose();
                         break;
                     case "Delete System Files Group":
                         op.deleteApkList.add(this.groupName.getText());
                         groupModel.addElement(this.groupName.getText());
                         groupList.setSelectedIndex(groupModel.getSize()-1);
-//                        op.deleteApkList.add(this.groupName.getText());
-//                        System.out.println("Button Group Added in : " + op.lastActionCommand);
+                        frame.dispose();
                         Default:
                         System.out.println("Something Went Wrong..!!");
                 }
-                
-
-            //This will close/dispose current dialogbox..
-                frame.dispose();
-            }else{
-                JOptionPane.showMessageDialog(null, "Group Name Already Exists..!!");
-            }
         }else{
             JOptionPane.showMessageDialog(null, "You Cannot Continue Without Setting Group Name..!!");
         }
@@ -1433,41 +1582,41 @@ public class AromaInstaller extends javax.swing.JFrame{
                 switch(lastSelected){
                     case "APKs Group":
                         if(!op.systemList.isEmpty()){
-                            op.fillListModelWithArrayList(groupModel, op.systemList);
+                            op.fillListModelWithArrayList(groupModel, op.systemList, "APKs-System");
                         }
                         if(!op.dataList.isEmpty()){
-                            op.fillListModelWithArrayList(groupModel, op.dataList);
+                            op.fillListModelWithArrayList(groupModel, op.dataList, "APKs-Data");
                         }
                         groupList.setSelectedIndex(0);
-                        System.out.println("Button Group is : " + this.buttonGroup.getSelection().getActionCommand());
+                        //System.out.println("Button Group is : " + this.buttonGroup.getSelection().getActionCommand());
                         break;
                     case "Boot Animation Group":
-                        op.fillListModelWithArrayList(groupModel, op.bootAnimList);
+                        op.fillListModelWithArrayList(groupModel, op.bootAnimList, "BootAnimations");
                         groupList.setSelectedIndex(0);
                         System.out.println("Button Group Added in : " + op.bootAnimList);
                         break;
                     case "Ringtones Group":
-                        op.fillListModelWithArrayList(groupModel, op.ringtoneList);
+                        op.fillListModelWithArrayList(groupModel, op.ringtoneList, "Ringtones");
                         groupList.setSelectedIndex(0);
                         System.out.println("Button Group Added in : " + op.ringtoneList);
                         break;
                     case "Notifications Group":
-                        op.fillListModelWithArrayList(groupModel, op.notifList);
+                        op.fillListModelWithArrayList(groupModel, op.notifList, "Notifications");
                         groupList.setSelectedIndex(0);
                         System.out.println("Button Group Added in : " + op.lastActionCommand);
                         break;
                     case "Kernel Group":
-                        op.fillListModelWithArrayList(groupModel, op.kernelList);
+                        op.fillListModelWithArrayList(groupModel, op.kernelList, "Kernel");
                         groupList.setSelectedIndex(0);
                         System.out.println("Button Group Added in : " + op.lastActionCommand);
                         break;
                     case "Advanced Group":
-                        op.fillListModelWithArrayList(groupModel, op.advancedList);
+                        op.fillListModelWithArrayList(groupModel, op.advancedList, "Advanced");
                         groupList.setSelectedIndex(0);
                         System.out.println("Button Group Added in : " + op.lastActionCommand);
                         break;
                     case "Delete System Files Group":
-                        op.fillListModelWithArrayList(groupModel, op.deleteApkList);
+                        op.fillListModelWithArrayList(groupModel, op.deleteApkList, "DeleteSystemApk");
                         groupList.setSelectedIndex(0);
                         System.out.println("Button Group Added in : " + op.lastActionCommand);
 //                        op.deleteApkList.add(this.groupName.getText());
@@ -1478,10 +1627,11 @@ public class AromaInstaller extends javax.swing.JFrame{
                 
 
                 //This will close/dispose current dialogbox..
-                frame.dispose();
+                //frame.dispose();
             
         }catch(NullPointerException npe){
             System.out.println("Exception caught in refreshGroupList");
+            npe.printStackTrace();
         }   
     }
     
@@ -1540,6 +1690,39 @@ public class AromaInstaller extends javax.swing.JFrame{
         
     }
     
+    public void updateUIwithZIPdata() throws IOException{
+        MultiValueMap mvm  = op.extractTheZip("C:\\Users\\Rajat\\Desktop\\FinalTest.zip");
+        System.out.println("Map Before : "+op.map);
+        //op.map.clear(); //For Temporary Use Only
+        groupModel.clear();
+        op.map.putAll(mvm);       
+        //op.groupArrayList.clear(); //For Temporary Use Only
+        op.groupArrayList.addAll(op.getGroupListFromMVM(mvm));
+        System.out.println("Updated GroupList : "+op.groupArrayList);
+        System.out.println("Updated Map : "+op.map);
+        for(String element:op.groupArrayList){
+            String[] temp = element.split("_");
+            switch(temp[0]){
+                case "APKs-System":
+                    op.systemList.add(element);
+                    break;
+                case "APKs-Data":
+                    op.dataList.add(element);
+                    break;
+                case "BootAnimations":
+                    op.bootAnimList.add(element);
+                    break;
+                case "Ringtones":
+                    op.ringtoneList.add(element);
+                    break;
+                case "Notifications":
+                    op.notifList.add(element);
+                    break;
+            }
+        }
+        this.refreshGroupList(this.lastSelected);
+        op.updateFileListWithSelectedGroupList(this.lastSelected, fileModel, mvm);
+    }
     /**
      * @param args the command line arguments
      */
