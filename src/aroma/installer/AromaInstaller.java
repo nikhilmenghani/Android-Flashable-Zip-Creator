@@ -1691,12 +1691,10 @@ public class AromaInstaller extends javax.swing.JFrame{
     }
     
     public void updateUIwithZIPdata() throws IOException{
-        MultiValueMap mvm  = op.extractTheZip("C:\\Users\\Rajat\\Desktop\\FinalTest.zip");
+        MultiValueMap mvm  = op.extractTheZip("C:\\Users\\Rajat\\Desktop\\testMe.zip");
         System.out.println("Map Before : "+op.map);
-        //op.map.clear(); //For Temporary Use Only
         groupModel.clear();
         op.map.putAll(mvm);       
-        //op.groupArrayList.clear(); //For Temporary Use Only
         op.groupArrayList.addAll(op.getGroupListFromMVM(mvm));
         System.out.println("Updated GroupList : "+op.groupArrayList);
         System.out.println("Updated Map : "+op.map);
@@ -1720,8 +1718,7 @@ public class AromaInstaller extends javax.swing.JFrame{
                     break;
             }
         }
-        this.refreshGroupList(this.lastSelected);
-        op.updateFileListWithSelectedGroupList(this.lastSelected, fileModel, mvm);
+        this.refreshGroupList("APKs Group");
     }
     /**
      * @param args the command line arguments
