@@ -1026,7 +1026,33 @@ public class AromaInstaller extends javax.swing.JFrame{
     }                                                   
 
     public void btnLoadAromaFlashableZipActionPerformed(java.awt.event.ActionEvent evt) {                                                         
-        System.out.println();
+        System.out.println("Load Flashable Zip Clicked..!!");
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        fileChooser.setMultiSelectionEnabled(false);
+        fileChooser.removeChoosableFileFilter(fileChooser.getFileFilter());
+        FileFilter filter = new FileNameExtensionFilter(".zip", "zip");
+        fileChooser.addChoosableFileFilter(filter);
+        int returnVal = fileChooser.showOpenDialog(btnLoadAromaFlashableZip);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            File file = fileChooser.getSelectedFile();
+            System.out.println("Existing Zip File Location : " + file.getAbsolutePath());
+            if(file.isDirectory()){
+                JOptionPane.showMessageDialog(this, "Invalid File Type..!!\n Try Again..!!");
+            }
+            else{
+                op.existingZipPath = file.getAbsolutePath();
+//                op.tempFolderPath = file.getParent() + "\\temp$$folder";
+//                System.out.println("Temp Folder Path : " + op.tempFolderPath);
+                try {
+                    this.updateUIwithZIPdata();
+                } catch (IOException ex) {
+                    Logger.getLogger(AromaInstaller.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        } else {
+            System.out.println("File access cancelled by user.");
+        }
     }                                                        
 
     public void btnSelectDeviceActionPerformed(java.awt.event.ActionEvent evt) {                                                
@@ -1036,6 +1062,7 @@ public class AromaInstaller extends javax.swing.JFrame{
 
     public void btnAddGroupActionPerformed(java.awt.event.ActionEvent evt) {
         System.out.println(this.lastSelected + " Clicked Add Group");
+        //op.getJarFileName();
         displayAddGroupUI(lastSelected);
     }                                           
 
@@ -1117,12 +1144,8 @@ public class AromaInstaller extends javax.swing.JFrame{
 
     public void btnResetAllActionPerformed(java.awt.event.ActionEvent evt) {                                            
         System.out.println("Reset All Button Clicked..");
-        try {
-            //resetAll();
-            this.updateUIwithZIPdata();
-        } catch (IOException ex) {
-            Logger.getLogger(AromaInstaller.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        resetAll();
+        
     }                                           
 
     public void btnCreateNormalZipActionPerformed(java.awt.event.ActionEvent evt) throws IOException {                                                   
@@ -1691,7 +1714,7 @@ public class AromaInstaller extends javax.swing.JFrame{
     }
     
     public void updateUIwithZIPdata() throws IOException{
-        MultiValueMap mvm  = op.extractTheZip("C:\\Users\\Rajat\\Desktop\\testMe.zip");
+        MultiValueMap mvm  = op.extractTheZip(op.existingZipPath);
         System.out.println("Map Before : "+op.map);
         groupModel.clear();
         op.map.putAll(mvm);       
@@ -1719,8 +1742,12 @@ public class AromaInstaller extends javax.swing.JFrame{
             }
         }
         this.refreshGroupList("APKs Group");
+        //this.refreshGroupList(this.lastSelected);
+        //op.updateFileListWithSelectedGroupList(this.lastSelected, fileModel, mvm);
     }
-    
+    /**
+     * @param args the command line arguments
+     */
     public static void main(String[] args) {
         
         try {

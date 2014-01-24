@@ -14,6 +14,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Iterator;
@@ -43,6 +44,7 @@ public class Operations {
     String updater_script = "";
     String flashableZipType = "";
     String jarFileName = "";
+    String existingZipPath = "";
     
     ArrayList<String> CSDArrayList;
     ArrayList<String> groupArrayList = new ArrayList<>();
@@ -155,13 +157,16 @@ public class Operations {
         System.out.println("Folder successfully compressed");
     }
     
-    public void getJarFileName(){
-        //Yet to define.. here jar file name will be returned so that if user renames source jar file, we dont get exception..
+    public String getJarFileName(){
+        String path[] = this.getClass().getResource("utils/mount").getPath().split("!");
+        String fileName = path[0].substring(path[0].lastIndexOf("/") + 1, path[0].length());
+        //JOptionPane.showMessageDialog(null, fileName);
+        return fileName;
     }
     
     public ArrayList<String> getJarFileList(){
         try{
-            JarFile jarFile = new JarFile("Aroma-Installer.jar");
+            JarFile jarFile = new JarFile(getJarFileName());
             for(Enumeration em = jarFile.entries(); em.hasMoreElements();) {
                 String s= em.nextElement().toString();
                 if(s.startsWith("aroma/installer/META-INF/")){
@@ -366,6 +371,11 @@ public class Operations {
         for(String temp : list){
             String finalStr = temp.replace(listType+"_", "");
             if(!model.contains(finalStr)){
+                // i think this adds group name to group list..!! right?
+                //yeah...i added that if part, coz it was conflicting
+                // is it normal that APKs System repeats ?
+                //no...it should be there only once
+                // hmm need to see about that..
                 model.addElement(finalStr);
             }
         }
