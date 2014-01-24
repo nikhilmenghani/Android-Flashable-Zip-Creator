@@ -1163,6 +1163,7 @@ public class AromaInstaller extends javax.swing.JFrame{
             op.flashableZipType = evt.getActionCommand();
             op.createZipAt(op.zipDestination);
             JOptionPane.showMessageDialog(this, "Zip File Successfully Created..!! Enjoy..!!");
+            op.deleteDirectories("Temp");
         }
     }
     
