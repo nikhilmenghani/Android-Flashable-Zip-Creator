@@ -1411,7 +1411,7 @@ public class AromaInstaller extends javax.swing.JFrame{
             }
         }catch(NullPointerException npe){
             System.out.println("Exception Caught in updateFileList");
-            npe.printStackTrace();
+            //npe.printStackTrace();
             fileModel.removeAllElements();
         }
     }
@@ -1591,7 +1591,6 @@ public class AromaInstaller extends javax.swing.JFrame{
                         //System.out.println("Button Group is : " + this.buttonGroup.getSelection().getActionCommand());
                         break;
                     case "Boot Animation Group":
-                        groupModel.clear();
                         op.fillListModelWithArrayList(groupModel, op.bootAnimList, "BootAnimations");
                         groupList.setSelectedIndex(0);
                         System.out.println("Button Group Added in : " + op.bootAnimList);
@@ -1693,9 +1692,11 @@ public class AromaInstaller extends javax.swing.JFrame{
     
     public void updateUIwithZIPdata() throws IOException{
         MultiValueMap mvm  = op.extractTheZip("C:\\Users\\Rajat\\Desktop\\FinalTest.zip");
-//        this.updateGroupList("APKs Group");
         System.out.println("Map Before : "+op.map);
-        op.map.putAll(mvm);
+        //op.map.clear(); //For Temporary Use Only
+        groupModel.clear();
+        op.map.putAll(mvm);       
+        //op.groupArrayList.clear(); //For Temporary Use Only
         op.groupArrayList.addAll(op.getGroupListFromMVM(mvm));
         System.out.println("Updated GroupList : "+op.groupArrayList);
         System.out.println("Updated Map : "+op.map);

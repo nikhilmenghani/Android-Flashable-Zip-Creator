@@ -365,7 +365,9 @@ public class Operations {
     public void fillListModelWithArrayList(DefaultListModel model, ArrayList<String> list, String listType){
         for(String temp : list){
             String finalStr = temp.replace(listType+"_", "");
-            model.addElement(finalStr);
+            if(!model.contains(finalStr)){
+                model.addElement(finalStr);
+            }
         }
     }
     
