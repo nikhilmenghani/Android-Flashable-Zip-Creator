@@ -429,57 +429,6 @@ public class Operations {
     
     //The following function will extract the whole zip file and return a multivaluemap which contains Group Name as a key and file name as its values
     public MultiValueMap extractTheZip (String source) throws IOException{ 
-//        byte[] buffer = new byte[1024];
-//        MultiValueMap mvm = new MultiValueMap();
-//        try{
-//            File folder = new File("Temp");
-//            if(!folder.exists()){
-//                folder.mkdir();
-//            }
-//            ZipInputStream zis = new ZipInputStream(new FileInputStream(source));
-//            ZipEntry ze = zis.getNextEntry();
-//            while(ze!=null){
-//                String fileName = ze.getName();
-//                File newFile = new File("Temp" + File.separator + fileName);
-//                String filePath = ze.getName();
-//                System.out.println(filePath);
-//                if(filePath.startsWith("customize/")){
-//                    String temp = filePath.replace("customize/", "");
-//                    String splitName[] = temp.split("/");
-//                    switch (splitName[0]){
-//                        case "APKs-System":
-//                            mvm.put("APKs-System_"+splitName[1],splitName[2]);
-//                            break;
-//                        case "APKs-Data":
-//                            mvm.put("APKsData_"+splitName[1],splitName[2]);
-//                            break;
-//                        case "Ringtones":
-//                            mvm.put("Ringtones_"+splitName[1],splitName[2]);
-//                            break;
-//                        case "Notifications":
-//                            mvm.put("Notifications_"+splitName[1],splitName[2]);
-//                            break;
-//                        case "BootAnimations":
-//                            mvm.put("BootAnimations_"+splitName[1],splitName[2]);
-//                            break;
-//                    }
-//                }
-//                new File(newFile.getParent()).mkdirs();
-//                FileOutputStream fos = new FileOutputStream(newFile);             
-//                int len;
-//                while ((len = zis.read(buffer)) > 0) {
-//                    fos.write(buffer, 0, len);
-//                }
-//                fos.close();   
-//                ze = zis.getNextEntry();
-//            }
-//            zis.closeEntry();
-//            zis.close();
-//            System.out.println("Done");
-//        }catch(IOException ex){
-//            ex.printStackTrace(); 
-//        }
-//        return mvm;
         byte[] buffer = new byte[1024];
         MultiValueMap mvm = new MultiValueMap();
         try{
@@ -506,19 +455,19 @@ public class Operations {
                     String splitName[] = temp.split("/");
                     switch (splitName[0]){
                         case "APKs-System":
-                            mvm.put("APKs-System_"+splitName[1],newFile.getAbsolutePath());
+                            mvm.put(splitName[1],newFile.getAbsolutePath());
                             break;
                         case "APKs-Data":
-                            mvm.put("APKs-Data_"+splitName[1],newFile.getAbsolutePath());
+                            mvm.put(splitName[1],newFile.getAbsolutePath());
                             break;
                         case "Ringtones":
-                            mvm.put("Ringtones_"+splitName[1],newFile.getAbsolutePath());
+                            mvm.put(splitName[1],newFile.getAbsolutePath());
                             break;
                         case "Notifications":
-                            mvm.put("Notifications_"+splitName[1],newFile.getAbsolutePath());
+                            mvm.put(splitName[1],newFile.getAbsolutePath());
                             break;
                         case "BootAnimations":
-                            mvm.put("BootAnimations_"+splitName[1],newFile.getAbsolutePath());
+                            mvm.put(splitName[1],newFile.getAbsolutePath());
                             break;
                     }
                 }
