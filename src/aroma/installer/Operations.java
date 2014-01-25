@@ -498,6 +498,42 @@ public class Operations {
         }
         return arrayList;
     }
+    
+    public void deleteDirectories(String location){
+        File directory = new File(location);
+        if(!directory.exists()){
+            JOptionPane.showMessageDialog(null, "Directory does not exist!!");
+        }
+        else{
+            this.delete(directory);
+        }
+    }
+    
+    public void delete(File file){
+        if(file.isDirectory()){
+            if(file.list().length == 0){
+                file.delete();
+                System.out.println("Directory Deleted.. " + file.getAbsolutePath());
+            }
+            else{
+                String files[] = file.list();
+                
+                for(String temp : files){
+                    File fileDelete = new File(file, temp);
+                    delete(fileDelete);
+                }
+                
+                if(file.list().length == 0){
+                    file.delete();
+                    System.out.println("Directory is deleted : " + file.getAbsolutePath());
+                }
+            }
+        }
+        else{
+            file.delete();
+            System.out.println("File is deleted : " + file.getAbsolutePath());
+        }
+    }
     //This function will not be needed once final product is ready.
     
     public ArrayList<String> jarFileList() throws IOException{
