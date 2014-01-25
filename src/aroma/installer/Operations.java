@@ -91,73 +91,73 @@ public class Operations {
         return "";
     }
     
-    public void createZipAt(String destination) throws IOException{
-        File fileDest = new File(destination);
-        System.out.println("Entered Create Zip");
-        if(!fileDest.exists()){
-            fileDest.createNewFile();
-            System.out.println("File Created");
-        }
-        InputStream in;
-        OutputStream out;
-        out = new FileOutputStream(fileDest);
-        ZipOutputStream zos = new ZipOutputStream(out);
-        System.out.println("Output To : " + destination);
-        
-        //Write Apk, Zip, etc files to ZIP..
-        
-        for(String groupName: this.groupArrayList){
-            System.out.println("Now Group under consideration is : " + groupName);
-            if(map.containsKey(groupName)){
-                for(String file: returnPathArray(groupName, map)){
-                    System.out.println("Group Name : " +groupName + " File Name : " + file);
-                    in = new FileInputStream(new File(file));
-                    file = getNameFromPath(file);
-                    file = "customize/" + getListName(groupName) + "/" + groupName + "/" + file;
-                    writeFileToZip(in, zos, file);
-                }
-            }
-            else{
-                JOptionPane.showMessageDialog(null, "Removed Empty Group : " + groupName);
-            }
-        }
-        if(!this.selectedDevice.equals("")){
-            in = this.getClass().getResourceAsStream("META-INF/com/google/android/binary files/" + this.selectedDevice + "/update-binary");
-        }
-        else{
-            in = new FileInputStream(new File(this.updateBinaryPath));
-        }
-        switch(this.flashableZipType){
-            case "Create Flashable Zip With Aroma Installer":
-                writeFileToZip(in, zos, "META-INF/com/google/android/update-binary-installer");
-                for(String fileName : jarFileList()){
-                    System.out.println("File Name : " + fileName);
-                    in = this.getClass().getResourceAsStream(fileName);
-                    writeFileToZip(in, zos, fileName);
-                }
-                this.createAromaConfigFile();
-                in = new ByteArrayInputStream(this.aroma_config.getBytes());
-                writeFileToZip(in, zos, "META-INF/com/google/android/aroma-config");
-                in = this.getClass().getResourceAsStream("META-INF/com/google/android/update-binary");
-                writeFileToZip(in, zos, "META-INF/com/google/android/update-binary");
-                break;
-            case "Create Normal Flashable Zip":
-                writeFileToZip(in, zos, "META-INF/com/google/android/update-binary");
-                break;
-            default:
-                JOptionPane.showMessageDialog(null, "Something Went Wrong..!! Restart Tool and Try Again..");
-        }
-        in = this.getClass().getResourceAsStream("utils/mount");
-        writeFileToZip(in, zos, "utils/mount");
-        in = this.getClass().getResourceAsStream("utils/umount");
-        writeFileToZip(in, zos, "utils/umount");
-        this.createUpdaterScriptFile();
-        in = new ByteArrayInputStream(this.updater_script.getBytes());
-        writeFileToZip(in, zos, "META-INF/com/google/android/updater-script");
-        zos.closeEntry();
-        zos.close();
-        System.out.println("Folder successfully compressed");
-    }
+//    public void createZipAt(String destination) throws IOException{
+//        File fileDest = new File(destination);
+//        System.out.println("Entered Create Zip");
+//        if(!fileDest.exists()){
+//            fileDest.createNewFile();
+//            System.out.println("File Created");
+//        }
+//        InputStream in;
+//        OutputStream out;
+//        out = new FileOutputStream(fileDest);
+//        ZipOutputStream zos = new ZipOutputStream(out);
+//        System.out.println("Output To : " + destination);
+//        
+//        //Write Apk, Zip, etc files to ZIP..
+//        
+//        for(String groupName: this.groupArrayList){
+//            System.out.println("Now Group under consideration is : " + groupName);
+//            if(map.containsKey(groupName)){
+//                for(String file: returnPathArray(groupName, map)){
+//                    System.out.println("Group Name : " +groupName + " File Name : " + file);
+//                    in = new FileInputStream(new File(file));
+//                    file = getNameFromPath(file);
+//                    file = "customize/" + getListName(groupName) + "/" + groupName + "/" + file;
+//                    writeFileToZip(in, zos, file);
+//                }
+//            }
+//            else{
+//                JOptionPane.showMessageDialog(null, "Removed Empty Group : " + groupName);
+//            }
+//        }
+//        if(!this.selectedDevice.equals("")){
+//            in = this.getClass().getResourceAsStream("META-INF/com/google/android/binary files/" + this.selectedDevice + "/update-binary");
+//        }
+//        else{
+//            in = new FileInputStream(new File(this.updateBinaryPath));
+//        }
+//        switch(this.flashableZipType){
+//            case "Create Flashable Zip With Aroma Installer":
+//                writeFileToZip(in, zos, "META-INF/com/google/android/update-binary-installer");
+//                for(String fileName : jarFileList()){
+//                    System.out.println("File Name : " + fileName);
+//                    in = this.getClass().getResourceAsStream(fileName);
+//                    writeFileToZip(in, zos, fileName);
+//                }
+//                this.createAromaConfigFile();
+//                in = new ByteArrayInputStream(this.aroma_config.getBytes());
+//                writeFileToZip(in, zos, "META-INF/com/google/android/aroma-config");
+//                in = this.getClass().getResourceAsStream("META-INF/com/google/android/update-binary");
+//                writeFileToZip(in, zos, "META-INF/com/google/android/update-binary");
+//                break;
+//            case "Create Normal Flashable Zip":
+//                writeFileToZip(in, zos, "META-INF/com/google/android/update-binary");
+//                break;
+//            default:
+//                JOptionPane.showMessageDialog(null, "Something Went Wrong..!! Restart Tool and Try Again..");
+//        }
+//        in = this.getClass().getResourceAsStream("utils/mount");
+//        writeFileToZip(in, zos, "utils/mount");
+//        in = this.getClass().getResourceAsStream("utils/umount");
+//        writeFileToZip(in, zos, "utils/umount");
+//        this.createUpdaterScriptFile();
+//        in = new ByteArrayInputStream(this.updater_script.getBytes());
+//        writeFileToZip(in, zos, "META-INF/com/google/android/updater-script");
+//        zos.closeEntry();
+//        zos.close();
+//        System.out.println("Folder successfully compressed");
+//    }
     
     public String getJarFileName(){
         String path[] = this.getClass().getResource("utils/mount").getPath().split("!");

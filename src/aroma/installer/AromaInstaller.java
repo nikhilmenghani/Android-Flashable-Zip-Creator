@@ -13,16 +13,14 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+import java.util.zip.ZipOutputStream;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -36,6 +34,7 @@ import org.apache.commons.collections4.map.MultiValueMap;
  * @author Rajat
  */
 public class AromaInstaller extends javax.swing.JFrame {//implements PropertyChangeListener{
+    private createZipTask CZtask;
     private ImportZipTask IZtask;
     public ProgressBarUpdater ju;
     public AromaInstaller(){
@@ -1028,13 +1027,119 @@ public class AromaInstaller extends javax.swing.JFrame {//implements PropertyCha
         dialog.setVisible(true);
     }
     
+    public void createZipUI(){
+        frame = new JFrame();
+        
+        JDialog dialog = new JDialog(frame,"Creating ZIP",true);
+        
+        CZ_Panel = new JPanel();
+        CZ_headingPanel = new JPanel();
+        lblCZHeading = new JLabel();
+        jScrollPane1 = new JScrollPane();
+        textAreaCZ = new JTextArea();
+        progressCZ = new JProgressBar();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        CZ_headingPanel.setBackground(new java.awt.Color(0, 0, 0));
+
+        lblCZHeading.setFont(new java.awt.Font("Verdana", 1, 24)); // NOI18N
+        lblCZHeading.setForeground(new java.awt.Color(255, 255, 255));
+        lblCZHeading.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblCZHeading.setText("Creating Flashable ZIP");
+
+        javax.swing.GroupLayout CZ_headingPanelLayout = new javax.swing.GroupLayout(CZ_headingPanel);
+        CZ_headingPanel.setLayout(CZ_headingPanelLayout);
+        CZ_headingPanelLayout.setHorizontalGroup(
+            CZ_headingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(CZ_headingPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(lblCZHeading, javax.swing.GroupLayout.DEFAULT_SIZE, 403, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        CZ_headingPanelLayout.setVerticalGroup(
+            CZ_headingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(CZ_headingPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(lblCZHeading, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        textAreaCZ.setColumns(20);
+        textAreaCZ.setRows(5);
+        jScrollPane1.setViewportView(textAreaCZ);
+
+        javax.swing.GroupLayout CZ_PanelLayout = new javax.swing.GroupLayout(CZ_Panel);
+        CZ_Panel.setLayout(CZ_PanelLayout);
+        CZ_PanelLayout.setHorizontalGroup(
+            CZ_PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(CZ_PanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(CZ_PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(CZ_headingPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1)
+                    .addComponent(progressCZ, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        CZ_PanelLayout.setVerticalGroup(
+            CZ_PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(CZ_PanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(CZ_headingPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(progressCZ, javax.swing.GroupLayout.DEFAULT_SIZE, 48, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(373, 373, 373)
+                .addComponent(CZ_Panel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(422, Short.MAX_VALUE))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(145, Short.MAX_VALUE)
+                .addComponent(CZ_Panel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(99, 99, 99))
+        );
+
+        pack();
+        
+        dialog.setContentPane(CZ_Panel);
+        dialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+        dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                CZtask = new createZipTask();
+                CZtask.execute();
+                
+            }
+        });
+        dialog.addWindowListener(new WindowAdapter() { 
+            public void windowClosing(WindowEvent we) {
+                frame.dispose();
+            }
+        });
+        dialog.pack();
+        dialog.setLocationRelativeTo(this);
+        dialog.setVisible(true);
+//        CZtask = new createZipTask();
+//        CZtask.execute();
+    }
+    
     public void btnBrowseZipActionPerformed(ActionEvent evt) {
         if(this.setExistingZipPath()){
             setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
             IZtask = new ImportZipTask();
             IZtask.execute();
         }else{
-            setLog("Cancelled By User");
+            setLog("Cancelled By User", textAreaImportZipLog);
         }
     }
     
@@ -1120,7 +1225,7 @@ public class AromaInstaller extends javax.swing.JFrame {//implements PropertyCha
         
         public MultiValueMap extractTheZip (String source) throws IOException{ 
             int progressValue = 20;
-            setLog("Extracting File from given Location...");
+            setLog("Extracting File from given Location...", textAreaImportZipLog);
             byte[] buffer = new byte[1024];
             MultiValueMap mvm = new MultiValueMap();
             try{
@@ -1132,13 +1237,13 @@ public class AromaInstaller extends javax.swing.JFrame {//implements PropertyCha
                 ZipInputStream zis = new ZipInputStream(new FileInputStream(source));
                 ZipEntry ze = zis.getNextEntry();
                 progressValue += 2;
-                setLog("Extracting Data...");
+                setLog("Extracting Data...", textAreaImportZipLog);
                 ju.setValue(progressValue);
                 while(ze!=null){
                     String fileName = ze.getName();
                     File newFile = new File("Temp" + File.separator + fileName);
                     String filePath = ze.getName();
-                    setLog(filePath);
+                    setLog(filePath, textAreaImportZipLog);
                     new File(newFile.getParent()).mkdirs();
                     FileOutputStream fos = new FileOutputStream(newFile);             
                     int len;
@@ -1174,7 +1279,7 @@ public class AromaInstaller extends javax.swing.JFrame {//implements PropertyCha
                 zis.closeEntry();
                 zis.close();
                 ju.setValue(100);
-                setLog("Crunching Data for Application.....Hold Tight ;)");
+                setLog("Crunching Data for Application.....Hold Tight ;)", textAreaImportZipLog);
                 System.out.println("Done");
                 ju.setValue(100);
             }catch(IOException ex){
@@ -1185,21 +1290,119 @@ public class AromaInstaller extends javax.swing.JFrame {//implements PropertyCha
     }
     
     class createZipTask extends SwingWorker<Void, Void>{
+        private int progress;
+        public void createZipTask(){
+            progress = 0;
+        }
 
         @Override
         protected Void doInBackground() throws Exception {
-            throw new UnsupportedOperationException("Not supported yet.");
+            ju = new ProgressBarUpdater(progressCZ);
+            new java.lang.Thread(ju).start();
+            createZipAt(op.zipDestination);
+            return null;
         }
         
+        public void createZipAt(String destination) throws IOException{
+            setLog("Creating "+op.flashableZipType+" Zip...", textAreaCZ);
+            File fileDest = new File(destination);
+            System.out.println("Entered Create Zip");
+            if(!fileDest.exists()){
+                fileDest.createNewFile();
+                System.out.println("File Created");
+            }
+            InputStream in;
+            OutputStream out;
+            out = new FileOutputStream(fileDest);
+            ZipOutputStream zos = new ZipOutputStream(out);
+            System.out.println("Output To : " + destination);
+            setLog("Writing Zip at specified destination...", textAreaCZ);
+            progress += 20;
+            //Write Apk, Zip, etc files to ZIP..
+            ju.setValue(progress);
+            setLog("Opening I/O Streams...", textAreaCZ);
+            setLog("Parsing Zip Data...", textAreaCZ);
+            for(String groupName: op.groupArrayList){
+                System.out.println("Now Group under consideration is : " + groupName);
+                if(op.map.containsKey(groupName)){
+                    for(String file: op.returnPathArray(groupName, op.map)){
+                        System.out.println("Group Name : " +groupName + " File Name : " + file);
+                        in = new FileInputStream(new File(file));
+                        file = op.getNameFromPath(file);
+                        file = "customize/" + op.getListName(groupName) + "/" + groupName + "/" + file;
+                        op.writeFileToZip(in, zos, file);
+                    }
+                    progress += 17;
+                    ju.setValue(progress);
+                }
+                else{
+                    JOptionPane.showMessageDialog(null, "Removed Empty Group : " + groupName);
+                }
+            }
+            if(!op.selectedDevice.equals("")){
+                in = this.getClass().getResourceAsStream("META-INF/com/google/android/binary files/" + op.selectedDevice + "/update-binary");
+            }
+            else{
+                in = new FileInputStream(new File(op.updateBinaryPath));
+            }
+            setLog("Creating Config Files....", textAreaCZ);
+            progress = 90;
+            ju.setValue(progress);
+            switch(op.flashableZipType){
+                case "Create Flashable Zip With Aroma Installer":
+                    op.writeFileToZip(in, zos, "META-INF/com/google/android/update-binary-installer");
+                    for(String fileName : op.jarFileList()){
+                        System.out.println("File Name : " + fileName);
+                        in = this.getClass().getResourceAsStream(fileName);
+                        op.writeFileToZip(in, zos, fileName);
+                    }
+                    op.createAromaConfigFile();
+                    in = new ByteArrayInputStream(op.aroma_config.getBytes());
+                    op.writeFileToZip(in, zos, "META-INF/com/google/android/aroma-config");
+                    in = this.getClass().getResourceAsStream("META-INF/com/google/android/update-binary");
+                    op.writeFileToZip(in, zos, "META-INF/com/google/android/update-binary");
+                    progress += 1;
+                    ju.setValue(progress);
+                    break;
+                case "Create Normal Flashable Zip":
+                    op.writeFileToZip(in, zos, "META-INF/com/google/android/update-binary");
+                    ju.setValue(90);
+                    break;
+                default:
+                    JOptionPane.showMessageDialog(null, "Something Went Wrong..!! Restart Tool and Try Again..");
+            }
+            setLog("Nearing Completion....", textAreaCZ);
+            in = this.getClass().getResourceAsStream("utils/mount");
+            op.writeFileToZip(in, zos, "utils/mount");
+            in = this.getClass().getResourceAsStream("utils/umount");
+            op.writeFileToZip(in, zos, "utils/umount");
+            op.createUpdaterScriptFile();
+            in = new ByteArrayInputStream(op.updater_script.getBytes());
+            ju.setValue(100);
+            op.writeFileToZip(in, zos, "META-INF/com/google/android/updater-script");
+            zos.closeEntry();
+            zos.close();
+            setLog("Folder Compressed Successfully....", textAreaCZ);
+            System.out.println("Folder successfully compressed");
+            setLog("Zip Successfully Created....", textAreaCZ);
+        }
         
+        @Override
+        public void done() {
+            Toolkit.getDefaultToolkit().beep();
+            setCursor(null); //turn off the wait cursor
+            textAreaCZ.append("Done!\n");
+            frame.setVisible(false);
+            JOptionPane.showMessageDialog(null, "Zip Successfully Created...!!!");
+            frame.dispose();
+        }
         
     }
-
-    public void setLog(String message){
-        textAreaImportZipLog.append(message + "\n");
-        textAreaImportZipLog.setCaretPosition(textAreaImportZipLog.getDocument().getLength());
+    
+    public void setLog(String message, JTextArea textArea){
+        textArea.append(message + "\n");
+        textArea.setCaretPosition(textArea.getDocument().getLength());
     }
-
     //All event handling functions here..!!
     public void btnContinueActionPerformed(ActionEvent ae) {
         updateGroupList(this.lastSelected); 
@@ -1393,12 +1596,14 @@ public class AromaInstaller extends javax.swing.JFrame {//implements PropertyCha
         
     }                                           
 
-    public void btnCreateNormalZipActionPerformed(java.awt.event.ActionEvent evt) throws IOException {                                                   
+    public void btnCreateNormalZipActionPerformed(java.awt.event.ActionEvent evt) throws IOException { 
+        
         System.out.println("normal Zip Action Performed..");
         if(this.checkIfEverythingIsOkay()){
             op.flashableZipType = evt.getActionCommand();
-            op.createZipAt(op.zipDestination);
-            JOptionPane.showMessageDialog(this, "Zip File Successfully Created..!! Enjoy..!!");
+            //CZtask = new createZipTask();
+            this.createZipUI();
+            //JOptionPane.showMessageDialog(this, "Zip File Successfully Created..!! Enjoy..!!");
         }
     }                                                  
 
@@ -1406,8 +1611,9 @@ public class AromaInstaller extends javax.swing.JFrame {//implements PropertyCha
         System.out.println("Create Aroma Zip Clicked..");
         if(this.checkIfEverythingIsOkay()){
             op.flashableZipType = evt.getActionCommand();
-            op.createZipAt(op.zipDestination);
-            JOptionPane.showMessageDialog(this, "Zip File Successfully Created..!! Enjoy..!!");
+            //createZipAt(op.zipDestination);
+            this.createZipUI();
+            //JOptionPane.showMessageDialog(this, "Zip File Successfully Created..!! Enjoy..!!");
             op.deleteDirectories("Temp");
         }
     }
@@ -2027,9 +2233,16 @@ public class AromaInstaller extends javax.swing.JFrame {//implements PropertyCha
     
     String lastSelected = "APKs Group";
     
+    public JPanel CZ_Panel;
+    public JPanel CZ_headingPanel;
+    public JScrollPane jScrollPane1;
+    public JLabel lblCZHeading;
+    public JProgressBar progressCZ;
+    public JTextArea textAreaCZ;
+    
     public JPanel ImportZip_panel;
     public JButton btnBrowseZip;
-    public JScrollPane jScrollPane1;
+    public JScrollPane scrollPaneIZ;
     public JLabel lblProgress;
     public JLabel lblSelectZip;
     public JProgressBar progressImportZip;
