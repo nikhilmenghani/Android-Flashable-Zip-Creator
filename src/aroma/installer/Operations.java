@@ -35,6 +35,8 @@ import org.apache.commons.collections4.map.MultiValueMap;
  */
 public class Operations {
     
+    int setProgress = 0;
+    
     String lastActionCommand = "";
     String updateBinaryPath = "";
     String zipDestination = "";

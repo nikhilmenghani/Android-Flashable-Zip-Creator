@@ -6,30 +6,24 @@
 
 package aroma.installer;
 
+import java.awt.Cursor;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.ButtonGroup;
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.JScrollPane;
-import javax.swing.JTextField;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
+import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileFilter;
@@ -41,7 +35,9 @@ import org.apache.commons.collections4.map.MultiValueMap;
  * @author Nikhil
  * @author Rajat
  */
-public class AromaInstaller extends javax.swing.JFrame{
+public class AromaInstaller extends javax.swing.JFrame {//implements PropertyChangeListener{
+    private ImportZipTask IZtask;
+    public ProgressBarUpdater ju;
     public AromaInstaller(){
         op.CSDArrayList = new ArrayList<>();
         op.CSDArrayList.add("Samsung Galaxy R");
@@ -928,10 +924,285 @@ public class AromaInstaller extends javax.swing.JFrame{
         //dialog.setLocationRelativeTo(null);
     }
     
+    public void importZipUI(){
+        frame = new JFrame();
+        
+        JDialog dialog = new JDialog(frame,"Import ZIP",true);
+        
+        ImportZip_panel = new JPanel();
+        btnBrowseZip = new JButton();
+        jScrollPane1 = new JScrollPane();
+        lblProgress = new  JLabel();
+        lblSelectZip = new JLabel();
+        progressImportZip = new JProgressBar();
+        textAreaImportZipLog = new JTextArea();
+        textFieldSelectZip = new JTextField();
+        
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        lblSelectZip.setText("Select Zip : ");
+
+        textFieldSelectZip.setEditable(false);
+        textFieldSelectZip.setText("Click Browse To Select Zip File...");
+
+        btnBrowseZip.setText("Browse..");
+        btnBrowseZip.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBrowseZipActionPerformed(evt);
+            }
+        });
+
+        textAreaImportZipLog.setColumns(20);
+        textAreaImportZipLog.setRows(5);
+        jScrollPane1.setViewportView(textAreaImportZipLog);
+
+        lblProgress.setText("Progress : ");
+
+        javax.swing.GroupLayout ImportZip_panelLayout = new javax.swing.GroupLayout(ImportZip_panel);
+        ImportZip_panel.setLayout(ImportZip_panelLayout);
+        ImportZip_panelLayout.setHorizontalGroup(
+            ImportZip_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(ImportZip_panelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(ImportZip_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(ImportZip_panelLayout.createSequentialGroup()
+                        .addComponent(lblSelectZip)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(textFieldSelectZip, javax.swing.GroupLayout.DEFAULT_SIZE, 368, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnBrowseZip))
+                    .addGroup(ImportZip_panelLayout.createSequentialGroup()
+                        .addComponent(lblProgress)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(progressImportZip, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1))
+                .addContainerGap())
+        );
+        ImportZip_panelLayout.setVerticalGroup(
+            ImportZip_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(ImportZip_panelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(ImportZip_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblSelectZip)
+                    .addComponent(textFieldSelectZip, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnBrowseZip))
+                .addGap(17, 17, 17)
+                .addGroup(ImportZip_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(ImportZip_panelLayout.createSequentialGroup()
+                        .addGap(7, 7, 7)
+                        .addComponent(lblProgress))
+                    .addComponent(progressImportZip, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 204, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(346, 346, 346)
+                .addComponent(ImportZip_panel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(363, Short.MAX_VALUE))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(159, 159, 159)
+                .addComponent(ImportZip_panel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(129, Short.MAX_VALUE))
+        );
+
+        pack();
+        
+        dialog.setContentPane(ImportZip_panel);
+        dialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+        dialog.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent we) {
+                frame.dispose();
+            }
+        });
+        dialog.pack();
+        dialog.setLocationRelativeTo(this);
+        dialog.setVisible(true);
+    }
+    
+    public void btnBrowseZipActionPerformed(ActionEvent evt) {
+        if(this.setExistingZipPath()){
+            setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+            IZtask = new ImportZipTask();
+            IZtask.execute();
+        }else{
+            setLog("Cancelled By User");
+        }
+    }
+    
+    public boolean setExistingZipPath(){
+        System.out.println("Load Flashable Zip Clicked..!!");
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        fileChooser.setMultiSelectionEnabled(false);
+        fileChooser.removeChoosableFileFilter(fileChooser.getFileFilter());
+        FileFilter filter = new FileNameExtensionFilter(".zip", "zip");
+        fileChooser.addChoosableFileFilter(filter);
+        int returnVal = fileChooser.showOpenDialog(btnBrowseZip);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            File file = fileChooser.getSelectedFile();
+            System.out.println("Existing Zip File Location : " + file.getAbsolutePath());
+            if(file.isDirectory() || returnVal == JFileChooser.CANCEL_OPTION){
+                JOptionPane.showMessageDialog(this, "Invalid File Type..!!\n Try Again..!!");
+                return false;
+            }
+            else{
+                op.existingZipPath = file.getAbsolutePath(); 
+                return true;
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "File access cancelled by user.");
+            return false;
+        }
+    }
+    
+    
+    class ImportZipTask extends SwingWorker<Void, Void> {
+      
+        @Override
+        public Void doInBackground() throws IOException { 
+            ju = new ProgressBarUpdater(progressImportZip);
+            new java.lang.Thread(ju).start();
+            int progress = 0;
+            progress += 5;
+            ju.setValue(progress);
+            textFieldSelectZip.setText(op.existingZipPath);
+            MultiValueMap mvm  = this.extractTheZip(op.existingZipPath);
+            System.out.println("Map Before : "+op.map);
+            groupModel.clear();
+            op.map.putAll(mvm);       
+            op.groupArrayList.addAll(op.getGroupListFromMVM(mvm));
+            System.out.println("Updated GroupList : "+op.groupArrayList);
+            System.out.println("Updated Map : "+op.map);
+            for(String element:op.groupArrayList){
+                String[] temp = element.split("_");
+                switch(temp[0]){
+                    case "APKs-System":
+                        op.systemList.add(element);
+                        break;
+                    case "APKs-Data":
+                        op.dataList.add(element);
+                        break;
+                    case "BootAnimations":
+                        op.bootAnimList.add(element);
+                        break;
+                    case "Ringtones":
+                        op.ringtoneList.add(element);
+                        break;
+                    case "Notifications":
+                        op.notifList.add(element);
+                        break;
+                }
+            }
+            refreshGroupList("APKs Group");
+            //ju.setValue(100);
+            return null;
+        }
+
+        @Override
+        public void done() {
+            Toolkit.getDefaultToolkit().beep();
+            btnBrowseZip.setEnabled(true);
+            setCursor(null); //turn off the wait cursor
+            textAreaImportZipLog.append("Done!\n");
+            frame.setVisible(false);
+            JOptionPane.showMessageDialog(null, "Zip Import Successful");
+            frame.dispose();
+        }
+        
+        public MultiValueMap extractTheZip (String source) throws IOException{ 
+            int progressValue = 20;
+            setLog("Extracting File from given Location...");
+            byte[] buffer = new byte[1024];
+            MultiValueMap mvm = new MultiValueMap();
+            try{
+                File folder = new File("Temp");
+                if(!folder.exists()){
+                    folder.mkdir();
+                }
+                ju.setValue(progressValue);
+                ZipInputStream zis = new ZipInputStream(new FileInputStream(source));
+                ZipEntry ze = zis.getNextEntry();
+                progressValue += 2;
+                setLog("Extracting Data...");
+                ju.setValue(progressValue);
+                while(ze!=null){
+                    String fileName = ze.getName();
+                    File newFile = new File("Temp" + File.separator + fileName);
+                    String filePath = ze.getName();
+                    setLog(filePath);
+                    new File(newFile.getParent()).mkdirs();
+                    FileOutputStream fos = new FileOutputStream(newFile);             
+                    int len;
+                    while ((len = zis.read(buffer)) > 0) {
+                        fos.write(buffer, 0, len);
+                    }
+                    fos.close();
+                    if(filePath.startsWith("customize/")){
+                        String temp = filePath.replace("customize/", "");
+                        String splitName[] = temp.split("/");
+                        switch (splitName[0]){
+                            case "APKs-System":
+                                mvm.put(splitName[1],newFile.getAbsolutePath());
+                                break;
+                            case "APKs-Data":
+                                mvm.put(splitName[1],newFile.getAbsolutePath());
+                                break;
+                            case "Ringtones":
+                                mvm.put(splitName[1],newFile.getAbsolutePath());
+                                break;
+                            case "Notifications":
+                                mvm.put(splitName[1],newFile.getAbsolutePath());
+                                break;
+                            case "BootAnimations":
+                                mvm.put(splitName[1],newFile.getAbsolutePath());
+                                break;
+                        }
+                    }
+                    ze = zis.getNextEntry();
+                    progressValue += 1;
+                    ju.setValue(progressValue);
+                }
+                zis.closeEntry();
+                zis.close();
+                ju.setValue(100);
+                setLog("Crunching Data for Application.....Hold Tight ;)");
+                System.out.println("Done");
+                ju.setValue(100);
+            }catch(IOException ex){
+                ex.printStackTrace(); 
+            }
+            return mvm;
+        }
+    }
+    
+    class createZipTask extends SwingWorker<Void, Void>{
+
+        @Override
+        protected Void doInBackground() throws Exception {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+        
+        
+        
+    }
+
+    public void setLog(String message){
+        textAreaImportZipLog.append(message + "\n");
+        textAreaImportZipLog.setCaretPosition(textAreaImportZipLog.getDocument().getLength());
+    }
+
     //All event handling functions here..!!
     public void btnContinueActionPerformed(ActionEvent ae) {
-        updateGroupList(this.lastSelected);
-        
+        updateGroupList(this.lastSelected); 
     }                                                         
 
     public void btnCancelActionPerformed(ActionEvent ae) {
@@ -1026,33 +1297,7 @@ public class AromaInstaller extends javax.swing.JFrame{
     }                                                   
 
     public void btnLoadAromaFlashableZipActionPerformed(java.awt.event.ActionEvent evt) {                                                         
-        System.out.println("Load Flashable Zip Clicked..!!");
-        JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        fileChooser.setMultiSelectionEnabled(false);
-        fileChooser.removeChoosableFileFilter(fileChooser.getFileFilter());
-        FileFilter filter = new FileNameExtensionFilter(".zip", "zip");
-        fileChooser.addChoosableFileFilter(filter);
-        int returnVal = fileChooser.showOpenDialog(btnLoadAromaFlashableZip);
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-            File file = fileChooser.getSelectedFile();
-            System.out.println("Existing Zip File Location : " + file.getAbsolutePath());
-            if(file.isDirectory()){
-                JOptionPane.showMessageDialog(this, "Invalid File Type..!!\n Try Again..!!");
-            }
-            else{
-                op.existingZipPath = file.getAbsolutePath();
-//                op.tempFolderPath = file.getParent() + "\\temp$$folder";
-//                System.out.println("Temp Folder Path : " + op.tempFolderPath);
-                try {
-                    this.updateUIwithZIPdata();
-                } catch (IOException ex) {
-                    Logger.getLogger(AromaInstaller.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        } else {
-            System.out.println("File access cancelled by user.");
-        }
+        this.importZipUI();
     }                                                        
 
     public void btnSelectDeviceActionPerformed(java.awt.event.ActionEvent evt) {                                                
@@ -1781,6 +2026,15 @@ public class AromaInstaller extends javax.swing.JFrame{
     Operations op = new Operations();
     
     String lastSelected = "APKs Group";
+    
+    public JPanel ImportZip_panel;
+    public JButton btnBrowseZip;
+    public JScrollPane jScrollPane1;
+    public JLabel lblProgress;
+    public JLabel lblSelectZip;
+    public JProgressBar progressImportZip;
+    public JTextArea textAreaImportZipLog;
+    public JTextField textFieldSelectZip;
     
     public JList CSDList;
     public JScrollPane CSDScrollPanel;
