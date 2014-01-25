@@ -924,162 +924,6 @@ public class AromaInstaller extends javax.swing.JFrame {//implements PropertyCha
         //dialog.setLocationRelativeTo(null);
     }
     
-    public void deleteSystemApkUI(){
-        frame = new JFrame();
-        
-        JDialog dialog = new JDialog(frame, "Delete System Apk", true);
-        
-        deleteSystemPanel = new JPanel();
-        deleteApkName = new JTextField();
-        lbl_deleteFileName = new JLabel();
-        lbl_deleteSystemExtension = new JLabel();
-        lbl_deleteSystemTitle = new JLabel();
-        btnAddDeleteFile = new JButton();
-        btnRemoveDeleteFile = new JButton();
-        btnDoneDeleteFile = new JButton();
-        btnResetDeleteFile = new JButton();
-        deleteSystemScrollPane = new JScrollPane();
-        deletefileModel = new DefaultListModel();
-        try{
-            this.deletefileModel.removeAllElements();
-            for(String fileName : op.deleteApkList){
-                System.out.println("File Added To List is : " + fileName);
-                this.deletefileModel.addElement(fileName);
-            }
-        }catch(NullPointerException npe){
-            System.out.println("Exception Caught while opening delete system apk UI");
-        }
-        deleteSystemFileList = new JList(deletefileModel);
-
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        deleteApkName.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-
-        lbl_deleteFileName.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        lbl_deleteFileName.setText("Enter File Name : ");
-
-        lbl_deleteSystemExtension.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        lbl_deleteSystemExtension.setText(".apk");
-
-        lbl_deleteSystemTitle.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        lbl_deleteSystemTitle.setText("Enter Exact Name of apk file which you want to delete from system");
-
-        btnAddDeleteFile.setText("Add");
-        btnAddDeleteFile.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAddDeleteFileActionPerformed(evt);
-            }
-        });
-
-        btnRemoveDeleteFile.setText("Remove");
-        btnRemoveDeleteFile.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnRemoveDeleteFileActionPerformed(evt);
-            }
-        });
-
-        btnDoneDeleteFile.setText("Done!");
-        btnDoneDeleteFile.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnDoneDeleteFileActionPerformed(evt);
-            }
-        });
-
-        btnResetDeleteFile.setText("Reset");
-        btnResetDeleteFile.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnResetDeleteFileActionPerformed(evt);
-            }
-        });
-
-        deleteSystemFileList.setFont(new java.awt.Font("Tahoma", 0, 14));
-        deleteSystemFileList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
-            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
-                deleteSystemFileListValueChanged(evt);
-            }
-        });
-        deleteSystemScrollPane.setViewportView(deleteSystemFileList);
-
-        javax.swing.GroupLayout deleteSystemPanelLayout = new javax.swing.GroupLayout(deleteSystemPanel);
-        deleteSystemPanel.setLayout(deleteSystemPanelLayout);
-        deleteSystemPanelLayout.setHorizontalGroup(
-            deleteSystemPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(deleteSystemPanelLayout.createSequentialGroup()
-                .addGap(53, 53, 53)
-                .addGroup(deleteSystemPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lbl_deleteSystemTitle)
-                    .addGroup(deleteSystemPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addGroup(deleteSystemPanelLayout.createSequentialGroup()
-                            .addComponent(lbl_deleteFileName)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(deleteApkName, javax.swing.GroupLayout.PREFERRED_SIZE, 321, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(lbl_deleteSystemExtension))
-                        .addGroup(deleteSystemPanelLayout.createSequentialGroup()
-                            .addComponent(deleteSystemScrollPane)
-                            .addGap(18, 18, 18)
-                            .addGroup(deleteSystemPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(btnRemoveDeleteFile, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(btnAddDeleteFile, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(btnDoneDeleteFile, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(btnResetDeleteFile, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addContainerGap(40, Short.MAX_VALUE))
-        );
-        deleteSystemPanelLayout.setVerticalGroup(
-            deleteSystemPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(deleteSystemPanelLayout.createSequentialGroup()
-                .addGap(31, 31, 31)
-                .addComponent(lbl_deleteSystemTitle)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(deleteSystemPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lbl_deleteFileName)
-                    .addComponent(deleteApkName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbl_deleteSystemExtension, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(deleteSystemPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(deleteSystemPanelLayout.createSequentialGroup()
-                        .addComponent(btnAddDeleteFile, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnRemoveDeleteFile, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnResetDeleteFile, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnDoneDeleteFile, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(deleteSystemScrollPane))
-                .addContainerGap(37, Short.MAX_VALUE))
-        );
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(290, 290, 290)
-                .addComponent(deleteSystemPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(393, Short.MAX_VALUE))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(103, 103, 103)
-                .addComponent(deleteSystemPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(145, Short.MAX_VALUE))
-        );
-
-        pack();
-        
-        dialog.setContentPane(deleteSystemPanel);
-        dialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
-        dialog.addWindowListener(new WindowAdapter() {
-            public void windowClosing(WindowEvent we) {
-                frame.dispose();
-            }
-        });
-        dialog.pack();
-        dialog.setLocationRelativeTo(this);
-        dialog.setVisible(true);
-    }
-    
     public void importZipUI(){
         frame = new JFrame();
         
@@ -1430,7 +1274,14 @@ public class AromaInstaller extends javax.swing.JFrame {//implements PropertyCha
 
     public void btnDeleteSystemFilesGroupActionPerformed(java.awt.event.ActionEvent evt) {                                                             
         System.out.println("Add Delete System Files Group Clicked..");
-        this.deleteSystemApkUI();
+		removeHighlight(this.lastSelected);
+        btnDeleteSystemFilesGroup.setSelected(true);
+        this.lastSelected = evt.getActionCommand();
+        
+        refreshGroupList(this.lastSelected);
+        this.lblGroup.setText("Delete System Files Group");
+        
+        updateFileList();
     }                                                            
 
     public void btnAdvancedGroupActionPerformed(java.awt.event.ActionEvent evt) {                                                    
@@ -1592,45 +1443,6 @@ public class AromaInstaller extends javax.swing.JFrame {//implements PropertyCha
         System.exit(0);
     }                                            
 
-    private void btnAddDeleteFileActionPerformed(java.awt.event.ActionEvent evt) {                                                 
-        System.out.println("Add Delete File Button Clicked..!!");
-        if(!deleteApkName.getText().equals("")){
-            op.deleteApkList.add(deleteApkName.getText() + ".apk");
-            deletefileModel.addElement(deleteApkName.getText() + ".apk");
-            deleteApkName.setText("");
-        }
-        else{
-            JOptionPane.showMessageDialog(this, "Add File Name First..!!");
-        }
-    }                                                
-
-    private void btnRemoveDeleteFileActionPerformed(java.awt.event.ActionEvent evt) {                                                    
-        System.out.println("Remove Delete File Button Clicked..!!");
-        if(!deleteSystemFileList.isSelectionEmpty()){
-            op.deleteApkList.remove(deleteSystemFileList.getSelectedValue());
-            deletefileModel.removeElement(deleteSystemFileList.getSelectedValue());
-        }
-        else{
-            JOptionPane.showMessageDialog(this, "Select File Name First..!!");
-        }
-    }                                                   
-
-    private void btnDoneDeleteFileActionPerformed(java.awt.event.ActionEvent evt) {                                                  
-        System.out.println("Done Delete File Button Clicked..!!");
-        frame.dispose();
-    }                                                 
-
-    private void btnResetDeleteFileActionPerformed(java.awt.event.ActionEvent evt) {                                                   
-        deletefileModel.removeAllElements();
-        op.deleteApkList = new ArrayList<String>();
-        deleteSystemFileList.removeAll();
-        deleteApkName.setText("");
-    }      
-    
-    private void deleteSystemFileListValueChanged(javax.swing.event.ListSelectionEvent evt) {                                                  
-        // TODO add your handling code here:
-    }
-    
     /**
      * Custom Functions Here..
      */
@@ -2237,8 +2049,6 @@ public class AromaInstaller extends javax.swing.JFrame {//implements PropertyCha
     
     public DefaultListModel groupModel;
     public DefaultListModel fileModel;
-    public DefaultListModel deletefileModel;
-    
     public JFrame frame;
     ButtonGroup buttonGroup;
     public JRadioButton addApkGroupRadData;
@@ -2248,18 +2058,6 @@ public class AromaInstaller extends javax.swing.JFrame {//implements PropertyCha
     public JLabel addGroupNameTitle;
     public JPanel addGroupPanel;
     public JMenuItem aboutMenuItem;
-    
-    private javax.swing.JButton btnAddDeleteFile;
-    private javax.swing.JButton btnDoneDeleteFile;
-    private javax.swing.JButton btnRemoveDeleteFile;
-    private javax.swing.JButton btnResetDeleteFile;
-    private javax.swing.JTextField deleteApkName;
-    private javax.swing.JList deleteSystemFileList;
-    private javax.swing.JPanel deleteSystemPanel;
-    private javax.swing.JScrollPane deleteSystemScrollPane;
-    private javax.swing.JLabel lbl_deleteFileName;
-    private javax.swing.JLabel lbl_deleteSystemExtension;
-    private javax.swing.JLabel lbl_deleteSystemTitle;
     
     public JButton btnSupportedDevices;
     public JButton btnCancel;

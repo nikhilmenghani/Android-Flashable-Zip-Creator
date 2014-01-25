@@ -47,7 +47,6 @@ public class Operations {
     String flashableZipType = "";
     String jarFileName = "";
     String existingZipPath = "";
-    String deleteApkConfigList = "";
     
     ArrayList<String> CSDArrayList;
     ArrayList<String> groupArrayList = new ArrayList<>();
@@ -68,17 +67,6 @@ public class Operations {
     
     Operations(){
         
-    }
-    
-    public void configToArrayList(){
-        
-    }
-    
-    public void createDeleteApkConfigList(){
-        for(String temp : this.deleteApkList){
-            this.deleteApkConfigList = this.deleteApkConfigList + temp + "\n";
-            System.out.println(deleteApkConfigList);
-        }
     }
     
     public String getListName(String groupName){
@@ -115,15 +103,6 @@ public class Operations {
         out = new FileOutputStream(fileDest);
         ZipOutputStream zos = new ZipOutputStream(out);
         System.out.println("Output To : " + destination);
-        
-        if(!this.deleteApkList.isEmpty()){
-            System.out.println("Delete List Not Empty..!!");
-            createDeleteApkConfigList();
-            in = new ByteArrayInputStream(this.deleteApkConfigList.getBytes());
-            writeFileToZip(in, zos, "customize/DeleteSystemApps/app-config");
-        }else{
-            System.out.println("Delete List Empty..!!");
-        }
         
         //Write Apk, Zip, etc files to ZIP..
         
@@ -241,40 +220,23 @@ public class Operations {
     
     public void displayListInAroma(String heading, ArrayList<String> arrayList){
         
-        if(arrayList.equals(deleteApkList)&&!arrayList.isEmpty()){
-            System.out.println("ArrayList is Delete Apk List");
+		if(!arrayList.isEmpty()){
             this.aroma_config = this.aroma_config + heading;
-            this.aroma_config = this.aroma_config + ",\n\"" + "Delete System Apks" + "\", \"\", 2";
             for(String list : arrayList){
-                    this.aroma_config = this.aroma_config + ",\n\"" + list + "\", \"\", 0";
-            }
-            this.aroma_config = this.aroma_config + ");\n";
-        }
-        else{
-            if(!arrayList.isEmpty()){
-                this.aroma_config = this.aroma_config + heading;
-                for(String list : arrayList){
-                    if(map.containsKey(list)){
+			if(map.containsKey(list)){
                     this.aroma_config = this.aroma_config + ",\n\"" + list + "\", \"\", 2";
                     //System.out.println("................" + this.returnPathArray(data_list, map));
-                        for(String list_files : this.returnPathArray(list, map)){
-                            this.aroma_config = this.aroma_config + ",\n\"" + this.removeExtension(getNameFromPath(list_files)) + "\", \"\", 0";
-                        }
+					for(String list_files : this.returnPathArray(list, map)){
+                        this.aroma_config = this.aroma_config + ",\n\"" + this.removeExtension(getNameFromPath(list_files)) + "\", \"\", 0";
                     }
                 }
-                this.aroma_config = this.aroma_config + ");\n";
             }
+			this.aroma_config = this.aroma_config + ");\n";
         }
     }
     
     public int listFilesInAromaConfig(ArrayList<String> groupType, String groupName, String propFile, int count, MultiValueMap mvm){
         int i = 1;
-        if(groupType.equals(deleteApkList)){
-            for(String file_list: deleteApkList){
-                this.aroma_config = this.aroma_config + "appendvar(\"installer_title\",iif(prop(\"" + propFile + "\",\"item." + count + "." + i + "\")==\"1\",\"" + file_list + "\",\"\"));\n";
-                i++;
-            }
-        }else{
             if(groupType.contains(groupName)){
                 for(String file_list: this.returnPathArray(groupName, mvm)){
                     this.aroma_config = this.aroma_config + "appendvar(\"installer_title\",iif(prop(\"" + propFile + "\",\"item." + count + "." + i + "\")==\"1\",\"" + this.removeExtension(getNameFromPath(file_list)) + "\",\"\"));\n";
@@ -282,7 +244,6 @@ public class Operations {
                 }
                 count++;
             }
-        }
         return count;
     }
     
@@ -397,23 +358,9 @@ public class Operations {
         
         extractFilesUpdaterScript(this.notifList, "Adding Notification Tones", "notification_choices.prop", "/system/media/audio/notifications");
         
-        if(!deleteApkList.isEmpty()){
-            for(String appName : deleteApkList){
-                this.updater_script = this.updater_script + " \n" + "delete(\"/system/app/" + appName + "\");\n";
-            }
-        }
-        
-        if(!systemList.isEmpty()){
-            this.updater_script = this.updater_script + "set_perm_recursive(1000, 1000, 0775, 0644, \"/system/app\");\n";
-        }
-        
-        if(!dataList.isEmpty()){
-            this.updater_script = this.updater_script + "set_perm_recursive(1000, 1000, 0771, 0644, \"/data/app\");\n";
-        }
-        
-        if(!ringtoneList.isEmpty()||!notifList.isEmpty()||!bootAnimList.isEmpty()){
-            this.updater_script = this.updater_script + "set_perm_recursive(1000, 1000, 0775, 0644, \"/system/media\");\n";
-        }
+		this.updater_script = this.updater_script + "set_perm_recursive(1000, 1000, 0771, 0644, \"/data/app\");\n";
+        this.updater_script = this.updater_script + "set_perm_recursive(1000, 1000, 0775, 0644, \"/system/app\");\n";
+        this.updater_script = this.updater_script + "set_perm_recursive(1000, 1000, 0775, 0644, \"/system/media\");\n";
         
         this.updater_script = this.updater_script + "ui_print(\"@Wiping dalvik-cache\");\n" +
                 "delete_recursive(\"/data/dalvik-cache\");\n";
