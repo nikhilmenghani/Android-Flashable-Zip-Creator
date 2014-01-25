@@ -7,13 +7,17 @@
 package aroma.installer;
 
 import java.awt.Component;
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -47,6 +51,8 @@ public class Operations {
     String flashableZipType = "";
     String jarFileName = "";
     String existingZipPath = "";
+    String deleteApkConfigList = "";
+    String appConfigPath = "customize/DeleteSystemApps/app-config";
     
     ArrayList<String> CSDArrayList;
     ArrayList<String> groupArrayList = new ArrayList<>();
@@ -67,6 +73,17 @@ public class Operations {
     
     Operations(){
         
+    }
+    
+    public void configToArrayList(){
+        
+    }
+    
+    public void createDeleteApkConfigList(){
+        for(String temp : this.deleteApkList){
+            this.deleteApkConfigList = this.deleteApkConfigList + temp + "\n";
+            System.out.println(deleteApkConfigList);
+        }
     }
     
     public String getListName(String groupName){
@@ -90,74 +107,6 @@ public class Operations {
         }
         return "";
     }
-    
-//    public void createZipAt(String destination) throws IOException{
-//        File fileDest = new File(destination);
-//        System.out.println("Entered Create Zip");
-//        if(!fileDest.exists()){
-//            fileDest.createNewFile();
-//            System.out.println("File Created");
-//        }
-//        InputStream in;
-//        OutputStream out;
-//        out = new FileOutputStream(fileDest);
-//        ZipOutputStream zos = new ZipOutputStream(out);
-//        System.out.println("Output To : " + destination);
-//        
-//        //Write Apk, Zip, etc files to ZIP..
-//        
-//        for(String groupName: this.groupArrayList){
-//            System.out.println("Now Group under consideration is : " + groupName);
-//            if(map.containsKey(groupName)){
-//                for(String file: returnPathArray(groupName, map)){
-//                    System.out.println("Group Name : " +groupName + " File Name : " + file);
-//                    in = new FileInputStream(new File(file));
-//                    file = getNameFromPath(file);
-//                    file = "customize/" + getListName(groupName) + "/" + groupName + "/" + file;
-//                    writeFileToZip(in, zos, file);
-//                }
-//            }
-//            else{
-//                JOptionPane.showMessageDialog(null, "Removed Empty Group : " + groupName);
-//            }
-//        }
-//        if(!this.selectedDevice.equals("")){
-//            in = this.getClass().getResourceAsStream("META-INF/com/google/android/binary files/" + this.selectedDevice + "/update-binary");
-//        }
-//        else{
-//            in = new FileInputStream(new File(this.updateBinaryPath));
-//        }
-//        switch(this.flashableZipType){
-//            case "Create Flashable Zip With Aroma Installer":
-//                writeFileToZip(in, zos, "META-INF/com/google/android/update-binary-installer");
-//                for(String fileName : jarFileList()){
-//                    System.out.println("File Name : " + fileName);
-//                    in = this.getClass().getResourceAsStream(fileName);
-//                    writeFileToZip(in, zos, fileName);
-//                }
-//                this.createAromaConfigFile();
-//                in = new ByteArrayInputStream(this.aroma_config.getBytes());
-//                writeFileToZip(in, zos, "META-INF/com/google/android/aroma-config");
-//                in = this.getClass().getResourceAsStream("META-INF/com/google/android/update-binary");
-//                writeFileToZip(in, zos, "META-INF/com/google/android/update-binary");
-//                break;
-//            case "Create Normal Flashable Zip":
-//                writeFileToZip(in, zos, "META-INF/com/google/android/update-binary");
-//                break;
-//            default:
-//                JOptionPane.showMessageDialog(null, "Something Went Wrong..!! Restart Tool and Try Again..");
-//        }
-//        in = this.getClass().getResourceAsStream("utils/mount");
-//        writeFileToZip(in, zos, "utils/mount");
-//        in = this.getClass().getResourceAsStream("utils/umount");
-//        writeFileToZip(in, zos, "utils/umount");
-//        this.createUpdaterScriptFile();
-//        in = new ByteArrayInputStream(this.updater_script.getBytes());
-//        writeFileToZip(in, zos, "META-INF/com/google/android/updater-script");
-//        zos.closeEntry();
-//        zos.close();
-//        System.out.println("Folder successfully compressed");
-//    }
     
     public String getJarFileName(){
         String path[] = this.getClass().getResource("utils/mount").getPath().split("!");
@@ -220,23 +169,40 @@ public class Operations {
     
     public void displayListInAroma(String heading, ArrayList<String> arrayList){
         
-		if(!arrayList.isEmpty()){
+        if(arrayList.equals(deleteApkList)&&!arrayList.isEmpty()){
+            System.out.println("ArrayList is Delete Apk List");
             this.aroma_config = this.aroma_config + heading;
+            this.aroma_config = this.aroma_config + ",\n\"" + "Delete System Apks" + "\", \"\", 2";
             for(String list : arrayList){
-			if(map.containsKey(list)){
+                    this.aroma_config = this.aroma_config + ",\n\"" + list + "\", \"\", 0";
+            }
+            this.aroma_config = this.aroma_config + ");\n";
+        }
+        else{
+            if(!arrayList.isEmpty()){
+                this.aroma_config = this.aroma_config + heading;
+                for(String list : arrayList){
+                    if(map.containsKey(list)){
                     this.aroma_config = this.aroma_config + ",\n\"" + list + "\", \"\", 2";
                     //System.out.println("................" + this.returnPathArray(data_list, map));
-					for(String list_files : this.returnPathArray(list, map)){
-                        this.aroma_config = this.aroma_config + ",\n\"" + this.removeExtension(getNameFromPath(list_files)) + "\", \"\", 0";
+                        for(String list_files : this.returnPathArray(list, map)){
+                            this.aroma_config = this.aroma_config + ",\n\"" + this.removeExtension(getNameFromPath(list_files)) + "\", \"\", 0";
+                        }
                     }
                 }
+                this.aroma_config = this.aroma_config + ");\n";
             }
-			this.aroma_config = this.aroma_config + ");\n";
         }
     }
     
     public int listFilesInAromaConfig(ArrayList<String> groupType, String groupName, String propFile, int count, MultiValueMap mvm){
         int i = 1;
+        if(groupType.equals(deleteApkList)){
+            for(String file_list: deleteApkList){
+                this.aroma_config = this.aroma_config + "appendvar(\"installer_title\",iif(prop(\"" + propFile + "\",\"item." + count + "." + i + "\")==\"1\",\"" + file_list + "\",\"\"));\n";
+                i++;
+            }
+        }else{
             if(groupType.contains(groupName)){
                 for(String file_list: this.returnPathArray(groupName, mvm)){
                     this.aroma_config = this.aroma_config + "appendvar(\"installer_title\",iif(prop(\"" + propFile + "\",\"item." + count + "." + i + "\")==\"1\",\"" + this.removeExtension(getNameFromPath(file_list)) + "\",\"\"));\n";
@@ -244,6 +210,7 @@ public class Operations {
                 }
                 count++;
             }
+        }
         return count;
     }
     
@@ -358,9 +325,23 @@ public class Operations {
         
         extractFilesUpdaterScript(this.notifList, "Adding Notification Tones", "notification_choices.prop", "/system/media/audio/notifications");
         
-		this.updater_script = this.updater_script + "set_perm_recursive(1000, 1000, 0771, 0644, \"/data/app\");\n";
-        this.updater_script = this.updater_script + "set_perm_recursive(1000, 1000, 0775, 0644, \"/system/app\");\n";
-        this.updater_script = this.updater_script + "set_perm_recursive(1000, 1000, 0775, 0644, \"/system/media\");\n";
+        if(!deleteApkList.isEmpty()){
+            for(String appName : deleteApkList){
+                this.updater_script = this.updater_script + " \n" + "delete(\"/system/app/" + appName + "\");\n";
+            }
+        }
+        
+        if(!systemList.isEmpty()){
+            this.updater_script = this.updater_script + "set_perm_recursive(1000, 1000, 0775, 0644, \"/system/app\");\n";
+        }
+        
+        if(!dataList.isEmpty()){
+            this.updater_script = this.updater_script + "set_perm_recursive(1000, 1000, 0771, 0644, \"/data/app\");\n";
+        }
+        
+        if(!ringtoneList.isEmpty()||!notifList.isEmpty()||!bootAnimList.isEmpty()){
+            this.updater_script = this.updater_script + "set_perm_recursive(1000, 1000, 0775, 0644, \"/system/media\");\n";
+        }
         
         this.updater_script = this.updater_script + "ui_print(\"@Wiping dalvik-cache\");\n" +
                 "delete_recursive(\"/data/dalvik-cache\");\n";
@@ -434,6 +415,39 @@ public class Operations {
         System.out.println("File access cancelled by user.");
         }
     }
+    
+    public ArrayList<String> getArrayListFromFileInZip(ZipInputStream zis) throws UnsupportedEncodingException{
+        ArrayList<String> list = new ArrayList<>();
+        String str = "";
+        BufferedReader br = new BufferedReader(new InputStreamReader(zis, "UTF-8"));
+        try {
+            while (br.ready()) {
+            str += (char) br.read();
+            }
+            System.out.println("String is " + str);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        String array[] = str.split("\n");
+        for(int i =0;i < array.length ; i++){
+            list.add(array[i]);
+        }
+        System.out.println("ArrayList obtained is : " + list);
+        return list;
+    }
+    
+//    public void getArrayListFromZip(String filePath) throws FileNotFoundException, IOException{
+//        ZipInputStream zis = new ZipInputStream(new FileInputStream(filePath));
+//        ZipEntry ze = zis.getNextEntry();
+//        String fileName = ze.getName();
+//        if(fileName.equals("customize/DeleteSystemApps/app-config")){
+//            JOptionPane.showMessageDialog(null, "Match Found");
+//        }
+//        else{
+//            System.out.println("Could not find..!!");
+//        }
+//        
+//    }
     
     //The following function will extract the whole zip file and return a multivaluemap which contains Group Name as a key and file name as its values
     public MultiValueMap extractTheZip (String source) throws IOException{ 
