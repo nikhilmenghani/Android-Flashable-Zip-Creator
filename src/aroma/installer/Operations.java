@@ -260,6 +260,12 @@ public class Operations {
             }
             da = listFilesInAromaConfig(deleteApkList, grouplist, "delete_choices.prop", da, map);
         }
+//        this.aroma_config = this.aroma_config + "\ncheckviewbox(\"Installation Complete\",\"<#selectbg_g><b>Do you want to wipe dalvik cache?</b></#>\"\n" +
+//                "\"@welcome\",\"Wipe Dalvik Cache\",\"0\",\"clear_cache\");\n\n";
+//        this.aroma_config = this.aroma_config + "if\ngetvar(\"clear_cache\")==\"1\"\n then \n" +
+//                "writetmpfile(\"dalvik_choices.prop\",\"true=yes\");\n endif;\n\n";
+//        
+        
         this.aroma_config = this.aroma_config + "writetmpfile(\"app_choices.prop\",readtmpfile(\"app_choices.prop\"));\n";
         this.aroma_config = this.aroma_config + "writetmpfile(\"system_app_choices.prop\",readtmpfile(\"system_app_choices.prop\"));\n";
         this.aroma_config = this.aroma_config + "writetmpfile(\"boot_anim_choices.prop\",readtmpfile(\"boot_anim_choices.prop\"));\n";
@@ -267,8 +273,10 @@ public class Operations {
         this.aroma_config = this.aroma_config + "writetmpfile(\"ringtone_choices.prop\",readtmpfile(\"ringtone_choices.prop\"));\n";
         this.aroma_config = this.aroma_config + "writetmpfile(\"notification_choices.prop\",readtmpfile(\"notification_choices.prop\"));\n";
         this.aroma_config = this.aroma_config + "writetmpfile(\"delete_choices.prop\",readtmpfile(\"delete_choices.prop\"));\n";
-        this.aroma_config = this.aroma_config + "if confirm(\"Installing\",getvar(\"installer_title\") + \"\\n\\nStart Installation?\", \"@confirm\")==\"no\" then back(1);\n";
-        this.aroma_config = this.aroma_config + "endif;\ninstall(\"Installing\", \"Your selected files are being installed. Please Wait...\", \"@install\");";
+        this.aroma_config = this.aroma_config + "writetmpfile(\"dalvik_choices.prop\",\"tr=no\n\");\\n";
+        this.aroma_config = this.aroma_config + "if confirm(\"Installing\",getvar(\"installer_title\") + \"\\n\\nStart Installation?\", \"@confirm\")==\"no\" then back(1);\nendif;\n";
+        this.aroma_config = this.aroma_config + "if confirm(\"Wipe cache partition\",\"Do you want to clear dalvik cache after installation?\", \"@confirm\")==\"yes\" then writetmpfile(\"dalvik_choices.prop\",\"true=yes\");\n\nendif;\n";
+        this.aroma_config = this.aroma_config + "install(\"Installing\", \"Your selected files are being installed. Please Wait...\", \"@install\");";
     }
     
     public void extractFilesUpdaterScript(ArrayList<String> arrayList, String title, String propFile, String location){
@@ -342,8 +350,12 @@ public class Operations {
             this.updater_script = this.updater_script + "set_perm_recursive(1000, 1000, 0775, 0644, \"/system/media\");\n";
         }
         
-        this.updater_script = this.updater_script + "ui_print(\"@Wiping dalvik-cache\");\n" +
-                "delete_recursive(\"/data/dalvik-cache\");\n";
+        if(this.flashableZipType.equals("Create Flashable Zip With Aroma Installer")){
+            this.updater_script = this.updater_script + "\nif(file_getprop(\"/tmp/aroma/dalvik_choices.prop\", \"true\")==\"yes\") then\n" +
+                "ui_print(\"@Wiping dalvik-cache\");" +
+                "delete_recursive(\"/data/dalvik-cache\");\nendif;\n";
+        }
+        
         this.updater_script = this.updater_script + "unmount(\"/data\");\n";
         this.updater_script = this.updater_script + "unmount(\"/system\");\n";
         this.updater_script = this.updater_script + "ui_print(\"@Finished Install\");\n";
