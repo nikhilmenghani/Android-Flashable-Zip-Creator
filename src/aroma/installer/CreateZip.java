@@ -13,6 +13,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.zip.ZipOutputStream;
 import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
@@ -45,7 +46,59 @@ public class CreateZip extends SwingWorker<Void,Void>{
         return null;
     }
 
+    public void removeEmptyGroup(){
+        ArrayList<String> arrayList = new ArrayList<>();
+        arrayList = op.groupArrayList;
+        for(String groupName: arrayList){
+            System.out.println("Considering " + groupName);
+            if(!op.map.containsKey(groupName)){
+                this.removeEmptyGroup(groupName);
+                System.out.println(groupName + " Removed..!!" + " Now GroupList Contains " + op.groupArrayList);
+                //recursion is used here..
+                removeEmptyGroup();
+            }
+            else{
+                System.out.println("Nothing to remove..!!");
+                continue;
+            }
+        }
+    }
+    
+    public void removeEmptyGroup(String groupName){
+        String str = groupName.substring(0,groupName.indexOf("_"));
+        //JOptionPane.showMessageDialog(null, "String is " + str);
+        switch(str){
+                case "APKs-System":
+                    op.systemList.remove(groupName);
+                    op.groupArrayList.remove(groupName);
+                    break;
+                case "APKs-Data_":
+                    op.dataList.remove(groupName);
+                    op.groupArrayList.remove(groupName);
+                    break;
+                case "BootAnimations":
+                    op.bootAnimList.remove(groupName);
+                    op.groupArrayList.remove(groupName);
+                    break;
+                case "Ringtones":
+                    op.ringtoneList.remove(groupName);
+                    op.groupArrayList.remove(groupName);
+                    break;
+                case "Notifications":
+                    op.notifList.remove(groupName);
+                    op.groupArrayList.remove(groupName);
+                    break;
+                case "Kernel":
+                    op.kernelList.remove(groupName);
+                    op.groupArrayList.remove(groupName);
+                    break;
+                default:
+                System.out.println("Something Went Wrong..!!");
+        }
+    }
+    
     public void createZipAt(String destination) throws IOException{
+        
         ai.setLog("Creating "+op.flashableZipType+" Zip...", ai.textAreaCZ);
         File fileDest = new File(destination);
         System.out.println("Entered Create Zip");
@@ -64,6 +117,7 @@ public class CreateZip extends SwingWorker<Void,Void>{
         ju.setValue(progress);
         ai.setLog("Opening I/O Streams...", ai.textAreaCZ);
         ai.setLog("Parsing Zip Data...", ai.textAreaCZ);
+        this.removeEmptyGroup();
         for(String groupName: op.groupArrayList){
             System.out.println("Now Group under consideration is : " + groupName);
             if(op.map.containsKey(groupName)){
