@@ -144,6 +144,59 @@ public class Operations {
         in.close();
     }
     
+    public void removeEmptyGroup(){
+        arrayList = new ArrayList<>();
+        arrayList = this.groupArrayList;
+        for(String groupName: arrayList){
+            System.out.println("Considering " + groupName);
+            if(!this.map.containsKey(groupName)){
+                this.removeEmptyGroup(groupName);
+                System.out.println(groupName + " Removed..!!" + " Now GroupList Contains " + this.groupArrayList);
+                
+                //recursion used here..
+                
+                removeEmptyGroup();
+            }
+            else{
+                System.out.println("Nothing to remove..!!");
+                continue;
+            }
+        }
+    }
+    
+    public void removeEmptyGroup(String groupName){
+        String str = groupName.substring(0,groupName.indexOf("_"));
+        //JOptionPane.showMessageDialog(null, "String is " + str);
+        switch(str){
+                case "APKs-System":
+                    this.systemList.remove(groupName);
+                    this.groupArrayList.remove(groupName);
+                    break;
+                case "APKs-Data_":
+                    this.dataList.remove(groupName);
+                   this.groupArrayList.remove(groupName);
+                    break;
+                case "BootAnimations":
+                    this.bootAnimList.remove(groupName);
+                    this.groupArrayList.remove(groupName);
+                    break;
+                case "Ringtones":
+                    this.ringtoneList.remove(groupName);
+                    this.groupArrayList.remove(groupName);
+                    break;
+                case "Notifications":
+                    this.notifList.remove(groupName);
+                    this.groupArrayList.remove(groupName);
+                    break;
+                case "Kernel":
+                    this.kernelList.remove(groupName);
+                    this.groupArrayList.remove(groupName);
+                    break;
+                default:
+                System.out.println("Something Went Wrong..!!");
+        }
+    }
+    
     public String removeExtension(String str){
         String tempString[] = str.split("\\.");
         for(int i = 1; i < tempString.length - 1 ; i++){
@@ -197,19 +250,18 @@ public class Operations {
     
     public int listFilesInAromaConfig(ArrayList<String> groupType, String groupName, String propFile, int count, MultiValueMap mvm){
         int i = 1;
-        if(groupType.equals(deleteApkList)){
+        if(groupType.equals(deleteApkList)&&count == 1){
             for(String file_list: deleteApkList){
                 this.aroma_config = this.aroma_config + "appendvar(\"installer_title\",iif(prop(\"" + propFile + "\",\"item." + count + "." + i + "\")==\"1\",\"" + file_list + "\",\"\"));\n";
                 i++;
             }
-        }else{
-            if(groupType.contains(groupName)){
+            count++;
+        }else if(groupType.contains(groupName)){
                 for(String file_list: this.returnPathArray(groupName, mvm)){
                     this.aroma_config = this.aroma_config + "appendvar(\"installer_title\",iif(prop(\"" + propFile + "\",\"item." + count + "." + i + "\")==\"1\",\"" + this.removeExtension(getNameFromPath(file_list)) + "\",\"\"));\n";
                     i++;
                 }
                 count++;
-            }
         }
         return count;
     }
@@ -257,11 +309,9 @@ public class Operations {
 
                 r = listFilesInAromaConfig(ringtoneList, grouplist, "ringtone_choices.prop", r, map);
 
-                n = listFilesInAromaConfig(notifList, grouplist, "notification_choices.prop", n, map);
-
-                da = listFilesInAromaConfig(deleteApkList, grouplist, "delete_choices.prop", da, map);
+                n = listFilesInAromaConfig(notifList, grouplist, "notification_choices.prop", n, map);    
             }
-            
+            da = listFilesInAromaConfig(deleteApkList, grouplist, "delete_choices.prop", da, map);
         }
         this.aroma_config = this.aroma_config + "writetmpfile(\"app_choices.prop\",readtmpfile(\"app_choices.prop\"));\n";
         this.aroma_config = this.aroma_config + "writetmpfile(\"system_app_choices.prop\",readtmpfile(\"system_app_choices.prop\"));\n";

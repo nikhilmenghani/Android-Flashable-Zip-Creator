@@ -1532,6 +1532,7 @@ public class AromaInstaller extends javax.swing.JFrame {//implements PropertyCha
         System.out.println("Create Aroma Zip Clicked..");
         if(this.checkIfEverythingIsOkay()){
             op.flashableZipType = evt.getActionCommand();
+            //op.removeEmptyGroup();
             //createZipAt(op.zipDestination);
             this.createZipUI();
             //JOptionPane.showMessageDialog(this, "Zip File Successfully Created..!! Enjoy..!!");
@@ -1746,7 +1747,7 @@ public class AromaInstaller extends javax.swing.JFrame {//implements PropertyCha
                 case "Delete System Files Group":
                     op.deleteApkList.remove(groupName);
                     op.map.remove(groupName);
-                Default:
+                default:
                 System.out.println("Something Went Wrong..!!");
             }
             //op.groupArrayList.remove(groupName);
@@ -1839,7 +1840,7 @@ public class AromaInstaller extends javax.swing.JFrame {//implements PropertyCha
                         fileModel.removeAllElements();
                         op.updateFileListWithSelectedGroupList("DeleteApk_"+groupList.getSelectedValue().toString(), fileModel, op.map);
                     }
-                Default:
+                default:
                     System.out.println("in Default....");
                     fileModel.removeAllElements();
                     System.out.println("Not Working!!");
@@ -1903,7 +1904,7 @@ public class AromaInstaller extends javax.swing.JFrame {//implements PropertyCha
                 System.out.println("Aroma Map contains : " + op.map);
                 break;
             case "Delete System Files Group":
-                    Default:
+                    default:
                     System.out.println("Something Went Wrong..!!");
         }
     }
@@ -2001,7 +2002,7 @@ public class AromaInstaller extends javax.swing.JFrame {//implements PropertyCha
                         groupModel.addElement(this.groupName.getText());
                         groupList.setSelectedIndex(groupModel.getSize()-1);
                         frame.dispose();
-                        Default:
+                        default:
                         System.out.println("Something Went Wrong..!!");
                 }
         }else{
@@ -2060,7 +2061,7 @@ public class AromaInstaller extends javax.swing.JFrame {//implements PropertyCha
                         System.out.println("Button Group Added in : " + op.lastActionCommand);
 //                        op.deleteApkList.add(this.groupName.getText());
 //                        System.out.println("Button Group Added in : " + op.lastActionCommand);
-                        Default:
+                        default:
                         System.out.println("Something Went Wrong..!!");
                 }
                 
@@ -2096,7 +2097,7 @@ public class AromaInstaller extends javax.swing.JFrame {//implements PropertyCha
                 break;
             case "Delete System Files Group":
                 btnDeleteSystemFilesGroup.setSelected(false);
-                Default:
+                default:
                 System.out.println("Something Went Wrong..!!");
         }
     }
@@ -2123,7 +2124,7 @@ public class AromaInstaller extends javax.swing.JFrame {//implements PropertyCha
                 break;
             case "Delete System Files Group":
                 btnDeleteSystemFilesGroup.setSelected(false);
-                Default:
+                default:
                 System.out.println("Something Went Wrong..!!");
         }
         
