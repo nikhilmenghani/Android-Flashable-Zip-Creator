@@ -144,59 +144,6 @@ public class Operations {
         in.close();
     }
     
-    public void removeEmptyGroup(){
-        arrayList = new ArrayList<>();
-        arrayList = this.groupArrayList;
-        for(String groupName: arrayList){
-            System.out.println("Considering " + groupName);
-            if(!this.map.containsKey(groupName)){
-                this.removeEmptyGroup(groupName);
-                System.out.println(groupName + " Removed..!!" + " Now GroupList Contains " + this.groupArrayList);
-                
-                //recursion used here..
-                
-                removeEmptyGroup();
-            }
-            else{
-                System.out.println("Nothing to remove..!!");
-                continue;
-            }
-        }
-    }
-    
-    public void removeEmptyGroup(String groupName){
-        String str = groupName.substring(0,groupName.indexOf("_"));
-        //JOptionPane.showMessageDialog(null, "String is " + str);
-        switch(str){
-                case "APKs-System":
-                    this.systemList.remove(groupName);
-                    this.groupArrayList.remove(groupName);
-                    break;
-                case "APKs-Data_":
-                    this.dataList.remove(groupName);
-                   this.groupArrayList.remove(groupName);
-                    break;
-                case "BootAnimations":
-                    this.bootAnimList.remove(groupName);
-                    this.groupArrayList.remove(groupName);
-                    break;
-                case "Ringtones":
-                    this.ringtoneList.remove(groupName);
-                    this.groupArrayList.remove(groupName);
-                    break;
-                case "Notifications":
-                    this.notifList.remove(groupName);
-                    this.groupArrayList.remove(groupName);
-                    break;
-                case "Kernel":
-                    this.kernelList.remove(groupName);
-                    this.groupArrayList.remove(groupName);
-                    break;
-                default:
-                System.out.println("Something Went Wrong..!!");
-        }
-    }
-    
     public String removeExtension(String str){
         String tempString[] = str.split("\\.");
         for(int i = 1; i < tempString.length - 1 ; i++){
@@ -573,7 +520,8 @@ public class Operations {
     public void deleteDirectories(String location){
         File directory = new File(location);
         if(!directory.exists()){
-            JOptionPane.showMessageDialog(null, "Directory does not exist!!");
+            //JOptionPane.showMessageDialog(null, "Directory does not exist!!");
+            System.out.println("Delete Doesn't Exist..!!");
         }
         else{
             this.delete(directory);
