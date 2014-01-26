@@ -288,7 +288,9 @@ public class Operations {
                                 i++;
                                 break;
                             case "Create Normal Flashable Zip":
+                                if(i == 1)
                                 this.updater_script = this.updater_script + "package_extract_dir(\"customize/" + getListName(list) + "/" + list + "\", \"" + location + "\");\n";
+                                i++;
                                 break;
                             default:
                                 JOptionPane.showMessageDialog(null, "Something Went Wrong..!! Restart Tool and Try Again..");
