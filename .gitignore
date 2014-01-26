@@ -1,0 +1,9 @@
+*.class
+build/
+dist/
+commons-collections4-4.0/
+nbproject/
+# Package Files #
+
+*.war
+*.ear
