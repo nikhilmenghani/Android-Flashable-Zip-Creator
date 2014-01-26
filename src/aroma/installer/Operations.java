@@ -260,11 +260,6 @@ public class Operations {
             }
             da = listFilesInAromaConfig(deleteApkList, grouplist, "delete_choices.prop", da, map);
         }
-//        this.aroma_config = this.aroma_config + "\ncheckviewbox(\"Installation Complete\",\"<#selectbg_g><b>Do you want to wipe dalvik cache?</b></#>\"\n" +
-//                "\"@welcome\",\"Wipe Dalvik Cache\",\"0\",\"clear_cache\");\n\n";
-//        this.aroma_config = this.aroma_config + "if\ngetvar(\"clear_cache\")==\"1\"\n then \n" +
-//                "writetmpfile(\"dalvik_choices.prop\",\"true=yes\");\n endif;\n\n";
-//        
         
         this.aroma_config = this.aroma_config + "writetmpfile(\"app_choices.prop\",readtmpfile(\"app_choices.prop\"));\n";
         this.aroma_config = this.aroma_config + "writetmpfile(\"system_app_choices.prop\",readtmpfile(\"system_app_choices.prop\"));\n";
