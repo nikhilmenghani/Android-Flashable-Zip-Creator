@@ -380,7 +380,12 @@ public class Operations {
     }
     
     public String getNameFromPath(String str){
-        String tempString[] = str.split("\\\\");
+        String[] tempString;
+        if(str.contains("\\")){
+            tempString = str.split("\\\\");
+        }else{
+            tempString = str.split("/");
+        }
         System.out.println("Successfully Splitted from " + str + " to " + tempString[tempString.length-1]);
         return tempString[tempString.length-1];
     }
