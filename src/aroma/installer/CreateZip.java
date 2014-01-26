@@ -46,6 +46,7 @@ public class CreateZip extends SwingWorker<Void,Void>{
     }
 
     public void removeEmptyGroup(){
+        ai.setLog("Checking If Any Group is Empty...", ai.textAreaCZ);
         ArrayList<String> arrayList = new ArrayList<>();
         arrayList = op.groupArrayList;
         for(String groupName: arrayList){
@@ -55,6 +56,7 @@ public class CreateZip extends SwingWorker<Void,Void>{
                 System.out.println(groupName + " Removed..!!" + " Now GroupList Contains " + op.groupArrayList);
                 //recursion is used here..
                 removeEmptyGroup();
+                ai.setLog("Removing Empty group " + groupName, ai.textAreaCZ);
             }
             else{
                 System.out.println("Nothing to remove..!!");
@@ -98,6 +100,7 @@ public class CreateZip extends SwingWorker<Void,Void>{
     
     public void createZipAt(String destination) throws IOException{
         this.removeEmptyGroup();
+        ai.setLog("All Clear...", ai.textAreaCZ);
         ai.setLog("Creating "+op.flashableZipType+" Zip...", ai.textAreaCZ);
         File fileDest = new File(destination);
         System.out.println("Entered Create Zip");

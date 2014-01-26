@@ -1411,6 +1411,7 @@ public class AromaInstaller extends javax.swing.JFrame {//implements PropertyCha
 
     public void btnAdvancedGroupActionPerformed(java.awt.event.ActionEvent evt) {                                                    
         System.out.println("Add Advanced Group Clicked..");
+        JOptionPane.showMessageDialog(this, "Currently Work In Progress..!!\nWill Be Available Soon..!!\nSuggestions to add features are welcomed..!! ");
 //        removeHighlight(this.lastSelected);
 //        btnDeleteSystemFilesGroup.setSelected(true);
 //        this.lastSelected = evt.getActionCommand();
@@ -1526,6 +1527,9 @@ public class AromaInstaller extends javax.swing.JFrame {//implements PropertyCha
             //CZtask = new createZipTask();
             this.createZipUI();
             //JOptionPane.showMessageDialog(this, "Zip File Successfully Created..!! Enjoy..!!");
+            File f = new File("Temp");
+            if(f.isDirectory()&&f.exists())
+                op.deleteDirectories("Temp");
         }
     }                                                  
 
@@ -1537,7 +1541,9 @@ public class AromaInstaller extends javax.swing.JFrame {//implements PropertyCha
             //createZipAt(op.zipDestination);
             this.createZipUI();
             //JOptionPane.showMessageDialog(this, "Zip File Successfully Created..!! Enjoy..!!");
-            op.deleteDirectories("Temp");
+            File f = new File("Temp");
+            if(f.isDirectory()&&f.exists())
+                op.deleteDirectories("Temp");
         }
     }
     

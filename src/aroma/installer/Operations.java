@@ -183,7 +183,7 @@ public class Operations {
                 this.aroma_config = this.aroma_config + heading;
                 for(String list : arrayList){
                     if(map.containsKey(list)){
-                    this.aroma_config = this.aroma_config + ",\n\"" + list + "\", \"\", 2";
+                    this.aroma_config = this.aroma_config + ",\n\"" + list.substring(list.lastIndexOf("_") + 1, list.length()) + "\", \"\", 2";
                     //System.out.println("................" + this.returnPathArray(data_list, map));
                         for(String list_files : this.returnPathArray(list, map)){
                             this.aroma_config = this.aroma_config + ",\n\"" + this.removeExtension(getNameFromPath(list_files)) + "\", \"\", 0";
@@ -438,19 +438,6 @@ public class Operations {
         return list;
     }
     
-//    public void getArrayListFromZip(String filePath) throws FileNotFoundException, IOException{
-//        ZipInputStream zis = new ZipInputStream(new FileInputStream(filePath));
-//        ZipEntry ze = zis.getNextEntry();
-//        String fileName = ze.getName();
-//        if(fileName.equals("customize/DeleteSystemApps/app-config")){
-//            JOptionPane.showMessageDialog(null, "Match Found");
-//        }
-//        else{
-//            System.out.println("Could not find..!!");
-//        }
-//        
-//    }
-    
     //The following function will extract the whole zip file and return a multivaluemap which contains Group Name as a key and file name as its values
     public MultiValueMap extractTheZip (String source) throws IOException{ 
         byte[] buffer = new byte[1024];
@@ -521,7 +508,7 @@ public class Operations {
         File directory = new File(location);
         if(!directory.exists()){
             //JOptionPane.showMessageDialog(null, "Directory does not exist!!");
-            System.out.println("Delete Doesn't Exist..!!");
+            System.out.println("Directory Doesn't Exist..!!");
         }
         else{
             this.delete(directory);
