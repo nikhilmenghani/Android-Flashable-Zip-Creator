@@ -5,7 +5,6 @@
 package aroma.installer;
 
 import java.awt.Toolkit;
-import java.awt.event.WindowAdapter;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -72,7 +71,7 @@ public class CreateZip extends SwingWorker<Void,Void>{
                     op.systemList.remove(groupName);
                     op.groupArrayList.remove(groupName);
                     break;
-                case "APKs-Data_":
+                case "APKs-Data":
                     op.dataList.remove(groupName);
                     op.groupArrayList.remove(groupName);
                     break;
@@ -98,7 +97,7 @@ public class CreateZip extends SwingWorker<Void,Void>{
     }
     
     public void createZipAt(String destination) throws IOException{
-        
+        this.removeEmptyGroup();
         ai.setLog("Creating "+op.flashableZipType+" Zip...", ai.textAreaCZ);
         File fileDest = new File(destination);
         System.out.println("Entered Create Zip");
@@ -117,7 +116,7 @@ public class CreateZip extends SwingWorker<Void,Void>{
         ju.setValue(progress);
         ai.setLog("Opening I/O Streams...", ai.textAreaCZ);
         ai.setLog("Parsing Zip Data...", ai.textAreaCZ);
-        this.removeEmptyGroup();
+        
         for(String groupName: op.groupArrayList){
             System.out.println("Now Group under consideration is : " + groupName);
             if(op.map.containsKey(groupName)){
