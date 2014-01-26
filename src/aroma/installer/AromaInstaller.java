@@ -1286,6 +1286,7 @@ public class AromaInstaller extends javax.swing.JFrame {//implements PropertyCha
     }
     
     private void CZwindowOpened(WindowEvent evt) {
+        //op.removeEmptyGroup();
         CZtask = new CreateZip(this, this.op);   
         CZtask.execute();
     }
