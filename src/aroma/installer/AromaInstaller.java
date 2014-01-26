@@ -31,8 +31,8 @@ import org.apache.commons.collections4.map.MultiValueMap;
  * @author Rajat
  */
 public class AromaInstaller extends javax.swing.JFrame {//implements PropertyChangeListener{
-    private createZipTask CZtask;
-    private ImportZipTask IZtask;
+    private CreateZip CZtask;
+    private ImportZip IZtask;
     public ProgressBarUpdater ju;
     public AromaInstaller(){
         op.CSDArrayList = new ArrayList<>();
@@ -779,13 +779,13 @@ public class AromaInstaller extends javax.swing.JFrame {//implements PropertyCha
         
         JDialog dialog = new JDialog(frame,"Currently Supported Devices",true);
         
-        JPanel CSD_panel = new JPanel();
+        CSD_panel = new JPanel();
        
-        JLabel CSD_heading = new JLabel();
-        JLabel CSD_title = new JLabel();
-        JLabel CSD_note1 = new JLabel();
-        JLabel CSD_note2 = new JLabel();
-        JLabel CSD_note3 = new JLabel();
+        CSD_heading = new JLabel();
+        CSD_title = new JLabel();
+        CSD_note1 = new JLabel();
+        CSD_note2 = new JLabel();
+        CSD_note3 = new JLabel();
         
         DefaultListModel CSDModel = new DefaultListModel();
         
@@ -1113,8 +1113,7 @@ public class AromaInstaller extends javax.swing.JFrame {//implements PropertyCha
         dialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
         dialog.addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowOpened(java.awt.event.WindowEvent evt) {
-                CZtask = new createZipTask();
-                CZtask.execute();
+                CZwindowOpened(evt);
                 
             }
         });
@@ -1130,10 +1129,15 @@ public class AromaInstaller extends javax.swing.JFrame {//implements PropertyCha
 //        CZtask.execute();
     }
     
+    private void CZwindowOpened(WindowEvent evt) {
+        CZtask = new CreateZip(this, this.op);   
+        CZtask.execute();
+    }
+    
     public void btnBrowseZipActionPerformed(ActionEvent evt) {
         if(this.setExistingZipPath()){
-            setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-            IZtask = new ImportZipTask();
+            //setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+            IZtask = new ImportZip(this, this.op);
             IZtask.execute();
         }else{
             setLog("Cancelled By User", textAreaImportZipLog);
@@ -1164,236 +1168,6 @@ public class AromaInstaller extends javax.swing.JFrame {//implements PropertyCha
             JOptionPane.showMessageDialog(this, "File access cancelled by user.");
             return false;
         }
-    }
-    
-    
-    class ImportZipTask extends SwingWorker<Void, Void> {
-      
-        @Override
-        public Void doInBackground() throws IOException { 
-            ju = new ProgressBarUpdater(progressImportZip);
-            new java.lang.Thread(ju).start();
-            int progress = 0;
-            progress += 5;
-            ju.setValue(progress);
-            textFieldSelectZip.setText(op.existingZipPath);
-            MultiValueMap mvm  = this.extractTheZip(op.existingZipPath);
-            System.out.println("Map Before : "+op.map);
-            groupModel.clear();
-            op.map.putAll(mvm);       
-            op.groupArrayList.addAll(op.getGroupListFromMVM(mvm));
-            System.out.println("Updated GroupList : "+op.groupArrayList);
-            System.out.println("Updated Map : "+op.map);
-            for(String element:op.groupArrayList){
-                String[] temp = element.split("_");
-                switch(temp[0]){
-                    case "APKs-System":
-                        op.systemList.add(element);
-                        break;
-                    case "APKs-Data":
-                        op.dataList.add(element);
-                        break;
-                    case "BootAnimations":
-                        op.bootAnimList.add(element);
-                        break;
-                    case "Ringtones":
-                        op.ringtoneList.add(element);
-                        break;
-                    case "Notifications":
-                        op.notifList.add(element);
-                        break;
-                }
-            }
-            refreshGroupList("APKs Group");
-            //ju.setValue(100);
-            return null;
-        }
-
-        @Override
-        public void done() {
-            Toolkit.getDefaultToolkit().beep();
-            btnBrowseZip.setEnabled(true);
-            setCursor(null); //turn off the wait cursor
-            textAreaImportZipLog.append("Done!\n");
-            frame.setVisible(false);
-            JOptionPane.showMessageDialog(null, "Zip Import Successful");
-            frame.dispose();
-        }
-        
-        public MultiValueMap extractTheZip (String source) throws IOException{ 
-            int progressValue = 20;
-            setLog("Extracting File from given Location...", textAreaImportZipLog);
-            byte[] buffer = new byte[1024];
-            MultiValueMap mvm = new MultiValueMap();
-            try{
-                File folder = new File("Temp");
-                if(!folder.exists()){
-                    folder.mkdir();
-                }
-                ju.setValue(progressValue);
-                ZipInputStream zis = new ZipInputStream(new FileInputStream(source));
-                ZipEntry ze = zis.getNextEntry();
-                progressValue += 2;
-                setLog("Extracting Data...", textAreaImportZipLog);
-                ju.setValue(progressValue);
-                while(ze!=null){
-                    String fileName = ze.getName();
-                    File newFile = new File("Temp" + File.separator + fileName);
-                    String filePath = ze.getName();
-                    setLog(filePath, textAreaImportZipLog);
-                    new File(newFile.getParent()).mkdirs();
-                    FileOutputStream fos = new FileOutputStream(newFile);             
-                    int len;
-                    while ((len = zis.read(buffer)) > 0) {
-                        fos.write(buffer, 0, len);
-                    }
-                    fos.close();
-                    if(filePath.startsWith("customize/")){
-                        String temp = filePath.replace("customize/", "");
-                        String splitName[] = temp.split("/");
-                        switch (splitName[0]){
-                            case "APKs-System":
-                                mvm.put(splitName[1],newFile.getAbsolutePath());
-                                break;
-                            case "APKs-Data":
-                                mvm.put(splitName[1],newFile.getAbsolutePath());
-                                break;
-                            case "Ringtones":
-                                mvm.put(splitName[1],newFile.getAbsolutePath());
-                                break;
-                            case "Notifications":
-                                mvm.put(splitName[1],newFile.getAbsolutePath());
-                                break;
-                            case "BootAnimations":
-                                mvm.put(splitName[1],newFile.getAbsolutePath());
-                                break;
-                        }
-                    }
-                    ze = zis.getNextEntry();
-                    progressValue += 1;
-                    ju.setValue(progressValue);
-                }
-                zis.closeEntry();
-                zis.close();
-                ju.setValue(100);
-                setLog("Crunching Data for Application.....Hold Tight ;)", textAreaImportZipLog);
-                System.out.println("Done");
-                ju.setValue(100);
-            }catch(IOException ex){
-                ex.printStackTrace(); 
-            }
-            return mvm;
-        }
-    }
-    
-    class createZipTask extends SwingWorker<Void, Void>{
-        private int progress;
-        public void createZipTask(){
-            progress = 0;
-        }
-
-        @Override
-        protected Void doInBackground() throws Exception {
-            ju = new ProgressBarUpdater(progressCZ);
-            new java.lang.Thread(ju).start();
-            createZipAt(op.zipDestination);
-            return null;
-        }
-        
-        public void createZipAt(String destination) throws IOException{
-            setLog("Creating "+op.flashableZipType+" Zip...", textAreaCZ);
-            File fileDest = new File(destination);
-            System.out.println("Entered Create Zip");
-            if(!fileDest.exists()){
-                fileDest.createNewFile();
-                System.out.println("File Created");
-            }
-            InputStream in;
-            OutputStream out;
-            out = new FileOutputStream(fileDest);
-            ZipOutputStream zos = new ZipOutputStream(out);
-            System.out.println("Output To : " + destination);
-            setLog("Writing Zip at specified destination...", textAreaCZ);
-            progress += 20;
-            //Write Apk, Zip, etc files to ZIP..
-            ju.setValue(progress);
-            setLog("Opening I/O Streams...", textAreaCZ);
-            setLog("Parsing Zip Data...", textAreaCZ);
-            for(String groupName: op.groupArrayList){
-                System.out.println("Now Group under consideration is : " + groupName);
-                if(op.map.containsKey(groupName)){
-                    for(String file: op.returnPathArray(groupName, op.map)){
-                        System.out.println("Group Name : " +groupName + " File Name : " + file);
-                        in = new FileInputStream(new File(file));
-                        file = op.getNameFromPath(file);
-                        file = "customize/" + op.getListName(groupName) + "/" + groupName + "/" + file;
-                        op.writeFileToZip(in, zos, file);
-                    }
-                    progress += 17;
-                    ju.setValue(progress);
-                }
-                else{
-                    JOptionPane.showMessageDialog(null, "Removed Empty Group : " + groupName);
-                }
-            }
-            if(!op.selectedDevice.equals("")){
-                in = this.getClass().getResourceAsStream("META-INF/com/google/android/binary files/" + op.selectedDevice + "/update-binary");
-            }
-            else{
-                in = new FileInputStream(new File(op.updateBinaryPath));
-            }
-            setLog("Creating Config Files....", textAreaCZ);
-            progress = 90;
-            ju.setValue(progress);
-            switch(op.flashableZipType){
-                case "Create Flashable Zip With Aroma Installer":
-                    op.writeFileToZip(in, zos, "META-INF/com/google/android/update-binary-installer");
-                    for(String fileName : op.jarFileList()){
-                        System.out.println("File Name : " + fileName);
-                        in = this.getClass().getResourceAsStream(fileName);
-                        op.writeFileToZip(in, zos, fileName);
-                    }
-                    op.createAromaConfigFile();
-                    in = new ByteArrayInputStream(op.aroma_config.getBytes());
-                    op.writeFileToZip(in, zos, "META-INF/com/google/android/aroma-config");
-                    in = this.getClass().getResourceAsStream("META-INF/com/google/android/update-binary");
-                    op.writeFileToZip(in, zos, "META-INF/com/google/android/update-binary");
-                    progress += 1;
-                    ju.setValue(progress);
-                    break;
-                case "Create Normal Flashable Zip":
-                    op.writeFileToZip(in, zos, "META-INF/com/google/android/update-binary");
-                    ju.setValue(90);
-                    break;
-                default:
-                    JOptionPane.showMessageDialog(null, "Something Went Wrong..!! Restart Tool and Try Again..");
-            }
-            setLog("Nearing Completion....", textAreaCZ);
-            in = this.getClass().getResourceAsStream("utils/mount");
-            op.writeFileToZip(in, zos, "utils/mount");
-            in = this.getClass().getResourceAsStream("utils/umount");
-            op.writeFileToZip(in, zos, "utils/umount");
-            op.createUpdaterScriptFile();
-            in = new ByteArrayInputStream(op.updater_script.getBytes());
-            ju.setValue(100);
-            op.writeFileToZip(in, zos, "META-INF/com/google/android/updater-script");
-            zos.closeEntry();
-            zos.close();
-            setLog("Folder Compressed Successfully....", textAreaCZ);
-            System.out.println("Folder successfully compressed");
-            setLog("Zip Successfully Created....", textAreaCZ);
-        }
-        
-        @Override
-        public void done() {
-            Toolkit.getDefaultToolkit().beep();
-            setCursor(null); //turn off the wait cursor
-            textAreaCZ.append("Done!\n");
-            frame.setVisible(false);
-            JOptionPane.showMessageDialog(null, "Zip Successfully Created...!!!");
-            frame.dispose();
-        }
-        
     }
     
     public void setLog(String message, JTextArea textArea){
@@ -1946,7 +1720,7 @@ public class AromaInstaller extends javax.swing.JFrame {//implements PropertyCha
     }
     
     public void updateGroupList(String lastSelected){
-        if(!this.groupName.getText().equals("")){
+        if(!this.groupName.getText().equals("") && !this.groupName.getText().contains("_")){
                 switch(lastSelected){
                     case "APKs Group":
                         if(op.groupArrayList.contains("APKs-System_"+this.groupName.getText()) || op.groupArrayList.contains("APKs-Data_"+this.groupName.getText())){
@@ -2042,7 +1816,11 @@ public class AromaInstaller extends javax.swing.JFrame {//implements PropertyCha
                         System.out.println("Something Went Wrong..!!");
                 }
         }else{
-            JOptionPane.showMessageDialog(null, "You Cannot Continue Without Setting Group Name..!!");
+            if(this.groupName.getText().contains("_")){
+                JOptionPane.showMessageDialog(null, "You Cannot Have Underscore(_) in Group Name..!!");
+            }else{
+                JOptionPane.showMessageDialog(null, "You Cannot Continue Without Setting Group Name..!!");
+            } 
         }
     }
     
