@@ -107,6 +107,9 @@ public class ImportZip extends SwingWorker<Void,Void>{
                 ju.setValue(progressValue);
                 while(ze!=null){
                     String fileName = ze.getName();
+                    if(fileName.equals(op.appConfigPath)){
+                        op.deleteApkList = op.getArrayListFromFileInZip(zis);
+                    }
                     File newFile = new File("Temp" + File.separator + fileName);
                     String filePath = ze.getName();
                     ai.setLog(filePath, ai.textAreaImportZipLog);

@@ -79,12 +79,7 @@ public class Operations {
         
     }
     
-    public void createDeleteApkConfigList(){
-        for(String temp : this.deleteApkList){
-            this.deleteApkConfigList = this.deleteApkConfigList + temp + "\n";
-            System.out.println(deleteApkConfigList);
-        }
-    }
+    
     
     public String getListName(String groupName){
         if(this.systemList.contains(groupName)){
@@ -268,7 +263,7 @@ public class Operations {
         this.aroma_config = this.aroma_config + "writetmpfile(\"ringtone_choices.prop\",readtmpfile(\"ringtone_choices.prop\"));\n";
         this.aroma_config = this.aroma_config + "writetmpfile(\"notification_choices.prop\",readtmpfile(\"notification_choices.prop\"));\n";
         this.aroma_config = this.aroma_config + "writetmpfile(\"delete_choices.prop\",readtmpfile(\"delete_choices.prop\"));\n";
-        this.aroma_config = this.aroma_config + "writetmpfile(\"dalvik_choices.prop\",\"tr=no\n\");\\n";
+        this.aroma_config = this.aroma_config + "writetmpfile(\"dalvik_choices.prop\",\"tr=no\\n\");\n";
         this.aroma_config = this.aroma_config + "if confirm(\"Installing\",getvar(\"installer_title\") + \"\\n\\nStart Installation?\", \"@confirm\")==\"no\" then back(1);\nendif;\n";
         this.aroma_config = this.aroma_config + "if confirm(\"Wipe cache partition\",\"Do you want to clear dalvik cache after installation?\", \"@confirm\")==\"yes\" then writetmpfile(\"dalvik_choices.prop\",\"true=yes\");\n\nendif;\n";
         this.aroma_config = this.aroma_config + "install(\"Installing\", \"Your selected files are being installed. Please Wait...\", \"@install\");";

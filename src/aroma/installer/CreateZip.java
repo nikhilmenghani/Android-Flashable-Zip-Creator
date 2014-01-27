@@ -45,6 +45,8 @@ public class CreateZip extends SwingWorker<Void,Void>{
         return null;
     }
 
+    
+    
     public void removeEmptyGroup(){
         ai.setLog("Checking If Any Group is Empty...", ai.textAreaCZ);
         ArrayList<String> arrayList = new ArrayList<>();
@@ -98,6 +100,13 @@ public class CreateZip extends SwingWorker<Void,Void>{
         }
     }
     
+    public void createDeleteApkConfigList(){
+        for(String temp : op.deleteApkList){
+            op.deleteApkConfigList = op.deleteApkConfigList + temp + "\n";
+            System.out.println(op.deleteApkConfigList);
+        }
+    }
+    
     public void createZipAt(String destination) throws IOException{
         this.removeEmptyGroup();
         ai.setLog("All Clear...", ai.textAreaCZ);
@@ -113,6 +122,14 @@ public class CreateZip extends SwingWorker<Void,Void>{
         out = new FileOutputStream(fileDest);
         ZipOutputStream zos = new ZipOutputStream(out);
         System.out.println("Output To : " + destination);
+        if(!op.deleteApkList.isEmpty()){
+                System.out.println("Delete List Not Empty..!!");
+                this.createDeleteApkConfigList();
+                in = new ByteArrayInputStream(op.deleteApkConfigList.getBytes());
+                op.writeFileToZip(in, zos, "customize/DeleteSystemApps/app-config");
+            }else{
+                System.out.println("Delete List Empty..!!");
+            }
         ai.setLog("Writing Zip at specified destination...", ai.textAreaCZ);
         progress += 20;
         //Write Apk, Zip, etc files to ZIP..
