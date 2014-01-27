@@ -936,6 +936,9 @@ public class AromaInstaller extends javax.swing.JFrame {//implements PropertyCha
         btnResetDeleteFile = new JButton();
         deleteSystemScrollPane = new JScrollPane();
         deletefileModel = new DefaultListModel();
+        CZ_headingPanel = new JPanel();
+        lblCZHeading1 = new JLabel();
+        
         try{
             this.deletefileModel.removeAllElements();
             for(String fileName : op.deleteApkList){
@@ -947,6 +950,8 @@ public class AromaInstaller extends javax.swing.JFrame {//implements PropertyCha
         }
         deleteSystemFileList = new JList(deletefileModel);
 
+        deleteSystemPanel.setBackground(new java.awt.Color(255, 255, 255));
+        
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         deleteApkName.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
@@ -996,6 +1001,30 @@ public class AromaInstaller extends javax.swing.JFrame {//implements PropertyCha
         });
         deleteSystemScrollPane.setViewportView(deleteSystemFileList);
 
+        CZ_headingPanel.setBackground(new java.awt.Color(0, 0, 0));
+
+        lblCZHeading1.setFont(new java.awt.Font("Verdana", 1, 24)); // NOI18N
+        lblCZHeading1.setForeground(new java.awt.Color(255, 255, 255));
+        lblCZHeading1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblCZHeading1.setText("Remove Unwanted Apps");
+        
+        javax.swing.GroupLayout CZ_headingPanelLayout = new javax.swing.GroupLayout(CZ_headingPanel);
+        CZ_headingPanel.setLayout(CZ_headingPanelLayout);
+        CZ_headingPanelLayout.setHorizontalGroup(
+            CZ_headingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(CZ_headingPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(lblCZHeading1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        CZ_headingPanelLayout.setVerticalGroup(
+            CZ_headingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(CZ_headingPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(lblCZHeading1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
         javax.swing.GroupLayout deleteSystemPanelLayout = new javax.swing.GroupLayout(deleteSystemPanel);
         deleteSystemPanel.setLayout(deleteSystemPanelLayout);
         deleteSystemPanelLayout.setHorizontalGroup(
@@ -1003,46 +1032,53 @@ public class AromaInstaller extends javax.swing.JFrame {//implements PropertyCha
             .addGroup(deleteSystemPanelLayout.createSequentialGroup()
                 .addGap(53, 53, 53)
                 .addGroup(deleteSystemPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lbl_deleteSystemTitle)
-                    .addGroup(deleteSystemPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addGroup(deleteSystemPanelLayout.createSequentialGroup()
-                            .addComponent(lbl_deleteFileName)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(deleteApkName, javax.swing.GroupLayout.PREFERRED_SIZE, 321, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(lbl_deleteSystemExtension))
-                        .addGroup(deleteSystemPanelLayout.createSequentialGroup()
-                            .addComponent(deleteSystemScrollPane)
-                            .addGap(18, 18, 18)
-                            .addGroup(deleteSystemPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(btnRemoveDeleteFile, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(btnAddDeleteFile, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(btnDoneDeleteFile, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(btnResetDeleteFile, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addContainerGap(40, Short.MAX_VALUE))
+                    .addGroup(deleteSystemPanelLayout.createSequentialGroup()
+                        .addComponent(deleteSystemScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 364, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addGroup(deleteSystemPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnRemoveDeleteFile, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnAddDeleteFile, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnDoneDeleteFile, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnResetDeleteFile, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(deleteSystemPanelLayout.createSequentialGroup()
+                        .addGroup(deleteSystemPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(deleteSystemPanelLayout.createSequentialGroup()
+                                .addComponent(lbl_deleteFileName)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(deleteApkName, javax.swing.GroupLayout.PREFERRED_SIZE, 321, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(lbl_deleteSystemTitle))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lbl_deleteSystemExtension)))
+                .addContainerGap(50, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, deleteSystemPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(CZ_headingPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         deleteSystemPanelLayout.setVerticalGroup(
             deleteSystemPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(deleteSystemPanelLayout.createSequentialGroup()
-                .addGap(31, 31, 31)
+                .addContainerGap()
+                .addComponent(CZ_headingPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, Short.MAX_VALUE)
                 .addComponent(lbl_deleteSystemTitle)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addGroup(deleteSystemPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lbl_deleteFileName)
                     .addComponent(deleteApkName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lbl_deleteSystemExtension, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                .addGap(17, 17, 17)
                 .addGroup(deleteSystemPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(deleteSystemPanelLayout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, deleteSystemPanelLayout.createSequentialGroup()
                         .addComponent(btnAddDeleteFile, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnRemoveDeleteFile, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btnResetDeleteFile, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btnDoneDeleteFile, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(deleteSystemScrollPane))
-                .addContainerGap(37, Short.MAX_VALUE))
+                    .addComponent(deleteSystemScrollPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(20, 20, 20))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -1052,14 +1088,14 @@ public class AromaInstaller extends javax.swing.JFrame {//implements PropertyCha
             .addGroup(layout.createSequentialGroup()
                 .addGap(290, 290, 290)
                 .addComponent(deleteSystemPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(393, Short.MAX_VALUE))
+                .addContainerGap(383, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(103, 103, 103)
+                .addGap(65, 65, 65)
                 .addComponent(deleteSystemPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(145, Short.MAX_VALUE))
+                .addContainerGap(143, Short.MAX_VALUE))
         );
 
         pack();
@@ -2208,6 +2244,7 @@ public class AromaInstaller extends javax.swing.JFrame {//implements PropertyCha
     
     public JPanel CZ_Panel;
     public JPanel CZ_headingPanel;
+    public JLabel lblCZHeading1;
     public JScrollPane jScrollPane1;
     public JLabel lblCZHeading;
     public JProgressBar progressCZ;
