@@ -37,7 +37,7 @@ public class AromaInstaller extends javax.swing.JFrame {//implements PropertyCha
     public ProgressBarUpdater ju;
     public AromaInstaller(){
         op.CSDmap = new HashMap<>();
-        op.CSDmap.put("Samsung Galaxy R" , "i9305");
+        op.CSDmap.put("Samsung Galaxy R" , "i9103");
         op.CSDmap.put("Samsung Galaxy Nexus (GSM)", "maguro");
         op.CSDmap.put("Samsung Galaxy Note II(N7100)" , "N7100");
         initComponents();
@@ -1873,12 +1873,18 @@ public class AromaInstaller extends javax.swing.JFrame {//implements PropertyCha
                         this.fileModel.removeAllElements();
                         op.updateFileListWithSelectedGroupList("APKs-Data_"+groupList.getSelectedValue().toString(), this.fileModel, op.map); 
                     }
+                    else{
+                        this.fileModel.removeAllElements();
+                    }
                     break;
                 case "Boot Animation Group":
                     if(op.map.containsKey("BootAnimations_"+this.groupList.getSelectedValue().toString())){
                         System.out.println("Working!!" );
                         fileModel.removeAllElements();
                         op.updateFileListWithSelectedGroupList("BootAnimations_"+groupList.getSelectedValue().toString(), fileModel, op.map);
+                    }
+                    else{
+                        this.fileModel.removeAllElements();
                     }
                     break;
                 case "Ringtones Group":
@@ -1887,6 +1893,9 @@ public class AromaInstaller extends javax.swing.JFrame {//implements PropertyCha
                         fileModel.removeAllElements();
                         op.updateFileListWithSelectedGroupList("Ringtones_"+groupList.getSelectedValue().toString(), fileModel, op.map);
                     }
+                    else{
+                        this.fileModel.removeAllElements();
+                    }
                     break;
                 case "Notifications Group":
                     if(op.map.containsKey("Notifications_"+this.groupList.getSelectedValue().toString())){
@@ -1894,12 +1903,18 @@ public class AromaInstaller extends javax.swing.JFrame {//implements PropertyCha
                         fileModel.removeAllElements();
                         op.updateFileListWithSelectedGroupList("Notifications_"+groupList.getSelectedValue().toString(), fileModel, op.map);
                     }
+                    else{
+                        this.fileModel.removeAllElements();
+                    }
                     break;
                 case "Kernel Group":
                     if(op.map.containsKey("Kernel_"+this.groupList.getSelectedValue().toString())){
                         System.out.println("Working!!" );
                         fileModel.removeAllElements();
                         op.updateFileListWithSelectedGroupList("Kernel_"+groupList.getSelectedValue().toString(), fileModel, op.map);
+                    }
+                    else{
+                        this.fileModel.removeAllElements();
                     }
                     break;
                 case "Advanced Group":
@@ -1910,11 +1925,12 @@ public class AromaInstaller extends javax.swing.JFrame {//implements PropertyCha
                     }
                     break;
                 case "Delete System Files Group":
-                    if(op.map.containsKey("DeleteApk_"+this.groupList.getSelectedValue().toString())){
-                        System.out.println("Working!!" );
-                        fileModel.removeAllElements();
-                        op.updateFileListWithSelectedGroupList("DeleteApk_"+groupList.getSelectedValue().toString(), fileModel, op.map);
-                    }
+//                    if(op.map.containsKey("DeleteApk_"+this.groupList.getSelectedValue().toString())){
+//                        System.out.println("Working!!" );
+//                        fileModel.removeAllElements();
+//                        op.updateFileListWithSelectedGroupList("DeleteApk_"+groupList.getSelectedValue().toString(), fileModel, op.map);
+//                    }
+                    break;
                 default:
                     System.out.println("in Default....");
                     fileModel.removeAllElements();
