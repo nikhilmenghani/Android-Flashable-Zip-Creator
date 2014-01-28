@@ -8,17 +8,13 @@ package aroma.installer;
 
 import java.awt.Component;
 import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Iterator;
@@ -179,7 +175,6 @@ public class Operations {
                 for(String list : arrayList){
                     if(map.containsKey(list)){
                     this.aroma_config = this.aroma_config + ",\n\"" + list.substring(list.lastIndexOf("_") + 1, list.length()) + "\", \"\", 2";
-                    //System.out.println("................" + this.returnPathArray(data_list, map));
                         for(String list_files : this.returnPathArray(list, map)){
                             this.aroma_config = this.aroma_config + ",\n\"" + this.removeExtension(getNameFromPath(list_files)) + "\", \"\", 0";
                         }
@@ -190,21 +185,32 @@ public class Operations {
         }
     }
     
-    public int listFilesInAromaConfig(ArrayList<String> groupType, String groupName, String propFile, int count, MultiValueMap mvm){
-        int i = 1;
-        if(groupType.equals(deleteApkList)&&count == 1){
-            for(String file_list: deleteApkList){
-                this.aroma_config = this.aroma_config + "appendvar(\"installer_title\",iif(prop(\"" + propFile + "\",\"item." + count + "." + i + "\")==\"1\",\"" + file_list + "\",\"\"));\n";
-                i++;
-            }
-            count++;
-        }else if(groupType.contains(groupName)){
-                for(String file_list: this.returnPathArray(groupName, mvm)){
-                    this.aroma_config = this.aroma_config + "appendvar(\"installer_title\",iif(prop(\"" + propFile + "\",\"item." + count + "." + i + "\")==\"1\",\"" + this.removeExtension(getNameFromPath(file_list)) + "\",\"\"));\n";
+    public int listFilesInAromaConfig(ArrayList<String> groupType, String groupName, String propFile, int count, MultiValueMap mvm, String type){
+        if(type.equals("selectbox")){
+            int i = 1;
+            if(groupType.contains(groupName)){
+                    for(String file_list: this.returnPathArray(groupName, mvm)){
+                        this.aroma_config = this.aroma_config + "appendvar(\"installer_title\",iif(prop(\"" + propFile + "\",\"selected.1" + "\")==\""+ i +"\",\"" + this.removeExtension(getNameFromPath(file_list)) + "\",\"\"));\n";
+                        i++;
+                    }
+                }
+        }else if(type.equals("checkbox")){
+            int i = 1;
+            if(groupType.equals(deleteApkList)&&count == 1){
+                for(String file_list: deleteApkList){
+                    this.aroma_config = this.aroma_config + "appendvar(\"installer_title\",iif(prop(\"" + propFile + "\",\"item." + count + "." + i + "\")==\"1\",\"" + file_list + "\",\"\"));\n";
                     i++;
                 }
                 count++;
+            }else if(groupType.contains(groupName)){
+                    for(String file_list: this.returnPathArray(groupName, mvm)){
+                        this.aroma_config = this.aroma_config + "appendvar(\"installer_title\",iif(prop(\"" + propFile + "\",\"item." + count + "." + i + "\")==\"1\",\"" + this.removeExtension(getNameFromPath(file_list)) + "\",\"\"));\n";
+                        i++;
+                    }
+                    count++;
+            }            
         }
+
         return count;
     }
     
@@ -241,37 +247,69 @@ public class Operations {
         
         for(String grouplist : groupArrayList){
             if(map.containsKey(grouplist)){
-                s = listFilesInAromaConfig(systemList, grouplist, "system_app_choices.prop", s, map);
+                s = listFilesInAromaConfig(systemList, grouplist, "system_app_choices.prop", s, map, "checkbox");
 
-                d = listFilesInAromaConfig(dataList, grouplist, "app_choices.prop", d, map);
+                d = listFilesInAromaConfig(dataList, grouplist, "app_choices.prop", d, map, "checkbox");
 
-                ba = listFilesInAromaConfig(bootAnimList, grouplist, "boot_anim_choices.prop", ba, map);
+                listFilesInAromaConfig(bootAnimList, grouplist, "boot_anim_choices.prop", ba, map, "selectbox");
 
-                k = listFilesInAromaConfig(kernelList, grouplist, "kernel_choices.prop", k, map);
+                listFilesInAromaConfig(kernelList, grouplist, "kernel_choices.prop", k, map, "selectbox");
 
-                r = listFilesInAromaConfig(ringtoneList, grouplist, "ringtone_choices.prop", r, map);
+                r = listFilesInAromaConfig(ringtoneList, grouplist, "ringtone_choices.prop", r, map, "checkbox");
 
-                n = listFilesInAromaConfig(notifList, grouplist, "notification_choices.prop", n, map);    
+                n = listFilesInAromaConfig(notifList, grouplist, "notification_choices.prop", n, map, "checkbox");    
             }
-            da = listFilesInAromaConfig(deleteApkList, grouplist, "delete_choices.prop", da, map);
+            da = listFilesInAromaConfig(deleteApkList, grouplist, "delete_choices.prop", da, map, "checkbox");
         }
         
+        if(!dataList.isEmpty())
         this.aroma_config = this.aroma_config + "writetmpfile(\"app_choices.prop\",readtmpfile(\"app_choices.prop\"));\n";
+        if(!systemList.isEmpty())
         this.aroma_config = this.aroma_config + "writetmpfile(\"system_app_choices.prop\",readtmpfile(\"system_app_choices.prop\"));\n";
+        if(!bootAnimList.isEmpty())
         this.aroma_config = this.aroma_config + "writetmpfile(\"boot_anim_choices.prop\",readtmpfile(\"boot_anim_choices.prop\"));\n";
+        if(!kernelList.isEmpty())
         this.aroma_config = this.aroma_config + "writetmpfile(\"kernel_choices.prop\",readtmpfile(\"kernel_choices.prop\"));\n";
+        if(!ringtoneList.isEmpty())
         this.aroma_config = this.aroma_config + "writetmpfile(\"ringtone_choices.prop\",readtmpfile(\"ringtone_choices.prop\"));\n";
+        if(!notifList.isEmpty())
         this.aroma_config = this.aroma_config + "writetmpfile(\"notification_choices.prop\",readtmpfile(\"notification_choices.prop\"));\n";
+        if(!deleteApkList.isEmpty())
         this.aroma_config = this.aroma_config + "writetmpfile(\"delete_choices.prop\",readtmpfile(\"delete_choices.prop\"));\n";
-        this.aroma_config = this.aroma_config + "writetmpfile(\"dalvik_choices.prop\",\"tr=no\\n\");\n";
+        
+        this.aroma_config = this.aroma_config + "writetmpfile(\"dalvik_choices.prop\",\"init=no\\n\");\n";
         this.aroma_config = this.aroma_config + "if confirm(\"Installing\",getvar(\"installer_title\") + \"\\n\\nStart Installation?\", \"@confirm\")==\"no\" then back(1);\nendif;\n";
         this.aroma_config = this.aroma_config + "if confirm(\"Wipe cache partition\",\"Do you want to clear dalvik cache after installation?\", \"@confirm\")==\"yes\" then writetmpfile(\"dalvik_choices.prop\",\"true=yes\");\n\nendif;\n";
         this.aroma_config = this.aroma_config + "install(\"Installing\", \"Your selected files are being installed. Please Wait...\", \"@install\");";
     }
     
     public void extractFilesUpdaterScript(ArrayList<String> arrayList, String title, String propFile, String location){
-        
-        if(!arrayList.isEmpty()){
+        if(arrayList.equals(bootAnimList)&&!arrayList.isEmpty()){
+            this.updater_script = this.updater_script + "ui_print(\"@" + title + "\");\n";
+            for(String list : arrayList){
+                if(map.containsKey(list)){
+                    int i = 1;
+                    for(String system_list_files : this.returnPathArray(list, map)){
+                        switch(this.flashableZipType){
+                            case "Create Flashable Zip With Aroma Installer":
+                                this.updater_script = this.updater_script + "if (file_getprop(\"/tmp/aroma/" + propFile + "\", \"selected.1" + "\")==\"" + i + "\") then ui_print(\"Installing " + this.removeExtension(getNameFromPath(system_list_files)) + "\");\n";
+                                this.updater_script = this.updater_script + "package_extract_file(\"customize/" + getListName(list) + "/" + list + "/" + getNameFromPath(system_list_files) + "\", \"" + location + "\");\n";
+                                this.updater_script = this.updater_script + "endif;\n";
+                                i++;
+                                break;
+                            case "Create Normal Flashable Zip":
+                                if(i == 1)
+                                this.updater_script = this.updater_script + "package_extract_file(\"customize/" + getListName(list) + "/" + list + "/" + getNameFromPath(system_list_files) + "\", \"" + location + "\");\n";
+                                i++;
+                                break;
+                            default:
+                                JOptionPane.showMessageDialog(null, "Something Went Wrong..!! Restart Tool and Try Again..");
+                        }
+                    }
+                }
+            }            
+        }
+        else if(!arrayList.isEmpty()){
             this.updater_script = this.updater_script + "ui_print(\"@" + title + "\");\n";
             int s = 1;
             for(String list : arrayList){
@@ -314,7 +352,7 @@ public class Operations {
         
         extractFilesUpdaterScript(this.dataList, "Installing Apps", "app_choices.prop", "/data/app");
         
-        extractFilesUpdaterScript(this.bootAnimList, "Installing Boot Animation", "boot_anim_choices.prop", "/system/media");
+        extractFilesUpdaterScript(this.bootAnimList, "Installing Boot Animation", "boot_anim_choices.prop", "/data/local/bootanimation.zip");
         
         //extractFilesUpdaterScript(this.kernelList, "Flashing Kernel", "kernel_choices.prop", aroma_config);
         
@@ -336,7 +374,11 @@ public class Operations {
             this.updater_script = this.updater_script + "set_perm_recursive(1000, 1000, 0771, 0644, \"/data/app\");\n";
         }
         
-        if(!ringtoneList.isEmpty()||!notifList.isEmpty()||!bootAnimList.isEmpty()){
+        if(!bootAnimList.isEmpty()){
+            this.updater_script = this.updater_script + "set_perm_recursive(1000, 1000, 0751, 0664, \"/data/local\");\n";
+        }
+        
+        if(!ringtoneList.isEmpty()||!notifList.isEmpty()){
             this.updater_script = this.updater_script + "set_perm_recursive(1000, 1000, 0775, 0644, \"/system/media\");\n";
         }
         
