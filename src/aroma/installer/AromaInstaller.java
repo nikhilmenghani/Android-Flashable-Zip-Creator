@@ -13,6 +13,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
@@ -35,10 +36,10 @@ public class AromaInstaller extends javax.swing.JFrame {//implements PropertyCha
     private ImportZip IZtask;
     public ProgressBarUpdater ju;
     public AromaInstaller(){
-        op.CSDArrayList = new ArrayList<>();
-        op.CSDArrayList.add("Samsung Galaxy R");
-        op.CSDArrayList.add("Samsung Galaxy Nexus");
-        op.CSDArrayList.add("Samsung Galaxy Note II(N7100)");
+        op.CSDmap = new HashMap<>();
+        op.CSDmap.put("Samsung Galaxy R" , "i9305");
+        op.CSDmap.put("Samsung Galaxy Nexus (GSM)", "maguro");
+        op.CSDmap.put("Samsung Galaxy Note II(N7100)" , "N7100");
         initComponents();
     }
     
@@ -794,7 +795,7 @@ public class AromaInstaller extends javax.swing.JFrame {//implements PropertyCha
         JScrollPane CSDScrollPanel = new JScrollPane();
         CSDScrollPanel.setViewportView(CSDList);
         
-        for(String deviceName : op.CSDArrayList){
+        for(String deviceName : op.CSDmap.keySet()){
             CSDModel.addElement(deviceName);
         }
         CSDList.setSelectedValue(op.selectedDevice, true
@@ -1629,8 +1630,10 @@ public class AromaInstaller extends javax.swing.JFrame {//implements PropertyCha
     }
     
     public void CSD_continueActionPerformed(ActionEvent ae){
-        op.selectedDevice = this.CSDList.getSelectedValue().toString();
+        op.selectedDevice = op.CSDmap.get(this.CSDList.getSelectedValue().toString());
+        op.kernelMountPoint = op.getKernelMountPoint();
         System.out.println(op.selectedDevice);
+        System.out.println(op.kernelMountPoint);
         textFieldUpdateBinary.setText("update-binary of " + op.selectedDevice + " Imported Successfully..!");
         frame.dispose();
     }
