@@ -1125,6 +1125,8 @@ public class AromaInstaller extends javax.swing.JFrame {//implements PropertyCha
         progressImportZip = new JProgressBar();
         textAreaImportZipLog = new JTextArea();
         textFieldSelectZip = new JTextField();
+        IZheader_panel = new javax.swing.JPanel();
+        lblIZheader = new javax.swing.JLabel();
         
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -1146,6 +1148,30 @@ public class AromaInstaller extends javax.swing.JFrame {//implements PropertyCha
 
         lblProgress.setText("Progress : ");
 
+        IZheader_panel.setBackground(new java.awt.Color(0, 0, 0));
+
+        lblIZheader.setFont(new java.awt.Font("Verdana", 1, 18)); // NOI18N
+        lblIZheader.setForeground(new java.awt.Color(255, 255, 255));
+        lblIZheader.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblIZheader.setText("Import Previously Created Zip");
+
+        javax.swing.GroupLayout IZheader_panelLayout = new javax.swing.GroupLayout(IZheader_panel);
+        IZheader_panel.setLayout(IZheader_panelLayout);
+        IZheader_panelLayout.setHorizontalGroup(
+            IZheader_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(IZheader_panelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(lblIZheader, javax.swing.GroupLayout.DEFAULT_SIZE, 533, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        IZheader_panelLayout.setVerticalGroup(
+            IZheader_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(IZheader_panelLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(lblIZheader, javax.swing.GroupLayout.DEFAULT_SIZE, 28, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
         javax.swing.GroupLayout ImportZip_panelLayout = new javax.swing.GroupLayout(ImportZip_panel);
         ImportZip_panel.setLayout(ImportZip_panelLayout);
         ImportZip_panelLayout.setHorizontalGroup(
@@ -1153,10 +1179,11 @@ public class AromaInstaller extends javax.swing.JFrame {//implements PropertyCha
             .addGroup(ImportZip_panelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(ImportZip_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(IZheader_panel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(ImportZip_panelLayout.createSequentialGroup()
                         .addComponent(lblSelectZip)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(textFieldSelectZip, javax.swing.GroupLayout.DEFAULT_SIZE, 368, Short.MAX_VALUE)
+                        .addComponent(textFieldSelectZip)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnBrowseZip))
                     .addGroup(ImportZip_panelLayout.createSequentialGroup()
@@ -1170,6 +1197,8 @@ public class AromaInstaller extends javax.swing.JFrame {//implements PropertyCha
             ImportZip_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(ImportZip_panelLayout.createSequentialGroup()
                 .addContainerGap()
+                .addComponent(IZheader_panel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addGroup(ImportZip_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblSelectZip)
                     .addComponent(textFieldSelectZip, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1180,9 +1209,9 @@ public class AromaInstaller extends javax.swing.JFrame {//implements PropertyCha
                         .addGap(7, 7, 7)
                         .addComponent(lblProgress))
                     .addComponent(progressImportZip, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 204, Short.MAX_VALUE)
-                .addContainerGap())
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -1190,16 +1219,16 @@ public class AromaInstaller extends javax.swing.JFrame {//implements PropertyCha
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(346, 346, 346)
-                .addComponent(ImportZip_panel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(363, Short.MAX_VALUE))
+                .addGap(212, 212, 212)
+                .addComponent(ImportZip_panel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(453, 453, 453))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(159, 159, 159)
+                .addGap(58, 58, 58)
                 .addComponent(ImportZip_panel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(129, Short.MAX_VALUE))
+                .addContainerGap(144, Short.MAX_VALUE))
         );
 
         pack();
@@ -2050,7 +2079,7 @@ public class AromaInstaller extends javax.swing.JFrame {//implements PropertyCha
                 }
         }else{
             if(this.groupName.getText().contains("_")){
-                JOptionPane.showMessageDialog(null, "You Cannot Have Underscore(_) in Group Name..!!");
+                JOptionPane.showMessageDialog(null, "Sorry, You Cannot Have Underscore(_) in Group Name..!!");
             }else{
                 JOptionPane.showMessageDialog(null, "You Cannot Continue Without Setting Group Name..!!");
             } 
@@ -2258,6 +2287,8 @@ public class AromaInstaller extends javax.swing.JFrame {//implements PropertyCha
     public JProgressBar progressImportZip;
     public JTextArea textAreaImportZipLog;
     public JTextField textFieldSelectZip;
+    public JPanel IZheader_panel;
+    public JLabel lblIZheader;
     
     public JList CSDList;
     public JScrollPane CSDScrollPanel;
