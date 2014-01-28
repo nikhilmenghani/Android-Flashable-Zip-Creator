@@ -6,6 +6,7 @@
   </Properties>
   <SyntheticProperties>
     <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
+    <SyntheticProperty name="generateCenter" type="boolean" value="false"/>
   </SyntheticProperties>
   <AuxValues>
     <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
@@ -23,18 +24,18 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
-              <EmptySpace min="-2" pref="346" max="-2" attributes="0"/>
-              <Component id="ImportZip_panel" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="363" max="32767" attributes="0"/>
+              <EmptySpace min="-2" pref="212" max="-2" attributes="0"/>
+              <Component id="ImportZip_panel" max="32767" attributes="0"/>
+              <EmptySpace min="-2" pref="453" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
-              <EmptySpace min="-2" pref="159" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="58" max="-2" attributes="0"/>
               <Component id="ImportZip_panel" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="129" max="32767" attributes="0"/>
+              <EmptySpace pref="144" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -45,13 +46,14 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" attributes="0">
+              <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="IZheader_panel" max="32767" attributes="0"/>
                       <Group type="102" attributes="0">
                           <Component id="lblSelectZip" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="textFieldSelectZip" pref="368" max="32767" attributes="0"/>
+                          <Component id="textFieldSelectZip" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="btnBrowseZip" min="-2" max="-2" attributes="0"/>
                       </Group>
@@ -70,6 +72,8 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
+                  <Component id="IZheader_panel" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="lblSelectZip" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="textFieldSelectZip" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -83,9 +87,9 @@
                       </Group>
                       <Component id="progressImportZip" alignment="0" min="-2" pref="28" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="jScrollPane1" pref="204" max="32767" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                  <Component id="jScrollPane1" min="-2" pref="210" max="-2" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -132,6 +136,48 @@
         </Component>
         <Component class="javax.swing.JProgressBar" name="progressImportZip">
         </Component>
+        <Container class="javax.swing.JPanel" name="IZheader_panel">
+          <Properties>
+            <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="0" green="0" red="0" type="rgb"/>
+            </Property>
+          </Properties>
+
+          <Layout>
+            <DimensionLayout dim="0">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="lblIZheader" pref="533" max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                  </Group>
+              </Group>
+            </DimensionLayout>
+            <DimensionLayout dim="1">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace max="32767" attributes="0"/>
+                      <Component id="lblIZheader" pref="28" max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                  </Group>
+              </Group>
+            </DimensionLayout>
+          </Layout>
+          <SubComponents>
+            <Component class="javax.swing.JLabel" name="lblIZheader">
+              <Properties>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                  <Font name="Verdana" size="18" style="1"/>
+                </Property>
+                <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                  <Color blue="ff" green="ff" red="ff" type="rgb"/>
+                </Property>
+                <Property name="horizontalAlignment" type="int" value="0"/>
+                <Property name="text" type="java.lang.String" value="Import Previously Created Zip"/>
+              </Properties>
+            </Component>
+          </SubComponents>
+        </Container>
       </SubComponents>
     </Container>
   </SubComponents>
