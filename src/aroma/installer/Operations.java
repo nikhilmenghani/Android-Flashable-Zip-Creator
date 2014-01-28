@@ -10,7 +10,9 @@ import java.awt.Component;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -21,6 +23,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.jar.JarFile;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
@@ -49,8 +53,8 @@ public class Operations {
     String existingZipPath = "";
     String deleteApkConfigList = "";
     String appConfigPath = "customize/DeleteSystemApps/app-config";
+    String kernelMountPoint = "";
     
-    ArrayList<String> CSDArrayList;
     ArrayList<String> groupArrayList = new ArrayList<>();
     ArrayList<String> systemList = new ArrayList<>();
     ArrayList<String> dataList = new ArrayList<>();
@@ -62,6 +66,8 @@ public class Operations {
     ArrayList<String> deleteApkList = new ArrayList<>();
     ArrayList<String> arrayList = new ArrayList<>();
     ArrayList<String> jarFileList = new ArrayList<>();
+    
+    Map<String, String> CSDmap;
     
     MultiValueMap map = new MultiValueMap();
     
@@ -122,6 +128,21 @@ public class Operations {
             System.err.println("Error: " + e.getMessage());
         }
         return this.jarFileList;
+    }
+    
+    public String getKernelMountPoint(){
+        try {
+            InputStream is = null;
+            BufferedReader br;
+            is = this.getClass().getResourceAsStream("META-INF/com/google/android/binary files/" + this.selectedDevice + "_mountpoint");
+            br = new BufferedReader(new InputStreamReader(is));
+            return br.readLine();
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Operations.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(Operations.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
     
     public void writeFileToZip(InputStream in, ZipOutputStream zos, String writeAt) throws IOException{
@@ -319,7 +340,11 @@ public class Operations {
                         switch(this.flashableZipType){
                             case "Create Flashable Zip With Aroma Installer":
                                 this.updater_script = this.updater_script + "if (file_getprop(\"/tmp/aroma/" + propFile + "\", \"item." + s + "." + i + "\")==\"1\") then ui_print(\"Installing " + this.removeExtension(getNameFromPath(system_list_files)) + "\");\n";
-                                this.updater_script = this.updater_script + "package_extract_dir(\"customize/" + getListName(list) + "/" + list + "\", \"" + location + "\");\n";
+                                if(propFile == "kernel_choices.prop"){
+                                    this.updater_script = this.updater_script + "package_extract_file(\"customize/" + getListName(list) + "/" + list + "/" + getNameFromPath(system_list_files) + "\", \"" + location + "\");\n";
+                                }else{
+                                    this.updater_script = this.updater_script + "package_extract_dir(\"customize/" + getListName(list) + "/" + list + "\", \"" + location + "\");\n";
+                                }
                                 this.updater_script = this.updater_script + "endif;\n";
                                 i++;
                                 break;
@@ -338,7 +363,7 @@ public class Operations {
         }
     }
     
-    public void createUpdaterScriptFile(){
+    public void createUpdaterScriptFile() throws FileNotFoundException, IOException{
         this.updater_script = "ui_print(\"@Starting the install process\");\n" +
                 "ui_print(\"Setting up required tools...\");\n" +
                 "package_extract_file(\"utils/mount\", \"/tmp/mount\");\n" +
@@ -354,7 +379,7 @@ public class Operations {
         
         extractFilesUpdaterScript(this.bootAnimList, "Installing Boot Animation", "boot_anim_choices.prop", "/data/local/bootanimation.zip");
         
-        //extractFilesUpdaterScript(this.kernelList, "Flashing Kernel", "kernel_choices.prop", aroma_config);
+        extractFilesUpdaterScript(this.kernelList, "Flashing Kernel", "kernel_choices.prop", this.kernelMountPoint);
         
         extractFilesUpdaterScript(this.ringtoneList, "Adding Ringtones", "ringtone_choices.prop", "/system/media/audio/ringtones");
         
