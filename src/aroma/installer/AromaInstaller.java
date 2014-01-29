@@ -811,8 +811,8 @@ public final class AromaInstaller extends javax.swing.JFrame {//implements Prope
         for(String deviceName : op.CSDmap.keySet()){
             CSDModel.addElement(deviceName);
         }
-        CSDList.setSelectedValue(op.selectedDevice, true
-        );
+        CSDList.setSelectedValue(op.selectedDevice, true);
+        
         JButton CSD_continue = new JButton();
         JButton CSD_cancel = new JButton();
         
@@ -1491,8 +1491,7 @@ public final class AromaInstaller extends javax.swing.JFrame {//implements Prope
         if(op.selectedDevice == "" && op.updateBinaryPath == ""){
             JOptionPane.showMessageDialog(null, "Please Select Your Device First...!!!");
         }else if(op.selectedDevice == "" && op.updateBinaryPath != ""){
-            JOptionPane.showMessageDialog(null, "Sorry, This Feature is only available for Supported Devices");
-            //this.lastSelected = "APKs Group";
+            JOptionPane.showMessageDialog(null, "Sorry, This Feature is only available for Supported Devices");  
         }else{
             System.out.println("Add Kernel Group Clicked..");
             removeHighlight(this.lastSelected);
@@ -1616,7 +1615,15 @@ public final class AromaInstaller extends javax.swing.JFrame {//implements Prope
     public void btnAddFileActionPerformed(java.awt.event.ActionEvent evt) {                                           
         System.out.println("Add File Clicked");
         if(!groupList.isSelectionEmpty()){
-            chooseFile(this.lastSelected);
+            if(this.lastSelected.equals("Boot Animation Group")&&op.map.containsKey("BootAnimations_" + groupList.getSelectedValue())){
+                JOptionPane.showMessageDialog(null, "There can be only one file per one Boot Animation group..!!\nAdd more groups to add more files..!!");
+            }
+            else if(this.lastSelected.equals("Kernel Group")&&op.map.containsKey("Kernel_" + groupList.getSelectedValue())){
+                JOptionPane.showMessageDialog(null, "There can be only one file per one Kernel group..!!\nAdd more groups to add more files..!!");
+            }
+            else{
+                chooseFile(this.lastSelected);
+            }
         }
         else{
             JOptionPane.showMessageDialog(null, "Select one group from Group List to add Files!!");

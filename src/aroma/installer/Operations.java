@@ -179,41 +179,58 @@ public class Operations {
         return arrayList;
     }
     
-    public void displayListInAroma(String heading, ArrayList<String> arrayList){
-        
-        if(arrayList.equals(deleteApkList)&&!arrayList.isEmpty()){
-            System.out.println("ArrayList is Delete Apk List");
-            this.aroma_config = this.aroma_config + heading;
-            this.aroma_config = this.aroma_config + ",\n\"" + "Delete System Apks" + "\", \"\", 2";
-            for(String list : arrayList){
-                    this.aroma_config = this.aroma_config + ",\n\"" + list + "\", \"\", 0";
+    public void displayListInAroma(String listType, String listGroup, String heading, String themeFormat, String propFile , ArrayList<String> arrayList){
+        if(listType.equals("checkbox")&&!arrayList.isEmpty()){
+            if(arrayList.equals(deleteApkList)){
+                System.out.println("ArrayList is Delete Apk List");
+                this.aroma_config = this.aroma_config + "\" " + listType + "(\" " + listGroup + "\",\"" + heading + "\",\"@" + themeFormat + "\",\"" + propFile + "\"";
+                this.aroma_config = this.aroma_config + ",\n\"" + "Delete System Apks" + "\", \"\", 2";
+                for(String list : arrayList){
+                        this.aroma_config = this.aroma_config + ",\n\"" + list + "\", \"\", 0";
+                }
+                this.aroma_config = this.aroma_config + ");\n";
             }
-            this.aroma_config = this.aroma_config + ");\n";
-        }
-        else{
-            if(!arrayList.isEmpty()){
+            else{
                 this.aroma_config = this.aroma_config + heading;
                 for(String list : arrayList){
                     if(map.containsKey(list)){
-                    this.aroma_config = this.aroma_config + ",\n\"" + list.substring(list.lastIndexOf("_") + 1, list.length()) + "\", \"\", 2";
+                        this.aroma_config = this.aroma_config + ",\n\"" + list.substring(list.lastIndexOf("_") + 1, list.length()) + "\", \"\", 2";
                         for(String list_files : this.returnPathArray(list, map)){
                             this.aroma_config = this.aroma_config + ",\n\"" + this.removeExtension(getNameFromPath(list_files)) + "\", \"\", 0";
                         }
                     }
                 }
                 this.aroma_config = this.aroma_config + ");\n";
+            }            
+        }else if(listType.equals("selectbox")&&!arrayList.isEmpty()){
+            if(propFile.equals("boot_anim_choices.prop")){
+                this.aroma_config = this.aroma_config + "" + listType + "(\" " + listGroup + "\",\"" + heading + "\",\"@" + themeFormat + "\",\"" + propFile + "\"";
+                this.aroma_config = this.aroma_config + ",\n\"" + "Select one Boot Animation" + "\", \"\", 2";
+                for(String list : arrayList){
+                        this.aroma_config = this.aroma_config + ",\n\"" + list.substring(list.lastIndexOf("_")+1,list.length()) + "\", \"\", 0";
+                }
+                this.aroma_config = this.aroma_config + ");\n";
+            }else if(propFile.equals("kernel_choices.prop")){
+                this.aroma_config = this.aroma_config + "" + listType + "(\" " + listGroup + "\",\"" + heading + "\",\"@" + themeFormat + "\",\"" + propFile + "\"";
+                this.aroma_config = this.aroma_config + ",\n\"" + "Select one kernel" + "\", \"\", 2";
+                for(String list : arrayList){
+                        this.aroma_config = this.aroma_config + ",\n\"" + list.substring(list.lastIndexOf("_")+1,list.length()) + "\", \"\", 0";
+                }
+                this.aroma_config = this.aroma_config + ");\n";
             }
         }
+
     }
     
     public int listFilesInAromaConfig(ArrayList<String> groupType, String groupName, String propFile, int count, MultiValueMap mvm, String type){
-        if(type.equals("selectbox")){
+        if(type.equals("selectbox")&&count == 1){
             int i = 1;
             if(groupType.contains(groupName)){
-                    for(String file_list: this.returnPathArray(groupName, mvm)){
-                        this.aroma_config = this.aroma_config + "appendvar(\"installer_title\",iif(prop(\"" + propFile + "\",\"selected.1" + "\")==\""+ i +"\",\"" + this.removeExtension(getNameFromPath(file_list)) + "\",\"\"));\n";
+                    for(String file_list: groupType){
+                        this.aroma_config = this.aroma_config + "appendvar(\"installer_title\",iif(prop(\"" + propFile + "\",\"selected.1" + "\")==\""+ i +"\",\"" + file_list.substring(file_list.lastIndexOf("_")+1,file_list.length()) + "\",\"\"));\n";
                         i++;
                     }
+                    count++;
                 }
         }else if(type.equals("checkbox")){
             int i = 1;
@@ -240,26 +257,19 @@ public class Operations {
                 "fontresload(\"1\", \"ttf/Roboto-Regular.ttf\", \"18\");\n" +
                 "theme(\"miui4\");\n";
         
-        displayListInAroma("checkbox(\"App List\",\"Choose the apps to be installed to data\","+
-                    "\"@personalize\",\"app_choices.prop\"", this.dataList);
+        displayListInAroma("checkbox", "App List" , "Choose the apps to be installed to data", "personalize", "app_choices.prop", this.dataList);
         
-        displayListInAroma("checkbox(\"System App List\",\"Choose the apps to be installed to system\","+
-                    "\"@personalize\",\"system_app_choices.prop\"", this.systemList);
+        displayListInAroma("checkbox", "System App List" , "Choose the apps to be installed to system", "personalize", "system_app_choices.prop", this.systemList);
         
-        displayListInAroma("selectbox(\"Boot Animations List\",\"Select Boot Animation to be used in current ROM\","+
-                    "\"@default\",\"boot_anim_choices.prop\"", this.bootAnimList);
+        displayListInAroma("selectbox", "Boot Animations List" , "Select Boot Animation to be used in current ROM", "personalize", "boot_anim_choices.prop", this.bootAnimList);
         
-        displayListInAroma("selectbox(\"Kernel List\",\"Select Kernel to be flashed\","+
-                    "\"@default\",\"kernel_choices.prop\"", this.kernelList);
-                
-        displayListInAroma("checkbox(\"Ringtone List\",\"Choose Ringtones to include in Rom\","+
-                    "\"@personalize\",\"ringtone_choices.prop\"", this.ringtoneList);
+        displayListInAroma("selectbox", "Kernel List" , "Select Kernel to be flashed", "default", "kernel_choices.prop", this.kernelList);
         
-        displayListInAroma("checkbox(\"Notification tone List\",\"Choose Notification Tones to include in Rom\","+
-                    "\"@personalize\",\"notification_choices.prop\"", this.notifList);
+        displayListInAroma("checkbox", "Ringtone List" , "Choose Ringtones to include in Rom", "personalize", "ringtone_choices.prop", this.ringtoneList);
         
-        displayListInAroma("checkbox(\"Remove System Apps List\",\"Choose Apps To Remove\","+
-                    "\"@personalize\",\"delete_choices.prop\"", this.deleteApkList);
+        displayListInAroma("checkbox", "Notification List" , "Choose Notification Tones to include in Rom", "personalize", "notification_choices.prop", this.notifList);
+        
+        displayListInAroma("checkbox", "Remove System Apps List", "Choose Apps To Remove", "personalize", "delete_choices.prop", this.deleteApkList);
         
         this.aroma_config = this.aroma_config + "setvar(\"installer_title\",\"You are about to install the following:\");\n" +
                 "appendvar(\"installer_title\",\"\\n\\n\");\n";
@@ -272,9 +282,9 @@ public class Operations {
 
                 d = listFilesInAromaConfig(dataList, grouplist, "app_choices.prop", d, map, "checkbox");
 
-                listFilesInAromaConfig(bootAnimList, grouplist, "boot_anim_choices.prop", ba, map, "selectbox");
+                ba = listFilesInAromaConfig(bootAnimList, grouplist, "boot_anim_choices.prop", ba, map, "selectbox");
 
-                listFilesInAromaConfig(kernelList, grouplist, "kernel_choices.prop", k, map, "selectbox");
+                k = listFilesInAromaConfig(kernelList, grouplist, "kernel_choices.prop", k, map, "selectbox");
 
                 r = listFilesInAromaConfig(ringtoneList, grouplist, "ringtone_choices.prop", r, map, "checkbox");
 
@@ -305,32 +315,7 @@ public class Operations {
     }
     
     public void extractFilesUpdaterScript(ArrayList<String> arrayList, String title, String propFile, String location){
-        if(arrayList.equals(bootAnimList)&&!arrayList.isEmpty()){
-            this.updater_script = this.updater_script + "ui_print(\"@" + title + "\");\n";
-            for(String list : arrayList){
-                if(map.containsKey(list)){
-                    int i = 1;
-                    for(String system_list_files : this.returnPathArray(list, map)){
-                        switch(this.flashableZipType){
-                            case "Create Flashable Zip With Aroma Installer":
-                                this.updater_script = this.updater_script + "if (file_getprop(\"/tmp/aroma/" + propFile + "\", \"selected.1" + "\")==\"" + i + "\") then ui_print(\"Installing " + this.removeExtension(getNameFromPath(system_list_files)) + "\");\n";
-                                this.updater_script = this.updater_script + "package_extract_file(\"customize/" + getListName(list) + "/" + list + "/" + getNameFromPath(system_list_files) + "\", \"" + location + "\");\n";
-                                this.updater_script = this.updater_script + "endif;\n";
-                                i++;
-                                break;
-                            case "Create Normal Flashable Zip":
-                                if(i == 1)
-                                this.updater_script = this.updater_script + "package_extract_file(\"customize/" + getListName(list) + "/" + list + "/" + getNameFromPath(system_list_files) + "\", \"" + location + "\");\n";
-                                i++;
-                                break;
-                            default:
-                                JOptionPane.showMessageDialog(null, "Something Went Wrong..!! Restart Tool and Try Again..");
-                        }
-                    }
-                }
-            }            
-        }
-        else if(!arrayList.isEmpty()){
+        if(!arrayList.isEmpty()){
             this.updater_script = this.updater_script + "ui_print(\"@" + title + "\");\n";
             int s = 1;
             for(String list : arrayList){
@@ -339,18 +324,29 @@ public class Operations {
                     for(String system_list_files : this.returnPathArray(list, map)){
                         switch(this.flashableZipType){
                             case "Create Flashable Zip With Aroma Installer":
-                                this.updater_script = this.updater_script + "if (file_getprop(\"/tmp/aroma/" + propFile + "\", \"item." + s + "." + i + "\")==\"1\") then ui_print(\"Installing " + this.removeExtension(getNameFromPath(system_list_files)) + "\");\n";
                                 if(propFile == "kernel_choices.prop"){
+                                    this.updater_script = this.updater_script + "if (file_getprop(\"/tmp/aroma/" + propFile + "\", \"selected.1" + "\")==\"" + s + "\") then ui_print(\"Flashing " + list.substring(list.lastIndexOf("_") + 1, list.length()) + "\");\n";
+                                    this.updater_script = this.updater_script + "assert(package_extract_file(\"customize/" + getListName(list) + "/" + list + "/" + getNameFromPath(system_list_files) + "\", \"" + location + "\"));\n";
+                                }else if(propFile == "boot_anim_choices.prop"){
+                                    this.updater_script = this.updater_script + "if (file_getprop(\"/tmp/aroma/" + propFile + "\", \"selected.1" + "\")==\"" + s + "\") then ui_print(\"Installing " + list.substring(list.lastIndexOf("_") + 1, list.length()) + "\");\n";
                                     this.updater_script = this.updater_script + "package_extract_file(\"customize/" + getListName(list) + "/" + list + "/" + getNameFromPath(system_list_files) + "\", \"" + location + "\");\n";
-                                }else{
+                                } else{
+                                    this.updater_script = this.updater_script + "if (file_getprop(\"/tmp/aroma/" + propFile + "\", \"item." + s + "." + i + "\")==\"1\") then ui_print(\"Installing " + this.removeExtension(getNameFromPath(system_list_files)) + "\");\n";
                                     this.updater_script = this.updater_script + "package_extract_dir(\"customize/" + getListName(list) + "/" + list + "\", \"" + location + "\");\n";
                                 }
                                 this.updater_script = this.updater_script + "endif;\n";
                                 i++;
                                 break;
                             case "Create Normal Flashable Zip":
-                                if(i == 1)
-                                this.updater_script = this.updater_script + "package_extract_dir(\"customize/" + getListName(list) + "/" + list + "\", \"" + location + "\");\n";
+                                if(i == 1){
+                                    if(propFile == "kernel_choices.prop"){
+                                        this.updater_script = this.updater_script + "package_extract_file(\"customize/" + getListName(list) + "/" + list + "/" + getNameFromPath(system_list_files) + "\", \"" + location + "\");\n";
+                                    }else if(propFile == "boot_anim_choices.prop"){
+                                        this.updater_script = this.updater_script + "package_extract_file(\"customize/" + getListName(list) + "/" + list + "/" + getNameFromPath(system_list_files) + "\", \"" + location + "\");\n";
+                                    } else{
+                                        this.updater_script = this.updater_script + "package_extract_dir(\"customize/" + getListName(list) + "/" + list + "\", \"" + location + "\");\n";
+                                    }
+                                }
                                 i++;
                                 break;
                             default:
@@ -379,7 +375,7 @@ public class Operations {
         
         extractFilesUpdaterScript(this.bootAnimList, "Installing Boot Animation", "boot_anim_choices.prop", "/data/local/bootanimation.zip");
         
-        extractFilesUpdaterScript(this.kernelList, "Flashing Kernel", "kernel_choices.prop", this.kernelMountPoint);
+        extractFilesUpdaterScript(this.kernelList, "Flashing Kernel", "kernel_choices.prop", this.kernelMountPoint + "/boot.img");
         
         extractFilesUpdaterScript(this.ringtoneList, "Adding Ringtones", "ringtone_choices.prop", "/system/media/audio/ringtones");
         
