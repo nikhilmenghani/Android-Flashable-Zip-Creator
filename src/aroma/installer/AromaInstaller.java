@@ -303,7 +303,7 @@ public final class AromaInstaller extends javax.swing.JFrame {//implements Prope
             }
         });
 
-        textFieldUpdateBinary.setText("Click Here To Select updater-binary....");
+        textFieldUpdateBinary.setText("Click Here To Select update-binary....");
 
         btnBrowseUpdateBinary.setText("Browse..");
         btnBrowseUpdateBinary.setActionCommand("Browse Update Binary");
@@ -313,7 +313,7 @@ public final class AromaInstaller extends javax.swing.JFrame {//implements Prope
             }
         });
 
-        lblTitle.setText("Device not in list? Then Select Working Updater Binary For Your Device : ");
+        lblTitle.setText("Device not in list? Then Select Working Update Binary For Your Device : ");
 
         lblZipDestination.setText("Select Zip Destination : ");
 
@@ -1828,7 +1828,7 @@ public final class AromaInstaller extends javax.swing.JFrame {//implements Prope
         
         this.refreshGroupList(this.lastSelected);
         
-        this.textFieldUpdateBinary.setText("Click Here To Select updater-binary....");
+        this.textFieldUpdateBinary.setText("Click Here To Select update-binary....");
         this.textFieldZipDestination.setText("Click Here To Select Zip Destination....");
     }
     
@@ -1891,7 +1891,7 @@ public final class AromaInstaller extends javax.swing.JFrame {//implements Prope
     }
     
     public boolean checkIfEverythingIsOkay(){
-        if(op.selectedDevice.equals("")&&this.textFieldUpdateBinary.getText().equals("Click Here To Select updater-binary....")){
+        if(op.selectedDevice.equals("")&&this.textFieldUpdateBinary.getText().equals("Click Here To Select update-binary....")){
             JOptionPane.showMessageDialog(this, "update-binary not imported..!!");
             return false;
         }
