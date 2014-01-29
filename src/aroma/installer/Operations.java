@@ -203,21 +203,16 @@ public class Operations {
                 this.aroma_config = this.aroma_config + ");\n";
             }            
         }else if(listType.equals("selectbox")&&!arrayList.isEmpty()){
+            this.aroma_config = this.aroma_config + "" + listType + "(\" " + listGroup + "\",\"" + heading + "\",\"@" + themeFormat + "\",\"" + propFile + "\"";
             if(propFile.equals("boot_anim_choices.prop")){
-                this.aroma_config = this.aroma_config + "" + listType + "(\" " + listGroup + "\",\"" + heading + "\",\"@" + themeFormat + "\",\"" + propFile + "\"";
                 this.aroma_config = this.aroma_config + ",\n\"" + "Select one Boot Animation" + "\", \"\", 2";
-                for(String list : arrayList){
-                        this.aroma_config = this.aroma_config + ",\n\"" + list.substring(list.lastIndexOf("_")+1,list.length()) + "\", \"\", 0";
-                }
-                this.aroma_config = this.aroma_config + ");\n";
             }else if(propFile.equals("kernel_choices.prop")){
-                this.aroma_config = this.aroma_config + "" + listType + "(\" " + listGroup + "\",\"" + heading + "\",\"@" + themeFormat + "\",\"" + propFile + "\"";
                 this.aroma_config = this.aroma_config + ",\n\"" + "Select one kernel" + "\", \"\", 2";
-                for(String list : arrayList){
-                        this.aroma_config = this.aroma_config + ",\n\"" + list.substring(list.lastIndexOf("_")+1,list.length()) + "\", \"\", 0";
-                }
-                this.aroma_config = this.aroma_config + ");\n";
             }
+            for(String list : arrayList){
+                this.aroma_config = this.aroma_config + ",\n\"" + list.substring(list.lastIndexOf("_")+1,list.length()) + "\", \"\", 0";
+            }
+            this.aroma_config = this.aroma_config + ");\n";
         }
 
     }
@@ -248,7 +243,6 @@ public class Operations {
                     count++;
             }            
         }
-
         return count;
     }
     
@@ -338,7 +332,7 @@ public class Operations {
                                 i++;
                                 break;
                             case "Create Normal Flashable Zip":
-                                if(i == 1){
+                                if(i == 1 && s == 1){
                                     if(propFile == "kernel_choices.prop"){
                                         this.updater_script = this.updater_script + "package_extract_file(\"customize/" + getListName(list) + "/" + list + "/" + getNameFromPath(system_list_files) + "\", \"" + location + "\");\n";
                                     }else if(propFile == "boot_anim_choices.prop"){
