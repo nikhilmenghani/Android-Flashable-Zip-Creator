@@ -1521,14 +1521,6 @@ public final class AromaInstaller extends javax.swing.JFrame {//implements Prope
             System.out.println("Add Advanced Group Clicked..");
             JOptionPane.showMessageDialog(this, "Currently Work In Progress..!!\nWill Be Available Soon..!!\nSuggestions to add features are welcomed..!! ");
         }
-//        removeHighlight(this.lastSelected);
-//        btnDeleteSystemFilesGroup.setSelected(true);
-//        this.lastSelected = evt.getActionCommand();
-//        
-//        refreshGroupList(this.lastSelected);
-//        this.lblGroup.setText("Advanced Group");
-//        
-//        updateFileList();
     }                                                   
 
     public void btnLoadAromaFlashableZipActionPerformed(java.awt.event.ActionEvent evt) {  
@@ -1648,8 +1640,13 @@ public final class AromaInstaller extends javax.swing.JFrame {//implements Prope
     }                                           
 
     public void btnCreateNormalZipActionPerformed(java.awt.event.ActionEvent evt) throws IOException { 
-        
         System.out.println("normal Zip Action Performed..");
+        if(op.getGroupCount(op.bootAnimList) > 1){
+           JOptionPane.showMessageDialog(this, "Including more than one Boot Animation groups in Normal Zip can cause Undesirable results..!!\nJust keep one group and remove others..!!");
+        }
+        if(op.getGroupCount(op.kernelList) > 1){
+           JOptionPane.showMessageDialog(this, "Including more than one kernel is risky..!!\nKindly keep one group and remove others..!!");
+        }
         if(this.checkIfEverythingIsOkay()){
             op.flashableZipType = evt.getActionCommand();
             //CZtask = new createZipTask();
