@@ -12,6 +12,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.*;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Level;
@@ -31,16 +32,28 @@ import org.apache.commons.collections4.map.MultiValueMap;
  * @author Nikhil
  * @author Rajat
  */
-public class AromaInstaller extends javax.swing.JFrame {//implements PropertyChangeListener{
+public final class AromaInstaller extends javax.swing.JFrame {//implements PropertyChangeListener{
     private CreateZip CZtask;
     private ImportZip IZtask;
     public ProgressBarUpdater ju;
     public AromaInstaller(){
         op.CSDmap = new HashMap<>();
-        op.CSDmap.put("Samsung Galaxy R" , "i9103");
-        op.CSDmap.put("Samsung Galaxy Nexus (GSM)", "maguro");
-        op.CSDmap.put("Samsung Galaxy Note II(N7100)" , "N7100");
+        try {
+            this.generateDeviceList();
+        } catch (URISyntaxException | IOException ex) {
+            Logger.getLogger(AromaInstaller.class.getName()).log(Level.SEVERE, null, ex);
+        }
         initComponents();
+    }
+    
+    public void generateDeviceList() throws URISyntaxException, IOException{
+        InputStream is = this.getClass().getResourceAsStream("META-INF/com/google/android/Supported Devices");
+        BufferedReader br = new BufferedReader(new InputStreamReader(is));
+        String deviceFullName;
+        while((deviceFullName = br.readLine()) != null){
+            String[] temp = deviceFullName.split("_");
+            op.CSDmap.put(temp[0], temp[1]);
+        }
     }
     
     @SuppressWarnings("unchecked")
@@ -1408,76 +1421,107 @@ public class AromaInstaller extends javax.swing.JFrame {//implements PropertyCha
         frame.dispose();
     }
     
-    public void btnApkGroupActionPerformed(java.awt.event.ActionEvent evt) {                                               
-        System.out.println("Add Apk Group Clicked.. " + evt.getActionCommand());
+    public void btnApkGroupActionPerformed(java.awt.event.ActionEvent evt) {
+        if(op.selectedDevice == "" && op.updateBinaryPath == ""){
+            JOptionPane.showMessageDialog(null, "Please Select Your Device First...!!!");
+        }else{
+            System.out.println("Add Apk Group Clicked.. " + evt.getActionCommand());
         
-        removeHighlight(this.lastSelected);
-        btnApkGroup.setSelected(true);
-        this.lastSelected = evt.getActionCommand();
-        
-        refreshGroupList(this.lastSelected);
-        this.lblGroup.setText("Apk Group");
-        
-        updateFileList();
-        //addApkGroupUI();
+            removeHighlight(this.lastSelected);
+            btnApkGroup.setSelected(true);
+            this.lastSelected = evt.getActionCommand();
+
+            refreshGroupList(this.lastSelected);
+            this.lblGroup.setText("Apk Group");
+
+            updateFileList();
+            //addApkGroupUI();
+        }
     }                                              
 
-    public void btnBootAnimGroupActionPerformed(java.awt.event.ActionEvent evt) {                                                    
-        System.out.println("Add Boot Animation Group Clicked..");
-        removeHighlight(this.lastSelected);
-        btnBootAnimGroup.setSelected(true);
-        this.lastSelected = evt.getActionCommand();
-        
-        refreshGroupList(this.lastSelected);
-        this.lblGroup.setText("Boot Animations Group");
-        
-        updateFileList();
+    public void btnBootAnimGroupActionPerformed(java.awt.event.ActionEvent evt) { 
+        if(op.selectedDevice == "" && op.updateBinaryPath == ""){
+            JOptionPane.showMessageDialog(null, "Please Select Your Device First...!!!");
+        }else{
+            System.out.println("Add Boot Animation Group Clicked..");
+            removeHighlight(this.lastSelected);
+            btnBootAnimGroup.setSelected(true);
+            this.lastSelected = evt.getActionCommand();
+
+            refreshGroupList(this.lastSelected);
+            this.lblGroup.setText("Boot Animations Group");
+
+            updateFileList();
+        }
     }                                                   
 
-    public void btnRingtonesGroupActionPerformed(java.awt.event.ActionEvent evt) {                                                     
-        System.out.println("Add Ringtones Group Clicked..");
-        removeHighlight(this.lastSelected);
-        btnRingtonesGroup.setSelected(true);
-        this.lastSelected = evt.getActionCommand();
-        
-        refreshGroupList(this.lastSelected);
-        this.lblGroup.setText("Ringtones Group");
-        
-        updateFileList();
+    public void btnRingtonesGroupActionPerformed(java.awt.event.ActionEvent evt) { 
+        if(op.selectedDevice == "" && op.updateBinaryPath == ""){
+            JOptionPane.showMessageDialog(null, "Please Select Your Device First...!!!");
+        }else{
+            System.out.println("Add Ringtones Group Clicked..");
+            removeHighlight(this.lastSelected);
+            btnRingtonesGroup.setSelected(true);
+            this.lastSelected = evt.getActionCommand();
+
+            refreshGroupList(this.lastSelected);
+            this.lblGroup.setText("Ringtones Group");
+
+            updateFileList();
+        }
     }                                                    
 
-    public void btnNotifGroupActionPerformed(java.awt.event.ActionEvent evt) {                                                 
-        System.out.println("Add Notifications Group Clicked..");
-        removeHighlight(this.lastSelected);
-        btnNotifGroup.setSelected(true);
-        this.lastSelected = evt.getActionCommand();
-        
-        refreshGroupList(this.lastSelected);
-        this.lblGroup.setText("Notifications Group");
-        
-        updateFileList();
+    public void btnNotifGroupActionPerformed(java.awt.event.ActionEvent evt) { 
+        if(op.selectedDevice == "" && op.updateBinaryPath == ""){
+            JOptionPane.showMessageDialog(null, "Please Select Your Device First...!!!");
+        }else{
+            System.out.println("Add Notifications Group Clicked..");
+            removeHighlight(this.lastSelected);
+            btnNotifGroup.setSelected(true);
+            this.lastSelected = evt.getActionCommand();
+
+            refreshGroupList(this.lastSelected);
+            this.lblGroup.setText("Notifications Group");
+
+            updateFileList();
+        }
     }                                                
 
-    public void btnKernelGroupActionPerformed(java.awt.event.ActionEvent evt) {                                                  
-        System.out.println("Add Kernel Group Clicked..");
-        removeHighlight(this.lastSelected);
-        btnKernelGroup.setSelected(true);
-        this.lastSelected = evt.getActionCommand();
-        
-        refreshGroupList(this.lastSelected);
-        this.lblGroup.setText("Kernel Group");
-        
-        updateFileList();
+    public void btnKernelGroupActionPerformed(java.awt.event.ActionEvent evt) { 
+        if(op.selectedDevice == "" && op.updateBinaryPath == ""){
+            JOptionPane.showMessageDialog(null, "Please Select Your Device First...!!!");
+        }else if(op.selectedDevice == "" && op.updateBinaryPath != ""){
+            JOptionPane.showMessageDialog(null, "Sorry, This Feature is only available for Supported Devices");
+            //this.lastSelected = "APKs Group";
+        }else{
+            System.out.println("Add Kernel Group Clicked..");
+            removeHighlight(this.lastSelected);
+            btnKernelGroup.setSelected(true);
+            this.lastSelected = evt.getActionCommand();
+
+            refreshGroupList(this.lastSelected);
+            this.lblGroup.setText("Kernel Group");
+
+            updateFileList();
+        }
     }                                                 
 
-    public void btnDeleteSystemFilesGroupActionPerformed(java.awt.event.ActionEvent evt) {                                                             
-        System.out.println("Add Delete System Files Group Clicked..");
-        this.deleteSystemApkUI();
+    public void btnDeleteSystemFilesGroupActionPerformed(java.awt.event.ActionEvent evt) { 
+        if(op.selectedDevice == "" && op.updateBinaryPath == ""){
+            JOptionPane.showMessageDialog(null, "Please Select Your Device First...!!!");
+        }else{
+            System.out.println("Add Delete System Files Group Clicked..");
+            this.deleteSystemApkUI();
+        }
     }                                                            
 
-    public void btnAdvancedGroupActionPerformed(java.awt.event.ActionEvent evt) {                                                    
-        System.out.println("Add Advanced Group Clicked..");
-        JOptionPane.showMessageDialog(this, "Currently Work In Progress..!!\nWill Be Available Soon..!!\nSuggestions to add features are welcomed..!! ");
+    public void btnAdvancedGroupActionPerformed(java.awt.event.ActionEvent evt) { 
+        if(op.selectedDevice == "" && op.updateBinaryPath == ""){
+            JOptionPane.showMessageDialog(null, "Please Select Your Device First...!!!");
+        }else{
+            System.out.println("Add Advanced Group Clicked..");
+            JOptionPane.showMessageDialog(this, "Currently Work In Progress..!!\nWill Be Available Soon..!!\nSuggestions to add features are welcomed..!! ");
+        }
 //        removeHighlight(this.lastSelected);
 //        btnDeleteSystemFilesGroup.setSelected(true);
 //        this.lastSelected = evt.getActionCommand();
@@ -1488,8 +1532,12 @@ public class AromaInstaller extends javax.swing.JFrame {//implements PropertyCha
 //        updateFileList();
     }                                                   
 
-    public void btnLoadAromaFlashableZipActionPerformed(java.awt.event.ActionEvent evt) {                                                         
-        this.importZipUI();
+    public void btnLoadAromaFlashableZipActionPerformed(java.awt.event.ActionEvent evt) {  
+        if(op.selectedDevice == "" && op.updateBinaryPath == ""){
+            JOptionPane.showMessageDialog(null, "Please Select Your Device First...!!!");
+        }else{
+            this.importZipUI();
+        }
     }                                                        
 
     public void btnSelectDeviceActionPerformed(java.awt.event.ActionEvent evt) {                                                
@@ -1498,9 +1546,15 @@ public class AromaInstaller extends javax.swing.JFrame {//implements PropertyCha
     }                                               
 
     public void btnAddGroupActionPerformed(java.awt.event.ActionEvent evt) {
-        System.out.println(this.lastSelected + " Clicked Add Group");
-        //op.getJarFileName();
-        displayAddGroupUI(lastSelected);
+        if(this.lastSelected == "APKs Group" && op.selectedDevice == "" && op.updateBinaryPath == ""){
+            JOptionPane.showMessageDialog(null, "Please Select Your Device First...!!!");
+        }else if(this.lastSelected == "Kernel Group" && op.selectedDevice == "" && op.updateBinaryPath != ""){
+            JOptionPane.showMessageDialog(null, "Feature Not Available For Custom Update-Binary");
+        }else{
+            System.out.println(this.lastSelected + " Clicked Add Group");
+            //op.getJarFileName();
+            displayAddGroupUI(lastSelected);
+        } 
     }                                           
 
     public void btnRemoveGroupActionPerformed(java.awt.event.ActionEvent evt) {
@@ -1529,6 +1583,7 @@ public class AromaInstaller extends javax.swing.JFrame {//implements PropertyCha
             textFieldUpdateBinary.setText(file.getAbsolutePath());
             op.updateBinaryPath = file.getAbsolutePath();
             op.selectedDevice = "";
+            JOptionPane.showMessageDialog(null, "Please note that For Devices not included in Supported List won't avail the feature of Kernel Flashing.\nSorry for inconvenience");
         } else {
             System.out.println("File access cancelled by user.");
         }
