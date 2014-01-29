@@ -12,6 +12,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.*;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Level;
@@ -31,16 +32,28 @@ import org.apache.commons.collections4.map.MultiValueMap;
  * @author Nikhil
  * @author Rajat
  */
-public class AromaInstaller extends javax.swing.JFrame {//implements PropertyChangeListener{
+public final class AromaInstaller extends javax.swing.JFrame {//implements PropertyChangeListener{
     private CreateZip CZtask;
     private ImportZip IZtask;
     public ProgressBarUpdater ju;
     public AromaInstaller(){
         op.CSDmap = new HashMap<>();
-        op.CSDmap.put("Samsung Galaxy R" , "i9103");
-        op.CSDmap.put("Samsung Galaxy Nexus (GSM)", "maguro");
-        op.CSDmap.put("Samsung Galaxy Note II(N7100)" , "N7100");
+        try {
+            this.generateDeviceList();
+        } catch (URISyntaxException | IOException ex) {
+            Logger.getLogger(AromaInstaller.class.getName()).log(Level.SEVERE, null, ex);
+        }
         initComponents();
+    }
+    
+    public void generateDeviceList() throws URISyntaxException, IOException{
+        InputStream is = this.getClass().getResourceAsStream("META-INF/com/google/android/Supported Devices");
+        BufferedReader br = new BufferedReader(new InputStreamReader(is));
+        String deviceFullName;
+        while((deviceFullName = br.readLine()) != null){
+            String[] temp = deviceFullName.split("_");
+            op.CSDmap.put(temp[0], temp[1]);
+        }
     }
     
     @SuppressWarnings("unchecked")
