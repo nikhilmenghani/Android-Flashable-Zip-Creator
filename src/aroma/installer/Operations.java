@@ -71,17 +71,17 @@ public class Operations {
     
     MultiValueMap map = new MultiValueMap();
     
-    
-    
     Operations(){
         
     }
-    
-    public void configToArrayList(){
         
+    public int getGroupCount(ArrayList<String> groupType){
+        int count = 0;
+        for(String temp : groupType){
+            count++;
+        }
+        return count;
     }
-    
-    
     
     public String getListName(String groupName){
         if(this.systemList.contains(groupName)){
