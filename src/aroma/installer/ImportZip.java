@@ -49,7 +49,7 @@ public class ImportZip extends SwingWorker<Void,Void>{
             op.groupArrayList.addAll(op.getGroupListFromMVM(mvm));
             System.out.println("Updated GroupList : "+op.groupArrayList);
             System.out.println("Updated Map : "+op.map);
-            for(String element:op.groupArrayList){
+            for(String element : op.groupArrayList){
                 String[] temp = element.split("_");
                 switch(temp[0]){
                     case "APKs-System":
@@ -139,7 +139,7 @@ public class ImportZip extends SwingWorker<Void,Void>{
                             case "BootAnimations":
                                 mvm.put(splitName[1],newFile.getAbsolutePath());
                                 break;
-                            case "Kernel":
+                            case "Kernels":
                                 mvm.put(splitName[1],newFile.getAbsolutePath());
                                 break;
                         }
