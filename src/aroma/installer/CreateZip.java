@@ -127,6 +127,7 @@ public class CreateZip extends SwingWorker<Void,Void>{
                 this.createDeleteApkConfigList();
                 in = new ByteArrayInputStream(op.deleteApkConfigList.getBytes());
                 op.writeFileToZip(in, zos, "customize/DeleteSystemApps/app-config");
+                ai.setLog("Imported System Files To Delete...", ai.textAreaCZ);
             }else{
                 System.out.println("Delete List Empty..!!");
             }
@@ -146,6 +147,8 @@ public class CreateZip extends SwingWorker<Void,Void>{
                     file = op.getNameFromPath(file);
                     file = "customize/" + op.getListName(groupName) + "/" + groupName + "/" + file;
                     op.writeFileToZip(in, zos, file);
+                    ai.setLog(op.getNameFromPath(file) + " Imported...", ai.textAreaCZ);
+                    progress += 1;
                 }
                 progress += 17;
                 ju.setValue(progress);
