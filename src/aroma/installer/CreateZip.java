@@ -16,6 +16,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.jar.JarFile;
+import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
@@ -107,6 +108,18 @@ public class CreateZip extends SwingWorker<Void,Void>{
         }
     }
     
+    
+    public void writeFileToZip(InputStream in, ZipOutputStream zos, String writeAt) throws IOException{
+        byte[] buffer = new byte[1024];
+        ZipEntry ze = new ZipEntry(writeAt);
+        zos.putNextEntry(ze);
+        int len;
+        while ((len = in.read(buffer)) > 0) {
+            zos.write(buffer, 0, len);
+        }
+        in.close();
+    }
+    
     public void createDeleteApkConfigList(){
         for(String temp : op.deleteApkList){
             op.deleteApkConfigList = op.deleteApkConfigList + temp + "\n";
@@ -166,7 +179,7 @@ public class CreateZip extends SwingWorker<Void,Void>{
                 System.out.println("Delete List Not Empty..!!");
                 this.createDeleteApkConfigList();
                 in = new ByteArrayInputStream(op.deleteApkConfigList.getBytes());
-                op.writeFileToZip(in, zos, "customize/DeleteSystemApps/app-config");
+                this.writeFileToZip(in, zos, "customize/DeleteSystemApps/app-config");
                 ai.setLog("Imported System Files To Delete...", ai.textAreaCZ);
             }else{
                 System.out.println("Delete List Empty..!!");
@@ -186,7 +199,7 @@ public class CreateZip extends SwingWorker<Void,Void>{
                     in = new FileInputStream(new File(file));
                     file = op.getNameFromPath(file);
                     file = "customize/" + op.getListName(groupName) + "/" + groupName + "/" + file;
-                    op.writeFileToZip(in, zos, file);
+                    this.writeFileToZip(in, zos, file);
                     ai.setLog(op.getNameFromPath(file) + " Imported...", ai.textAreaCZ);
                     progress += 1;
                 }
@@ -208,22 +221,22 @@ public class CreateZip extends SwingWorker<Void,Void>{
         ju.setValue(progress);
         switch(op.flashableZipType){
             case "Create Flashable Zip With Aroma Installer":
-                op.writeFileToZip(in, zos, "META-INF/com/google/android/update-binary-installer");
+                this.writeFileToZip(in, zos, "META-INF/com/google/android/update-binary-installer");
                 for(String fileName : op.jarFileList){
                     System.out.println("File Name : " + fileName);
                     in = this.getClass().getResourceAsStream(fileName);
-                    op.writeFileToZip(in, zos, fileName);
+                    this.writeFileToZip(in, zos, fileName);
                 }
                 op.createAromaConfigFile();
                 in = new ByteArrayInputStream(op.aroma_config.getBytes());
-                op.writeFileToZip(in, zos, "META-INF/com/google/android/aroma-config");
+                this.writeFileToZip(in, zos, "META-INF/com/google/android/aroma-config");
                 in = this.getClass().getResourceAsStream("META-INF/com/google/android/update-binary");
-                op.writeFileToZip(in, zos, "META-INF/com/google/android/update-binary");
+                this.writeFileToZip(in, zos, "META-INF/com/google/android/update-binary");
                 progress += 1;
                 ju.setValue(progress);
                 break;
             case "Create Normal Flashable Zip":
-                op.writeFileToZip(in, zos, "META-INF/com/google/android/update-binary");
+                this.writeFileToZip(in, zos, "META-INF/com/google/android/update-binary");
                 ju.setValue(90);
                 break;
             default:
@@ -231,13 +244,13 @@ public class CreateZip extends SwingWorker<Void,Void>{
         }
         ai.setLog("Nearing Completion....", ai.textAreaCZ);
         in = this.getClass().getResourceAsStream("utils/mount");
-        op.writeFileToZip(in, zos, "utils/mount");
+        this.writeFileToZip(in, zos, "utils/mount");
         in = this.getClass().getResourceAsStream("utils/umount");
-        op.writeFileToZip(in, zos, "utils/umount");
+        this.writeFileToZip(in, zos, "utils/umount");
         op.createUpdaterScriptFile();
         in = new ByteArrayInputStream(op.updater_script.getBytes());
         ju.setValue(100);
-        op.writeFileToZip(in, zos, "META-INF/com/google/android/updater-script");
+        this.writeFileToZip(in, zos, "META-INF/com/google/android/updater-script");
         zos.closeEntry();
         zos.close();
         ai.setLog("Folder Compressed Successfully....", ai.textAreaCZ);
