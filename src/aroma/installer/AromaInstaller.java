@@ -2319,39 +2319,6 @@ public final class AromaInstaller extends javax.swing.JFrame {//implements Prope
         
     }
     
-    public void updateUIwithZIPdata() throws IOException{
-        MultiValueMap mvm  = op.extractTheZip(op.existingZipPath);
-        //op.getArrayListFromZip(op.existingZipPath);
-        System.out.println("Map Before : "+op.map);
-        groupModel.clear();
-        op.map.putAll(mvm);       
-        op.groupArrayList.addAll(op.getGroupListFromMVM(mvm));
-        System.out.println("Updated GroupList : "+op.groupArrayList);
-        System.out.println("Updated Map : "+op.map);
-        for(String element:op.groupArrayList){
-            String[] temp = element.split("_");
-            switch(temp[0]){
-                case "APKs-System":
-                    op.systemList.add(element);
-                    break;
-                case "APKs-Data":
-                    op.dataList.add(element);
-                    break;
-                case "BootAnimations":
-                    op.bootAnimList.add(element);
-                    break;
-                case "Ringtones":
-                    op.ringtoneList.add(element);
-                    break;
-                case "Notifications":
-                    op.notifList.add(element);
-                    break;
-            }
-        }
-        this.refreshGroupList("APKs Group");
-        //this.refreshGroupList(this.lastSelected);
-        //op.updateFileListWithSelectedGroupList(this.lastSelected, fileModel, mvm);
-    }
     /**
      * @param args the command line arguments
      */

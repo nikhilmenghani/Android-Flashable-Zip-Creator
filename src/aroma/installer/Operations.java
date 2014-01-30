@@ -24,7 +24,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
-import java.util.zip.ZipOutputStream;
 import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
 import javax.swing.JList;
@@ -106,7 +105,7 @@ public class Operations {
     
     public String getKernelMountPoint(){
         try {
-            InputStream is = null;
+            InputStream is;
             BufferedReader br;
             is = this.getClass().getResourceAsStream("META-INF/com/google/android/binary files/" + this.selectedDevice + "_mountpoint");
             br = new BufferedReader(new InputStreamReader(is));
@@ -167,10 +166,13 @@ public class Operations {
             }            
         }else if(listType.equals("selectbox")&&!arrayList.isEmpty()){
             this.aroma_config += "" + listType + "(\" " + listGroup + "\",\"" + heading + "\",\"@" + themeFormat + "\",\"" + propFile + "\"";
-            if(propFile.equals("boot_anim_choices.prop")){
-                this.aroma_config += ",\n\"" + "Select one Boot Animation" + "\", \"\", 2";
-            }else if(propFile.equals("kernel_choices.prop")){
-                this.aroma_config += ",\n\"" + "Select one kernel" + "\", \"\", 2";
+            switch (propFile) {
+                case "boot_anim_choices.prop":
+                    this.aroma_config += ",\n\"" + "Select one Boot Animation" + "\", \"\", 2";
+                    break;
+                case "kernel_choices.prop":
+                    this.aroma_config += ",\n\"" + "Select one kernel" + "\", \"\", 2";
+                    break;
             }
             for(String list : arrayList){
                 this.aroma_config += ",\n\"" + list.substring(list.lastIndexOf("_")+1,list.length()) + "\", \"\", 0";
@@ -291,27 +293,35 @@ public class Operations {
                     for(String system_list_files : this.returnPathArray(list, map)){
                         switch(this.flashableZipType){
                             case "Create Flashable Zip With Aroma Installer":
-                                if(propFile == "kernel_choices.prop"){
+                            switch (propFile) {
+                                case "kernel_choices.prop":
                                     this.updater_script += "if (file_getprop(\"/tmp/aroma/" + propFile + "\", \"selected.1" + "\")==\"" + s + "\") then ui_print(\"Flashing " + list.substring(list.lastIndexOf("_") + 1, list.length()) + "\");\n";
                                     this.updater_script += "assert(package_extract_file(\"customize/" + getListName(list) + "/" + list + "/" + getNameFromPath(system_list_files) + "\", \"" + location + "\"));\n";
-                                }else if(propFile == "boot_anim_choices.prop"){
+                                    break;
+                                case "boot_anim_choices.prop":
                                     this.updater_script += "if (file_getprop(\"/tmp/aroma/" + propFile + "\", \"selected.1" + "\")==\"" + s + "\") then ui_print(\"Installing " + list.substring(list.lastIndexOf("_") + 1, list.length()) + "\");\n";
                                     this.updater_script += "package_extract_file(\"customize/" + getListName(list) + "/" + list + "/" + getNameFromPath(system_list_files) + "\", \"" + location + "\");\n";
-                                } else{
+                                    break;
+                                default:
                                     this.updater_script += "if (file_getprop(\"/tmp/aroma/" + propFile + "\", \"item." + s + "." + i + "\")==\"1\") then ui_print(\"Installing " + this.removeExtension(getNameFromPath(system_list_files)) + "\");\n";
                                     this.updater_script += "package_extract_dir(\"customize/" + getListName(list) + "/" + list + "\", \"" + location + "\");\n";
-                                }
-                                this.updater_script += "endif;\n";
-                                i++;
-                                break;
+                                    break;
+                            }
+                            this.updater_script += "endif;\n";
+                            i++;
+                            break;
                             case "Create Normal Flashable Zip":
                                 if(i == 1 && s == 1){
-                                    if(propFile == "kernel_choices.prop"){
-                                        this.updater_script += "package_extract_file(\"customize/" + getListName(list) + "/" + list + "/" + getNameFromPath(system_list_files) + "\", \"" + location + "\");\n";
-                                    }else if(propFile == "boot_anim_choices.prop"){
-                                        this.updater_script += "package_extract_file(\"customize/" + getListName(list) + "/" + list + "/" + getNameFromPath(system_list_files) + "\", \"" + location + "\");\n";
-                                    } else{
-                                        this.updater_script += "package_extract_dir(\"customize/" + getListName(list) + "/" + list + "\", \"" + location + "\");\n";
+                                    switch (propFile) {
+                                        case "kernel_choices.prop":
+                                            this.updater_script += "package_extract_file(\"customize/" + getListName(list) + "/" + list + "/" + getNameFromPath(system_list_files) + "\", \"" + location + "\");\n";
+                                            break;
+                                        case "boot_anim_choices.prop":
+                                            this.updater_script += "package_extract_file(\"customize/" + getListName(list) + "/" + list + "/" + getNameFromPath(system_list_files) + "\", \"" + location + "\");\n";
+                                            break;
+                                        default:
+                                            this.updater_script += "package_extract_dir(\"customize/" + getListName(list) + "/" + list + "\", \"" + location + "\");\n";
+                                            break;
                                     }
                                 }
                                 i++;
@@ -403,14 +413,14 @@ public class Operations {
     }
     
     public String getFilePath(String key, String name, MultiValueMap mvm){
-        ArrayList<String> arrayList = new ArrayList<>();
+        ArrayList<String> list = new ArrayList<>();
         Set entrySet = mvm.entrySet();
         Iterator it = entrySet.iterator();
         while(it.hasNext()){
             Map.Entry mapEntry = (Map.Entry) it.next();
             if(key.equals(mapEntry.getKey())){
-                arrayList = (ArrayList<String>) mvm.get(mapEntry.getKey());
-                for(String path: arrayList){
+                list = (ArrayList<String>) mvm.get(mapEntry.getKey());
+                for(String path: list){
                     if(path.contains(name)){
                         return path;
                     }
@@ -421,17 +431,17 @@ public class Operations {
     }
     
     public void updateFileListWithSelectedGroupList(String str, DefaultListModel model, MultiValueMap mvm){
-        ArrayList<String> arrayList = new ArrayList<>();
+        ArrayList<String> list = new ArrayList<>();
         Set entrySet = mvm.entrySet();
         Iterator it = entrySet.iterator();
         while(it.hasNext()){
             Map.Entry mapEntry = (Map.Entry) it.next();
             if(str.equals(mapEntry.getKey())){
-                arrayList = (ArrayList<String>) mvm.get(mapEntry.getKey());
-                for (int j = 0; j < arrayList.size(); j++) {
-                    System.out.println("Testing.. "+getNameFromPath(arrayList.get(j)));
-                    System.out.println("\t" + mapEntry.getKey() + "\t  " + getNameFromPath(arrayList.get(j)));
-                    model.addElement(getNameFromPath(arrayList.get(j)));
+                list = (ArrayList<String>) mvm.get(mapEntry.getKey());
+                for (int j = 0; j < list.size(); j++) {
+                    System.out.println("Testing.. "+getNameFromPath(list.get(j)));
+                    System.out.println("\t" + mapEntry.getKey() + "\t  " + getNameFromPath(list.get(j)));
+                    model.addElement(getNameFromPath(list.get(j)));
                 }
             }
         }
@@ -441,12 +451,12 @@ public class Operations {
         int returnVal = fileChooser.showOpenDialog(cmpnt);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File[] file = fileChooser.getSelectedFiles();
-            for(int i=0; i<file.length; i++){
-                if(this.map.containsValue(file[i].getAbsolutePath())){
+            for (File fileName : file) {
+                if (this.map.containsValue(fileName.getAbsolutePath())) {
                     JOptionPane.showMessageDialog(null, "File with the same name already exists\nPlease rename the file before importing or make another group and import it.");
-                }else{
-                    this.map.put(type+"_"+groupList.getSelectedValue(), file[i].getAbsolutePath());
-                    System.out.println(file[i].getAbsolutePath());
+                } else {
+                    this.map.put(type+"_"+groupList.getSelectedValue(), fileName.getAbsolutePath());
+                    System.out.println(fileName.getAbsolutePath());
                 }
             }
             fileModel.removeAllElements();
@@ -456,96 +466,10 @@ public class Operations {
         }
     }
     
-    public ArrayList<String> getArrayListFromFileInZip(ZipInputStream zis) throws UnsupportedEncodingException{
-        ArrayList<String> list = new ArrayList<>();
-        String str = "";
-        BufferedReader br = new BufferedReader(new InputStreamReader(zis, "UTF-8"));
-        try {
-            while (br.ready()) {
-            str += (char) br.read();
-            }
-            System.out.println("String is " + str);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        String array[] = str.split("\n");
-        for(int i =0;i < array.length ; i++){
-            list.add(array[i]);
-        }
-        System.out.println("ArrayList obtained is : " + list);
-        return list;
-    }
-    
-    //The following function will extract the whole zip file and return a multivaluemap which contains Group Name as a key and file name as its values
-    public MultiValueMap extractTheZip (String source) throws IOException{ 
-        byte[] buffer = new byte[1024];
-        MultiValueMap mvm = new MultiValueMap();
-        try{
-            File folder = new File("Temp");
-            if(!folder.exists()){
-                folder.mkdir();
-            }
-            ZipInputStream zis = new ZipInputStream(new FileInputStream(source));
-            ZipEntry ze = zis.getNextEntry();
-            while(ze!=null){
-                String fileName = ze.getName();
-                File newFile = new File("Temp" + File.separator + fileName);
-                String filePath = ze.getName();
-                System.out.println(filePath);
-                new File(newFile.getParent()).mkdirs();
-                FileOutputStream fos = new FileOutputStream(newFile);             
-                int len;
-                while ((len = zis.read(buffer)) > 0) {
-                    fos.write(buffer, 0, len);
-                }
-                fos.close();
-                if(filePath.startsWith("customize/")){
-                    String temp = filePath.replace("customize/", "");
-                    String splitName[] = temp.split("/");
-                    switch (splitName[0]){
-                        case "APKs-System":
-                            mvm.put(splitName[1],newFile.getAbsolutePath());
-                            break;
-                        case "APKs-Data":
-                            mvm.put(splitName[1],newFile.getAbsolutePath());
-                            break;
-                        case "Ringtones":
-                            mvm.put(splitName[1],newFile.getAbsolutePath());
-                            break;
-                        case "Notifications":
-                            mvm.put(splitName[1],newFile.getAbsolutePath());
-                            break;
-                        case "BootAnimations":
-                            mvm.put(splitName[1],newFile.getAbsolutePath());
-                            break;
-                    }
-                }
-                ze = zis.getNextEntry();
-            }
-            zis.closeEntry();
-            zis.close();
-            System.out.println("Done");
-        }catch(IOException ex){
-            ex.printStackTrace(); 
-        }
-        return mvm;
-    }
-    
-    public ArrayList<String> getGroupListFromMVM(MultiValueMap mvm){
-        ArrayList<String> arrayList = new ArrayList<>();
-        Set entrySet = mvm.entrySet();
-        Iterator it = entrySet.iterator();
-        while(it.hasNext()){
-            Map.Entry mapEntry = (Map.Entry) it.next();
-            arrayList.add(mapEntry.getKey().toString());
-        }
-        return arrayList;
-    }
     
     public void deleteDirectories(String location){
         File directory = new File(location);
         if(!directory.exists()){
-            //JOptionPane.showMessageDialog(null, "Directory does not exist!!");
             System.out.println("Directory Doesn't Exist..!!");
         }
         else{

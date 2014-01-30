@@ -5,10 +5,17 @@
 package aroma.installer;
 
 import java.awt.Toolkit;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import javax.swing.JOptionPane;
@@ -16,8 +23,8 @@ import javax.swing.SwingWorker;
 import org.apache.commons.collections4.map.MultiValueMap;
 
 /**
- *
- * @author rajat
+ * @author Nikhil
+ * @author Rajat
  */
 public class ImportZip extends SwingWorker<Void,Void>{
     ProgressBarUpdater ju;
@@ -35,6 +42,17 @@ public class ImportZip extends SwingWorker<Void,Void>{
         
     }
     
+    public ArrayList<String> getGroupListFromMVM(MultiValueMap mvm){
+        ArrayList<String> arrayList = new ArrayList<>();
+        Set entrySet = mvm.entrySet();
+        Iterator it = entrySet.iterator();
+        while(it.hasNext()){
+            Map.Entry mapEntry = (Map.Entry) it.next();
+            arrayList.add(mapEntry.getKey().toString());
+        }
+        return arrayList;
+    }
+    
     @Override
         public Void doInBackground() throws IOException { 
             ju = new ProgressBarUpdater(ai.progressImportZip);
@@ -47,7 +65,7 @@ public class ImportZip extends SwingWorker<Void,Void>{
             System.out.println("Map Before : "+op.map);
             ai.groupModel.clear();
             op.map.putAll(mvm);       
-            op.groupArrayList.addAll(op.getGroupListFromMVM(mvm));
+            op.groupArrayList.addAll(this.getGroupListFromMVM(mvm));
             System.out.println("Updated GroupList : "+op.groupArrayList);
             System.out.println("Updated Map : "+op.map);
             for(String element : op.groupArrayList){
@@ -78,6 +96,25 @@ public class ImportZip extends SwingWorker<Void,Void>{
             return null;
         }
 
+        public ArrayList<String> getArrayListFromFileInZip(ZipInputStream zis) throws UnsupportedEncodingException{
+            ArrayList<String> list = new ArrayList<>();
+            String str = "";
+            BufferedReader br = new BufferedReader(new InputStreamReader(zis, "UTF-8"));
+            try {
+                while (br.ready()) {
+                str += (char) br.read();
+                }
+                System.out.println("String is " + str);
+            } catch (IOException e) {
+            }
+            String array[] = str.split("\n");
+            for (String file : array) {
+                list.add(file);
+            }
+            System.out.println("ArrayList obtained is : " + list);
+            return list;
+        }
+        
         @Override
         public void done() {
             Toolkit.getDefaultToolkit().beep();
@@ -110,7 +147,7 @@ public class ImportZip extends SwingWorker<Void,Void>{
                 while(ze!=null){
                     String fileName = ze.getName();
                     if(fileName.equals(op.appConfigPath)){
-                        op.deleteApkList = op.getArrayListFromFileInZip(zis);
+                        op.deleteApkList = this.getArrayListFromFileInZip(zis);
                     }
                     File newFile = new File("Temp" + File.separator + fileName);
                     String filePath = ze.getName();
