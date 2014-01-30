@@ -1118,7 +1118,11 @@ public final class AromaInstaller extends javax.swing.JFrame {//implements Prope
         dialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
         dialog.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent we) {
-                frame.dispose();
+                if(CZtask.close){
+                    frame.dispose();
+                }else{
+                    frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+                }    
             }
         });
         dialog.pack();
@@ -1251,12 +1255,24 @@ public final class AromaInstaller extends javax.swing.JFrame {//implements Prope
         dialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
         dialog.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent we) {
-                frame.dispose();
+                if(IZtask != null){
+                    if(IZtask.close){
+                        frame.dispose();
+                    }else{
+                        frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+                    }
+                }else{
+                    frame.dispose();
+                }
             }
         });
         dialog.pack();
         dialog.setLocationRelativeTo(this);
         dialog.setVisible(true);
+    }
+    
+    public void importZipWindowClosing(){
+        
     }
     
     public void createZipUI(){
@@ -1349,12 +1365,19 @@ public final class AromaInstaller extends javax.swing.JFrame {//implements Prope
         dialog.addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowOpened(java.awt.event.WindowEvent evt) {
                 CZwindowOpened(evt);
-                
             }
         });
         dialog.addWindowListener(new WindowAdapter() { 
             public void windowClosing(WindowEvent we) {
-                frame.dispose();
+                if(CZtask != null){
+                    if(CZtask.close){
+                        frame.dispose();
+                    }else{
+                        frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+                    }
+                }else{
+                    frame.dispose();
+                }
             }
         });
         dialog.pack();
@@ -1422,9 +1445,9 @@ public final class AromaInstaller extends javax.swing.JFrame {//implements Prope
     }
     
     public void btnApkGroupActionPerformed(java.awt.event.ActionEvent evt) {
-        if(op.selectedDevice == "" && op.updateBinaryPath == ""){
-            JOptionPane.showMessageDialog(null, "Please Select Your Device First...!!!");
-        }else{
+//        if(op.selectedDevice == "" && op.updateBinaryPath == ""){
+//            JOptionPane.showMessageDialog(null, "Please Select Your Device First...!!!");
+//        }else{
             System.out.println("Add Apk Group Clicked.. " + evt.getActionCommand());
         
             removeHighlight(this.lastSelected);
@@ -1436,13 +1459,13 @@ public final class AromaInstaller extends javax.swing.JFrame {//implements Prope
 
             updateFileList();
             //addApkGroupUI();
-        }
+       // }
     }                                              
 
     public void btnBootAnimGroupActionPerformed(java.awt.event.ActionEvent evt) { 
-        if(op.selectedDevice == "" && op.updateBinaryPath == ""){
-            JOptionPane.showMessageDialog(null, "Please Select Your Device First...!!!");
-        }else{
+//        if(op.selectedDevice == "" && op.updateBinaryPath == ""){
+//            JOptionPane.showMessageDialog(null, "Please Select Your Device First...!!!");
+//        }else{
             System.out.println("Add Boot Animation Group Clicked..");
             removeHighlight(this.lastSelected);
             btnBootAnimGroup.setSelected(true);
@@ -1452,13 +1475,13 @@ public final class AromaInstaller extends javax.swing.JFrame {//implements Prope
             this.lblGroup.setText("Boot Animations Group");
 
             updateFileList();
-        }
+        //}
     }                                                   
 
     public void btnRingtonesGroupActionPerformed(java.awt.event.ActionEvent evt) { 
-        if(op.selectedDevice == "" && op.updateBinaryPath == ""){
-            JOptionPane.showMessageDialog(null, "Please Select Your Device First...!!!");
-        }else{
+//        if(op.selectedDevice == "" && op.updateBinaryPath == ""){
+//            JOptionPane.showMessageDialog(null, "Please Select Your Device First...!!!");
+//        }else{
             System.out.println("Add Ringtones Group Clicked..");
             removeHighlight(this.lastSelected);
             btnRingtonesGroup.setSelected(true);
@@ -1468,13 +1491,13 @@ public final class AromaInstaller extends javax.swing.JFrame {//implements Prope
             this.lblGroup.setText("Ringtones Group");
 
             updateFileList();
-        }
+        //}
     }                                                    
 
     public void btnNotifGroupActionPerformed(java.awt.event.ActionEvent evt) { 
-        if(op.selectedDevice == "" && op.updateBinaryPath == ""){
-            JOptionPane.showMessageDialog(null, "Please Select Your Device First...!!!");
-        }else{
+//        if(op.selectedDevice == "" && op.updateBinaryPath == ""){
+//            JOptionPane.showMessageDialog(null, "Please Select Your Device First...!!!");
+//        }else{
             System.out.println("Add Notifications Group Clicked..");
             removeHighlight(this.lastSelected);
             btnNotifGroup.setSelected(true);
@@ -1484,7 +1507,7 @@ public final class AromaInstaller extends javax.swing.JFrame {//implements Prope
             this.lblGroup.setText("Notifications Group");
 
             updateFileList();
-        }
+        //}
     }                                                
 
     public void btnKernelGroupActionPerformed(java.awt.event.ActionEvent evt) { 
@@ -1506,29 +1529,29 @@ public final class AromaInstaller extends javax.swing.JFrame {//implements Prope
     }                                                 
 
     public void btnDeleteSystemFilesGroupActionPerformed(java.awt.event.ActionEvent evt) { 
-        if(op.selectedDevice == "" && op.updateBinaryPath == ""){
-            JOptionPane.showMessageDialog(null, "Please Select Your Device First...!!!");
-        }else{
+//        if(op.selectedDevice == "" && op.updateBinaryPath == ""){
+//            JOptionPane.showMessageDialog(null, "Please Select Your Device First...!!!");
+//        }else{
             System.out.println("Add Delete System Files Group Clicked..");
             this.deleteSystemApkUI();
-        }
+//        }
     }                                                            
 
     public void btnAdvancedGroupActionPerformed(java.awt.event.ActionEvent evt) { 
-        if(op.selectedDevice == "" && op.updateBinaryPath == ""){
-            JOptionPane.showMessageDialog(null, "Please Select Your Device First...!!!");
-        }else{
+//        if(op.selectedDevice == "" && op.updateBinaryPath == ""){
+//            JOptionPane.showMessageDialog(null, "Please Select Your Device First...!!!");
+//        }else{
             System.out.println("Add Advanced Group Clicked..");
             JOptionPane.showMessageDialog(this, "Currently Work In Progress..!!\nWill Be Available Soon..!!\nSuggestions to add features are welcomed..!! ");
-        }
+        //}
     }                                                   
 
     public void btnLoadAromaFlashableZipActionPerformed(java.awt.event.ActionEvent evt) {  
-        if(op.selectedDevice == "" && op.updateBinaryPath == ""){
-            JOptionPane.showMessageDialog(null, "Please Select Your Device First...!!!");
-        }else{
+//        if(op.selectedDevice == "" && op.updateBinaryPath == ""){
+//            JOptionPane.showMessageDialog(null, "Please Select Your Device First...!!!");
+//        }else{
             this.importZipUI();
-        }
+        //}
     }                                                        
 
     public void btnSelectDeviceActionPerformed(java.awt.event.ActionEvent evt) {                                                
@@ -1537,9 +1560,10 @@ public final class AromaInstaller extends javax.swing.JFrame {//implements Prope
     }                                               
 
     public void btnAddGroupActionPerformed(java.awt.event.ActionEvent evt) {
-        if(this.lastSelected == "APKs Group" && op.selectedDevice == "" && op.updateBinaryPath == ""){
-            JOptionPane.showMessageDialog(null, "Please Select Your Device First...!!!");
-        }else if(this.lastSelected == "Kernel Group" && op.selectedDevice == "" && op.updateBinaryPath != ""){
+//        if(this.lastSelected == "APKs Group" && op.selectedDevice == "" && op.updateBinaryPath == ""){
+//            JOptionPane.showMessageDialog(null, "Please Select Your Device First...!!!");
+//        }else 
+        if(this.lastSelected == "Kernel Group" && op.selectedDevice == "" && op.updateBinaryPath != ""){
             JOptionPane.showMessageDialog(null, "Feature Not Available For Custom Update-Binary");
         }else{
             System.out.println(this.lastSelected + " Clicked Add Group");
@@ -1607,15 +1631,15 @@ public final class AromaInstaller extends javax.swing.JFrame {//implements Prope
     public void btnAddFileActionPerformed(java.awt.event.ActionEvent evt) {                                           
         System.out.println("Add File Clicked");
         if(!groupList.isSelectionEmpty()){
-            if(this.lastSelected.equals("Boot Animation Group")&&op.map.containsKey("BootAnimations_" + groupList.getSelectedValue())){
-                JOptionPane.showMessageDialog(null, "There can be only one file per one Boot Animation group..!!\nAdd more groups to add more files..!!");
-            }
-            else if(this.lastSelected.equals("Kernel Group")&&op.map.containsKey("Kernel_" + groupList.getSelectedValue())){
-                JOptionPane.showMessageDialog(null, "There can be only one file per one Kernel group..!!\nAdd more groups to add more files..!!");
-            }
-            else{
+//            if(this.lastSelected.equals("Boot Animation Group")&&op.map.containsKey("BootAnimations_" + groupList.getSelectedValue())){
+//                JOptionPane.showMessageDialog(null, "There can be only one file per one Boot Animation group..!!\nAdd more groups to add more files..!!");
+//            }
+//            else if(this.lastSelected.equals("Kernel Group")&&op.map.containsKey("Kernel_" + groupList.getSelectedValue())){
+//                JOptionPane.showMessageDialog(null, "There can be only one file per one Kernel group..!!\nAdd more groups to add more files..!!");
+//            }
+//            else{
                 chooseFile(this.lastSelected);
-            }
+//            }
         }
         else{
             JOptionPane.showMessageDialog(null, "Select one group from Group List to add Files!!");

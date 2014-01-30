@@ -14,6 +14,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
+import javax.swing.WindowConstants;
 import org.apache.commons.collections4.map.MultiValueMap;
 
 /**
@@ -24,10 +25,12 @@ public class ImportZip extends SwingWorker<Void,Void>{
     ProgressBarUpdater ju;
     Operations op;
     AromaInstaller ai;
+    boolean close;
 
     ImportZip(AromaInstaller aThis, Operations op) {
         this.ai = aThis;
         this.op = op;
+        this.close = false;
     }
     
     public void ImportZip(AromaInstaller ai, Operations op){
@@ -81,6 +84,7 @@ public class ImportZip extends SwingWorker<Void,Void>{
         public void done() {
             Toolkit.getDefaultToolkit().beep();
             ai.btnBrowseZip.setEnabled(true);
+            this.close = true;
             //setCursor(null); //turn off the wait cursor
             //setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
             ai.textAreaImportZipLog.append("Done!\n");

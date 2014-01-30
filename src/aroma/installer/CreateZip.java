@@ -4,6 +4,7 @@
  */
 package aroma.installer;
 
+import java.awt.Cursor;
 import java.awt.Toolkit;
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -26,11 +27,13 @@ public class CreateZip extends SwingWorker<Void,Void>{
     ProgressBarUpdater ju;
     AromaInstaller ai;
     Operations op;
+    boolean close;
 
     CreateZip(AromaInstaller aThis, Operations op) {
         this.ai = aThis;
         this.op = op;
         progress = 0;
+        this.close = false;
     }
 
     public void CreateZip(AromaInstaller ai, Operations op){
@@ -39,6 +42,7 @@ public class CreateZip extends SwingWorker<Void,Void>{
 
     @Override
     protected Void doInBackground() throws Exception {
+//        ai.contentPanel.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         ju = new ProgressBarUpdater(ai.progressCZ);
         new java.lang.Thread(ju).start();
         createZipAt(op.zipDestination);
@@ -208,8 +212,10 @@ public class CreateZip extends SwingWorker<Void,Void>{
     @Override
     public void done() {
         Toolkit.getDefaultToolkit().beep();
+        ai.CZ_Panel.setCursor(Cursor.getDefaultCursor());
         //setCursor(null); //turn off the wait cursor
         ai.textAreaCZ.append("Done!\n");
+        this.close = true;
         ai.frame.setVisible(false);
         JOptionPane.showMessageDialog(null, "Zip Successfully Created...!!!");
         ai.frame.dispose();
