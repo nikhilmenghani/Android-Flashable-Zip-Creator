@@ -182,35 +182,6 @@ public class Operations {
 
     }
     
-    public int listFilesInAromaConfig(ArrayList<String> groupType, String groupName, String propFile, int count, MultiValueMap mvm, String type){
-        if(type.equals("selectbox")&&count == 1){
-            int i = 1;
-            if(groupType.contains(groupName)){
-                    for(String file_list: groupType){
-                        this.aroma_config += "appendvar(\"installer_title\",iif(prop(\"" + propFile + "\",\"selected.1" + "\")==\""+ i +"\",\"" + file_list.substring(file_list.lastIndexOf("_")+1,file_list.length()) + "\n" + "\",\"\"));\n";
-                        i++;
-                    }
-                    count++;
-                }
-        }else if(type.equals("checkbox")){
-            int i = 1;
-            if(groupType.equals(deleteApkList)&&count == 1){
-                for(String file_list: deleteApkList){
-                    this.aroma_config += "appendvar(\"installer_title\",iif(prop(\"" + propFile + "\",\"item." + count + "." + i + "\")==\"1\",\"" + file_list + "\n" + "\",\"\"));\n";
-                    i++;
-                }
-                count++;
-            }else if(groupType.contains(groupName)){
-                    for(String file_list: this.returnPathArray(groupName, mvm)){
-                        this.aroma_config += "appendvar(\"installer_title\",iif(prop(\"" + propFile + "\",\"item." + count + "." + i + "\")==\"1\",\"" + this.removeExtension(getNameFromPath(file_list)) + "\n" + "\",\"\"));\n";
-                        i++;
-                    }
-                    count++;
-            }            
-        }
-        return count;
-    }
-    
     public void createAromaConfigFile(){
         this.aroma_config = "fontresload(\"0\", \"ttf/Roboto-Regular.ttf\", \"12\");\n" +
                 "fontresload(\"1\", \"ttf/Roboto-Regular.ttf\", \"18\");\n" +
@@ -224,35 +195,13 @@ public class Operations {
         
         displayListInAroma("selectbox", "Boot Animations List" , "Select Boot Animation to be used in current ROM", "personalize", "boot_anim_choices.prop", this.bootAnimList);
         
-        displayListInAroma("selectbox", "Kernel List" , "Select Kernel to be flashed", "default", "kernel_choices.prop", this.kernelList);
+        displayListInAroma("selectbox", "Kernel List" , "Select Kernel to be flashed", "personalize", "kernel_choices.prop", this.kernelList);
         
         displayListInAroma("checkbox", "Ringtone List" , "Choose Ringtones to include in Rom", "personalize", "ringtone_choices.prop", this.ringtoneList);
         
         displayListInAroma("checkbox", "Notification List" , "Choose Notification Tones to include in Rom", "personalize", "notification_choices.prop", this.notifList);
         
         displayListInAroma("checkbox", "Remove System Apps List", "Choose Apps To Remove", "personalize", "delete_choices.prop", this.deleteApkList);
-        
-        this.aroma_config += "setvar(\"installer_title\",\"You are about to install the following:\");\n" +
-                "appendvar(\"installer_title\",\"\\n\\n\");\n";
-        
-        int s = 1, d = 1, k = 1, ba = 1, r = 1, n = 1, da = 1;
-        
-        for(String grouplist : groupArrayList){
-            if(map.containsKey(grouplist)){
-                s = listFilesInAromaConfig(systemList, grouplist, "system_app_choices.prop", s, map, "checkbox");
-
-                d = listFilesInAromaConfig(dataList, grouplist, "app_choices.prop", d, map, "checkbox");
-
-                ba = listFilesInAromaConfig(bootAnimList, grouplist, "boot_anim_choices.prop", ba, map, "selectbox");
-
-                k = listFilesInAromaConfig(kernelList, grouplist, "kernel_choices.prop", k, map, "selectbox");
-
-                r = listFilesInAromaConfig(ringtoneList, grouplist, "ringtone_choices.prop", r, map, "checkbox");
-
-                n = listFilesInAromaConfig(notifList, grouplist, "notification_choices.prop", n, map, "checkbox");    
-            }
-            da = listFilesInAromaConfig(deleteApkList, grouplist, "delete_choices.prop", da, map, "checkbox");
-        }
         
         if(!dataList.isEmpty())
         this.aroma_config += "writetmpfile(\"app_choices.prop\",readtmpfile(\"app_choices.prop\"));\n";
@@ -279,7 +228,7 @@ public class Operations {
 
         //this.aroma_config += "if confirm(\"Installing\",getvar(\"installer_title\") + \"\\n\\nStart Installation?\", \"@confirm\")==\"no\" then back(1);\nendif;\n";
         this.aroma_config += "install(\"Installing\", \"Your selected files are being installed. Please Wait...\", \"@install\");";
-        this.aroma_config += "if confirm(\"Wipe cache partition\",\"Do you want to clear dalvik cache after installation?\", \"@confirm\")==\"yes\" then writetmpfile(\"dalvik_choices.prop\",\"true=yes\");\n\nendif;\n";
+        this.aroma_config += "if confirm(\"Wipe cache partition\",\"Do you want to clear dalvik cache?\", \"@confirm\")==\"yes\" then writetmpfile(\"dalvik_choices.prop\",\"true=yes\");\n\nendif;\n";
         
     }
     
