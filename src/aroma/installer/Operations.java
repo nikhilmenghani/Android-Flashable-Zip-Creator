@@ -369,7 +369,7 @@ public class Operations {
         
         extractFilesUpdaterScript(this.bootAnimList, "Installing Boot Animation", "boot_anim_choices.prop", "/data/local/bootanimation.zip");
         
-        extractFilesUpdaterScript(this.kernelList, "Flashing Kernel", "kernel_choices.prop", this.kernelMountPoint + "/boot.img");
+        extractFilesUpdaterScript(this.kernelList, "Flashing Kernel", "kernel_choices.prop", this.kernelMountPoint);// + "/boot.img");
         
         extractFilesUpdaterScript(this.ringtoneList, "Adding Ringtones", "ringtone_choices.prop", "/system/media/audio/ringtones");
         
@@ -469,8 +469,12 @@ public class Operations {
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File[] file = fileChooser.getSelectedFiles();
             for(int i=0; i<file.length; i++){
-                this.map.put(type+"_"+groupList.getSelectedValue(), file[i].getAbsolutePath());
-                System.out.println(file[i].getAbsolutePath());
+                if(this.map.containsValue(file[i].getAbsolutePath())){
+                    JOptionPane.showMessageDialog(null, "File with the same name already exists\nPlease rename the file before importing or make another group and import it.");
+                }else{
+                    this.map.put(type+"_"+groupList.getSelectedValue(), file[i].getAbsolutePath());
+                    System.out.println(file[i].getAbsolutePath());
+                }
             }
             fileModel.removeAllElements();
             updateFileListWithSelectedGroupList(type+"_"+groupList.getSelectedValue().toString(), fileModel, this.map);
