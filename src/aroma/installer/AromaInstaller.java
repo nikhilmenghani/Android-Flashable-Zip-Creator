@@ -1120,11 +1120,7 @@ public final class AromaInstaller extends javax.swing.JFrame {//implements Prope
         dialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
         dialog.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent we) {
-                if(CZtask.close){
-                    frame.dispose();
-                }else{
-                    frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-                }    
+                frame.dispose();
             }
         });
         dialog.pack();
