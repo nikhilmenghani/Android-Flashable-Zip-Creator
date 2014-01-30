@@ -46,6 +46,7 @@ public class Operations {
     String zipDestination = "";
     String tempFolderPath = "";
     String selectedDevice = "";
+    String selectedDeviceName = "";
     String aroma_config = "";
     String updater_script = "";
     String flashableZipType = "";
@@ -105,31 +106,6 @@ public class Operations {
         return "";
     }
     
-    public String getJarFileName(){
-        String path[] = this.getClass().getResource("utils/mount").getPath().split("!");
-        String fileName = path[0].substring(path[0].lastIndexOf("/") + 1, path[0].length());
-        //JOptionPane.showMessageDialog(null, fileName);
-        return fileName;
-    }
-    
-    public ArrayList<String> getJarFileList(){
-        try{
-            JarFile jarFile = new JarFile(getJarFileName());
-            for(Enumeration em = jarFile.entries(); em.hasMoreElements();) {
-                String s= em.nextElement().toString();
-                if(s.startsWith("aroma/installer/META-INF/")){
-                    s = s.substring("aroma/installer/".length(), s.length());
-                    if(s.endsWith(".ttf")||s.endsWith(".png")||s.endsWith(".prop")||s.endsWith(".lang"))
-                        this.jarFileList.add(s);
-                    }
-            }
-            jarFile.close();
-        }catch (IOException e){
-            System.err.println("Error: " + e.getMessage());
-        }
-        return this.jarFileList;
-    }
-    
     public String getKernelMountPoint(){
         try {
             InputStream is = null;
@@ -183,7 +159,7 @@ public class Operations {
         if(listType.equals("checkbox")&&!arrayList.isEmpty()){
             if(arrayList.equals(deleteApkList)){
                 System.out.println("ArrayList is Delete Apk List");
-                this.aroma_config = this.aroma_config + "\" " + listType + "(\" " + listGroup + "\",\"" + heading + "\",\"@" + themeFormat + "\",\"" + propFile + "\"";
+                this.aroma_config = this.aroma_config + "" + listType + "(\" " + listGroup + "\",\"" + heading + "\",\"@" + themeFormat + "\",\"" + propFile + "\"";
                 this.aroma_config = this.aroma_config + ",\n\"" + "Delete System Apks" + "\", \"\", 2";
                 for(String list : arrayList){
                         this.aroma_config = this.aroma_config + ",\n\"" + list + "\", \"\", 0";
@@ -191,7 +167,7 @@ public class Operations {
                 this.aroma_config = this.aroma_config + ");\n";
             }
             else{
-                this.aroma_config = this.aroma_config + heading;
+                this.aroma_config = this.aroma_config + "" + listType + "(\" " + listGroup + "\",\"" + heading + "\",\"@" + themeFormat + "\",\"" + propFile + "\"";
                 for(String list : arrayList){
                     if(map.containsKey(list)){
                         this.aroma_config = this.aroma_config + ",\n\"" + list.substring(list.lastIndexOf("_") + 1, list.length()) + "\", \"\", 2";
@@ -222,7 +198,7 @@ public class Operations {
             int i = 1;
             if(groupType.contains(groupName)){
                     for(String file_list: groupType){
-                        this.aroma_config = this.aroma_config + "appendvar(\"installer_title\",iif(prop(\"" + propFile + "\",\"selected.1" + "\")==\""+ i +"\",\"" + file_list.substring(file_list.lastIndexOf("_")+1,file_list.length()) + "\",\"\"));\n";
+                        this.aroma_config = this.aroma_config + "appendvar(\"installer_title\",iif(prop(\"" + propFile + "\",\"selected.1" + "\")==\""+ i +"\",\"" + file_list.substring(file_list.lastIndexOf("_")+1,file_list.length()) + "\n" + "\",\"\"));\n";
                         i++;
                     }
                     count++;
@@ -231,13 +207,13 @@ public class Operations {
             int i = 1;
             if(groupType.equals(deleteApkList)&&count == 1){
                 for(String file_list: deleteApkList){
-                    this.aroma_config = this.aroma_config + "appendvar(\"installer_title\",iif(prop(\"" + propFile + "\",\"item." + count + "." + i + "\")==\"1\",\"" + file_list + "\",\"\"));\n";
+                    this.aroma_config = this.aroma_config + "appendvar(\"installer_title\",iif(prop(\"" + propFile + "\",\"item." + count + "." + i + "\")==\"1\",\"" + file_list + "\n" + "\",\"\"));\n";
                     i++;
                 }
                 count++;
             }else if(groupType.contains(groupName)){
                     for(String file_list: this.returnPathArray(groupName, mvm)){
-                        this.aroma_config = this.aroma_config + "appendvar(\"installer_title\",iif(prop(\"" + propFile + "\",\"item." + count + "." + i + "\")==\"1\",\"" + this.removeExtension(getNameFromPath(file_list)) + "\",\"\"));\n";
+                        this.aroma_config = this.aroma_config + "appendvar(\"installer_title\",iif(prop(\"" + propFile + "\",\"item." + count + "." + i + "\")==\"1\",\"" + this.removeExtension(getNameFromPath(file_list)) + "\n" + "\",\"\"));\n";
                         i++;
                     }
                     count++;
@@ -250,6 +226,8 @@ public class Operations {
         this.aroma_config = "fontresload(\"0\", \"ttf/Roboto-Regular.ttf\", \"12\");\n" +
                 "fontresload(\"1\", \"ttf/Roboto-Regular.ttf\", \"18\");\n" +
                 "theme(\"miui4\");\n";
+        
+        this.aroma_config += "agreebox(\"Important notes!\", \"Terms & Conditions\", \"@alert\",resread(\"Terms and Conditions.txt\"), \"I agree with these Terms of Use...\", \"You need to agree with the Terms of Use...\");\n";
         
         displayListInAroma("checkbox", "App List" , "Choose the apps to be installed to data", "personalize", "app_choices.prop", this.dataList);
         
@@ -608,6 +586,7 @@ public class Operations {
     //This function will not be needed once final product is ready.
     
     public ArrayList<String> jarFileList() throws IOException{
+        this.jarFileList.add("META-INF/com/google/android/aroma/Terms and Conditions.txt");
         this.jarFileList.add("META-INF/com/google/android/aroma/fonts/big.png");
         this.jarFileList.add("META-INF/com/google/android/aroma/fonts/small.png");
         

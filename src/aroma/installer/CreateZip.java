@@ -14,6 +14,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.jar.JarFile;
 import java.util.zip.ZipOutputStream;
 import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
@@ -62,6 +64,7 @@ public class CreateZip extends SwingWorker<Void,Void>{
                 System.out.println(groupName + " Removed..!!" + " Now GroupList Contains " + op.groupArrayList);
                 //recursion is used here..
                 removeEmptyGroup();
+                JOptionPane.showMessageDialog(ai, "Removed Empty Group : " + groupName);
                 ai.setLog("Removing Empty group " + groupName, ai.textAreaCZ);
             }
             else{
@@ -111,7 +114,40 @@ public class CreateZip extends SwingWorker<Void,Void>{
         }
     }
     
+    public String getJarFileName(){
+        String path[] = this.getClass().getResource("utils/mount").getPath().split("!");
+        String fileName = path[0].substring(path[0].lastIndexOf("/") + 1, path[0].length());
+        //JOptionPane.showMessageDialog(null, fileName);
+        return fileName;
+    }
+    
+    public ArrayList<String> getJarFileList(){
+        try{
+            JarFile jarFile = new JarFile(getJarFileName());
+            for(Enumeration em = jarFile.entries(); em.hasMoreElements();) {
+                String s= em.nextElement().toString();
+                if(s.startsWith("aroma/installer/META-INF/")){
+                    s = s.substring("aroma/installer/".length(), s.length());
+                    if(s.endsWith(".ttf")||s.endsWith(".png")||s.endsWith(".prop")||s.endsWith(".lang")||s.endsWith(".txt"))
+                        op.jarFileList.add(s);
+                    }
+            }
+            jarFile.close();
+        }catch (IOException e){
+            System.err.println("Error: " + e.getMessage());
+        }
+        return op.jarFileList;
+    }
+    public boolean isExecutingJarFile(){
+        return this.getClass().getResource("utils/mount").getPath().contains("!");
+    }
+    
     public void createZipAt(String destination) throws IOException{
+        if(isExecutingJarFile()){
+            op.jarFileList = this.getJarFileList();
+        }else{
+            op.jarFileList = op.jarFileList();
+        }
         this.removeEmptyGroup();
         ai.setLog("All Clear...", ai.textAreaCZ);
         ai.setLog("Creating "+op.flashableZipType+" Zip...", ai.textAreaCZ);
@@ -173,7 +209,7 @@ public class CreateZip extends SwingWorker<Void,Void>{
         switch(op.flashableZipType){
             case "Create Flashable Zip With Aroma Installer":
                 op.writeFileToZip(in, zos, "META-INF/com/google/android/update-binary-installer");
-                for(String fileName : op.jarFileList()){
+                for(String fileName : op.jarFileList){
                     System.out.println("File Name : " + fileName);
                     in = this.getClass().getResourceAsStream(fileName);
                     op.writeFileToZip(in, zos, fileName);

@@ -15,7 +15,7 @@ import javax.swing.ImageIcon;
 
 
 public class Utils {
-    public final static String acc = "acc";
+    public final static String acc = "aac";
     public final static String mp3 = "mp3";
     public final static String m4a = "m4a";
     public final static String ogg = "ogg";

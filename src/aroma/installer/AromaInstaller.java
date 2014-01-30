@@ -59,6 +59,7 @@ public final class AromaInstaller extends javax.swing.JFrame {//implements Prope
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
     public void initComponents() {
+        this.setResizable(false);
         jMenuBar1 = new JMenuBar();
         jMenu1 = new JMenu();
         jMenu2 = new JMenu();
@@ -811,7 +812,8 @@ public final class AromaInstaller extends javax.swing.JFrame {//implements Prope
         for(String deviceName : op.CSDmap.keySet()){
             CSDModel.addElement(deviceName);
         }
-        CSDList.setSelectedValue(op.selectedDevice, true);
+        //JOptionPane.showMessageDialog(this, op.selectedDevice);
+        CSDList.setSelectedValue(op.selectedDeviceName, true);
         
         JButton CSD_continue = new JButton();
         JButton CSD_cancel = new JButton();
@@ -1398,6 +1400,7 @@ public final class AromaInstaller extends javax.swing.JFrame {//implements Prope
             //setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
             IZtask = new ImportZip(this, this.op);
             IZtask.execute();
+            //this.textFieldZipDestination.setText(op.zipDestination);
         }else{
             setLog("Cancelled By User", textAreaImportZipLog);
         }
@@ -1598,7 +1601,8 @@ public final class AromaInstaller extends javax.swing.JFrame {//implements Prope
             textFieldUpdateBinary.setText(file.getAbsolutePath());
             op.updateBinaryPath = file.getAbsolutePath();
             op.selectedDevice = "";
-            JOptionPane.showMessageDialog(null, "Please note that For Devices not included in Supported List won't avail the feature of Kernel Flashing.\nSorry for inconvenience");
+            op.selectedDeviceName = "";
+            JOptionPane.showMessageDialog(null, "Please note that Devices not included in Supported List won't avail the feature of Kernel Flashing.\nSorry for inconvenience");
         } else {
             System.out.println("File access cancelled by user.");
         }
@@ -1631,15 +1635,15 @@ public final class AromaInstaller extends javax.swing.JFrame {//implements Prope
     public void btnAddFileActionPerformed(java.awt.event.ActionEvent evt) {                                           
         System.out.println("Add File Clicked");
         if(!groupList.isSelectionEmpty()){
-//            if(this.lastSelected.equals("Boot Animation Group")&&op.map.containsKey("BootAnimations_" + groupList.getSelectedValue())){
-//                JOptionPane.showMessageDialog(null, "There can be only one file per one Boot Animation group..!!\nAdd more groups to add more files..!!");
-//            }
-//            else if(this.lastSelected.equals("Kernel Group")&&op.map.containsKey("Kernel_" + groupList.getSelectedValue())){
-//                JOptionPane.showMessageDialog(null, "There can be only one file per one Kernel group..!!\nAdd more groups to add more files..!!");
-//            }
-//            else{
+            if(this.lastSelected.equals("Boot Animation Group")&&op.map.containsKey("BootAnimations_" + groupList.getSelectedValue())){
+                JOptionPane.showMessageDialog(null, "There can be only one file per one Boot Animation group..!!\nAdd more groups to add more files..!!");
+            }
+            else if(this.lastSelected.equals("Kernel Group")&&op.map.containsKey("Kernel_" + groupList.getSelectedValue())){
+                JOptionPane.showMessageDialog(null, "There can be only one file per one Kernel group..!!\nAdd more groups to add more files..!!");
+            }
+            else{
                 chooseFile(this.lastSelected);
-//            }
+            }
         }
         else{
             JOptionPane.showMessageDialog(null, "Select one group from Group List to add Files!!");
@@ -1714,6 +1718,7 @@ public final class AromaInstaller extends javax.swing.JFrame {//implements Prope
     
     public void CSD_continueActionPerformed(ActionEvent ae){
         op.selectedDevice = op.CSDmap.get(this.CSDList.getSelectedValue().toString());
+        op.selectedDeviceName = this.CSDList.getSelectedValue().toString();
         op.kernelMountPoint = op.getKernelMountPoint();
         System.out.println(op.selectedDevice);
         System.out.println(op.kernelMountPoint);
@@ -1830,6 +1835,7 @@ public final class AromaInstaller extends javax.swing.JFrame {//implements Prope
         op.zipDestination = "";
         op.tempFolderPath = "";
         op.selectedDevice = "";
+        op.selectedDeviceName = "";
         op.aroma_config = "";
         op.updater_script = "";
         op.flashableZipType = "";
@@ -1918,17 +1924,30 @@ public final class AromaInstaller extends javax.swing.JFrame {//implements Prope
         }
     }
     
+    public boolean isAnyGroupEmpty(){
+        for(String groups : op.groupArrayList){
+            if(!op.map.containsKey(groups)){
+                return true;
+            }
+        }
+        return false;
+    }
+    
     public boolean checkIfEverythingIsOkay(){
         if(op.selectedDevice.equals("")&&this.textFieldUpdateBinary.getText().equals("Click Here To Select update-binary....")){
             JOptionPane.showMessageDialog(this, "update-binary not imported..!!");
             return false;
         }
         else if(op.zipDestination.equals("")){
-            JOptionPane.showMessageDialog(this, "You Forgot to enter destination path of Zip file..!!");
+            JOptionPane.showMessageDialog(this, "You forgot to enter destination path of Zip file..!!");
             return false;
         }
         else if(op.groupArrayList.isEmpty()){
             JOptionPane.showMessageDialog(this, "Zip cannot be created without group..\nFirst create one..!!");
+            return false;
+        }
+        else if(isAnyGroupEmpty()){
+            JOptionPane.showMessageDialog(this, "One of the group is left empty..!!\n Kindly add items to that group or remove group..!!");
             return false;
         }
         else if(op.map.isEmpty()){

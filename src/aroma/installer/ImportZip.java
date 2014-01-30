@@ -4,7 +4,6 @@
  */
 package aroma.installer;
 
-import java.awt.Cursor;
 import java.awt.Toolkit;
 import java.io.File;
 import java.io.FileInputStream;
@@ -14,7 +13,6 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
-import javax.swing.WindowConstants;
 import org.apache.commons.collections4.map.MultiValueMap;
 
 /**
@@ -157,6 +155,7 @@ public class ImportZip extends SwingWorker<Void,Void>{
                 ju.setValue(100);
                 ai.setLog("Crunching Data for Application.....Hold Tight ;)", ai.textAreaImportZipLog);
                 System.out.println("Done");
+                //op.zipDestination = source;
                 ju.setValue(100);
             }catch(IOException ex){
                 ex.printStackTrace(); 
