@@ -245,6 +245,16 @@ public class NewUI extends javax.swing.JFrame {
         });
 
         textFieldUpdateBinary.setText("Click Here To Select updater-binary....");
+        textFieldUpdateBinary.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                textFieldUpdateBinaryMouseClicked(evt);
+            }
+        });
+        textFieldUpdateBinary.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                textFieldUpdateBinaryActionPerformed(evt);
+            }
+        });
 
         btnBrowseUpdateBinary.setText("Browse..");
         btnBrowseUpdateBinary.addActionListener(new java.awt.event.ActionListener() {
@@ -258,6 +268,16 @@ public class NewUI extends javax.swing.JFrame {
         lblZipDestination.setText("Select Zip Destination : ");
 
         textFieldZipDestination.setText("Click Here To Select Zip Destination....");
+        textFieldZipDestination.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                textFieldZipDestinationMouseClicked(evt);
+            }
+        });
+        textFieldZipDestination.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                textFieldZipDestinationActionPerformed(evt);
+            }
+        });
 
         btnBrowseZipDestination.setText("Browse..");
         btnBrowseZipDestination.addActionListener(new java.awt.event.ActionListener() {
@@ -564,6 +584,22 @@ public class NewUI extends javax.swing.JFrame {
     private void btnCreateAromaZipActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateAromaZipActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnCreateAromaZipActionPerformed
+
+    private void textFieldUpdateBinaryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldUpdateBinaryActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_textFieldUpdateBinaryActionPerformed
+
+    private void textFieldZipDestinationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldZipDestinationActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_textFieldZipDestinationActionPerformed
+
+    private void textFieldUpdateBinaryMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_textFieldUpdateBinaryMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_textFieldUpdateBinaryMouseClicked
+
+    private void textFieldZipDestinationMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_textFieldZipDestinationMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_textFieldZipDestinationMouseClicked
 
     /**
      * @param args the command line arguments

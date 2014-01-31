@@ -213,16 +213,25 @@ public class Operations {
         this.aroma_config += "writetmpfile(\"delete_choices.prop\",readtmpfile(\"delete_choices.prop\"));\n";
         
         this.aroma_config += "writetmpfile(\"dalvik_choices.prop\",\"init=no\\n\");\n";
-        this.aroma_config += "viewbox(\n"+"\"Ready to Install\",\n" +
+        this.aroma_config += "checkviewbox(\n"+"\"Ready to Install\",\n" +
                 "    \"The wizard is ready to begin installation.\\n\\n\"+\n" +
                 "	\"Press <b>Next</b> to begin the installation.\\n\\n\"+\n" +
-                "	\"If you want to review or change any of your installation settings, press <b>Back</b>. Press Left Hard Button -> Quit Installation to exit the wizard.\",\n" +
-                "    \"@install\"\n" +
-                ");";
-
+                "	\"If you want to review or change any of your installation settings, press <b>Back</b>. Press Left Hard Button -> Quit Installation to exit the wizard.\\n\\n\\n\\n\\n\\n\\n\",\n" +
+                "    \"@install\",\n" +
+                "\"<b>Clear Dalvik Cache</b> After Installation.\",\n" +
+                "\"0\",\n" +
+                "\"clear_it\"" +
+                ");\n";
+        
+        this.aroma_config += "if\n" +
+                "  getvar(\"clear_it\")==\"1\"\n" +
+                "then\n" +
+                "  writetmpfile(\"dalvik_choices.prop\",\"true=yes\");\n" +
+                "endif;";
+        
+        //this.aroma_config += "if confirm(\"Wipe cache partition\",\"Do you want to clear dalvik cache after installation?\", \"@confirm\")==\"yes\" then writetmpfile(\"dalvik_choices.prop\",\"true=yes\");\n\nendif;\n";
         //this.aroma_config += "if confirm(\"Installing\",getvar(\"installer_title\") + \"\\n\\nStart Installation?\", \"@confirm\")==\"no\" then back(1);\nendif;\n";
-        this.aroma_config += "install(\"Installing\", \"Your selected files are being installed. Please Wait...\", \"@install\");";
-        this.aroma_config += "if confirm(\"Wipe cache partition\",\"Do you want to clear dalvik cache?\", \"@confirm\")==\"yes\" then writetmpfile(\"dalvik_choices.prop\",\"true=yes\");\n\nendif;\n";
+        this.aroma_config += "install(\"Installing\", \"Your selected files are being installed. Please Wait...\", \"@install\");\n";
         
     }
     
@@ -325,8 +334,9 @@ public class Operations {
         
         if(this.flashableZipType.equals("Create Flashable Zip With Aroma Installer")){
             this.updater_script += "\nif(file_getprop(\"/tmp/aroma/dalvik_choices.prop\", \"true\")==\"yes\") then\n" +
-                "ui_print(\"@Wiping dalvik-cache\");" +
-                "delete_recursive(\"/data/dalvik-cache\");\nendif;\n";
+                    "ui_print(\"@Wiping dalvik-cache\");\n" +
+                    "delete_recursive(\"/data/dalvik-cache\");\n" +
+                    "endif;\n";
         }
         
         this.updater_script += "unmount(\"/data\");\n";

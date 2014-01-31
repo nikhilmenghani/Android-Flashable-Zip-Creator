@@ -300,6 +300,11 @@ public final class AromaInstaller extends javax.swing.JFrame {//implements Prope
         });
 
         textFieldUpdateBinary.setText("Click Here To Select update-binary....");
+        textFieldUpdateBinary.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                textFieldUpdateBinaryMouseClicked(evt);
+            }
+        });
 
         btnBrowseUpdateBinary.setText("Browse..");
         btnBrowseUpdateBinary.setActionCommand("Browse Update Binary");
@@ -314,6 +319,11 @@ public final class AromaInstaller extends javax.swing.JFrame {//implements Prope
         lblZipDestination.setText("Select Zip Destination : ");
 
         textFieldZipDestination.setText("Click Here To Select Zip Destination....");
+        textFieldZipDestination.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                textFieldZipDestinationMouseClicked(evt);
+            }
+        });
 
         btnBrowseZipDestination.setText("Browse..");
         btnBrowseZipDestination.setActionCommand("Browse Zip Destination");
@@ -1575,10 +1585,9 @@ public final class AromaInstaller extends javax.swing.JFrame {//implements Prope
             JOptionPane.showMessageDialog(this, "Select Group First..!!");
         }
         
-    }                                              
-
-    public void btnBrowseUpdateBinaryActionPerformed(java.awt.event.ActionEvent evt) {                                                      
-        System.out.println("Browse Update Binary Clicked..!!");
+    }                      
+    
+    public void browseUpdateBinary(){
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         int returnVal = fileChooser.showOpenDialog(btnBrowseUpdateBinary);
@@ -1597,10 +1606,14 @@ public final class AromaInstaller extends javax.swing.JFrame {//implements Prope
         } else {
             System.out.println("File access cancelled by user.");
         }
+    }
+
+    public void btnBrowseUpdateBinaryActionPerformed(java.awt.event.ActionEvent evt) {                                                      
+        System.out.println("Browse Update Binary Clicked..!!");
+        browseUpdateBinary();
     }                                                     
 
-    public void btnBrowseZipDestinationActionPerformed(java.awt.event.ActionEvent evt) {                                                        
-        System.out.println("Browse Zip Destination Clicked..");
+    public void browseZipDestination(){
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         fileChooser.removeChoosableFileFilter(fileChooser.getFileFilter());
@@ -1621,8 +1634,23 @@ public final class AromaInstaller extends javax.swing.JFrame {//implements Prope
         } else {
             System.out.println("File access cancelled by user.");
         }
+    }
+    
+    public void btnBrowseZipDestinationActionPerformed(java.awt.event.ActionEvent evt) {                                                        
+        System.out.println("Browse Zip Destination Clicked..");
+        browseZipDestination();
     }                                                       
 
+    public void textFieldUpdateBinaryMouseClicked(java.awt.event.MouseEvent evt) {                                                   
+        System.out.println("Browse Update Binary Clicked..!!");
+        browseUpdateBinary();
+    }                                                  
+
+    public void textFieldZipDestinationMouseClicked(java.awt.event.MouseEvent evt) {                                                     
+        System.out.println("Browse Zip Destination Clicked..");
+        browseZipDestination();
+    }
+    
     public void btnAddFileActionPerformed(java.awt.event.ActionEvent evt) {                                           
         System.out.println("Add File Clicked");
         if(!groupList.isSelectionEmpty()){
@@ -1723,8 +1751,8 @@ public final class AromaInstaller extends javax.swing.JFrame {//implements Prope
     
     public void exitMenuItemActionPerformed(java.awt.event.ActionEvent evt) {                                             
         System.exit(0);
-    }                                            
-
+    }              
+    
     private void btnAddDeleteFileActionPerformed(java.awt.event.ActionEvent evt) {                                                 
         System.out.println("Add Delete File Button Clicked..!!");
         if(!deleteApkName.getText().equals("")){
@@ -1853,8 +1881,8 @@ public final class AromaInstaller extends javax.swing.JFrame {//implements Prope
         
         this.refreshGroupList(this.lastSelected);
         
-        this.textFieldUpdateBinary.setText("Click Here To Select update-binary....");
-        this.textFieldZipDestination.setText("Click Here To Select Zip Destination....");
+        textFieldUpdateBinary.setText("Click Here To Select update-binary....");
+        textFieldZipDestination.setText("Click Here To Select Zip Destination....");
     }
     
     public void removeGroup(String groupName){
