@@ -9,21 +9,16 @@ package aroma.installer;
 import java.awt.Component;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
 import javax.swing.JList;
@@ -179,7 +174,6 @@ public class Operations {
             }
             this.aroma_config += ");\n";
         }
-
     }
     
     public void createAromaConfigFile(){
@@ -401,7 +395,7 @@ public class Operations {
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File[] file = fileChooser.getSelectedFiles();
             for (File fileName : file) {
-                if (this.map.containsValue(fileName.getAbsolutePath())) {
+                if (this.map.containsValue(type + "_" + groupList.getSelectedValue(),fileName.getAbsolutePath())||fileModel.contains(fileName.getName())) {
                     JOptionPane.showMessageDialog(null, "File with the same name already exists\nPlease rename the file before importing or make another group and import it.");
                 } else {
                     this.map.put(type+"_"+groupList.getSelectedValue(), fileName.getAbsolutePath());

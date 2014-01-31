@@ -72,21 +72,27 @@ public class ImportZip extends SwingWorker<Void,Void>{
                 String[] temp = element.split("_");
                 switch(temp[0]){
                     case "APKs-System":
+                        if(!op.systemList.contains(element))
                         op.systemList.add(element);
                         break;
                     case "APKs-Data":
+                        if(!op.dataList.contains(element))
                         op.dataList.add(element);
                         break;
                     case "BootAnimations":
+                        if(!op.bootAnimList.contains(element))
                         op.bootAnimList.add(element);
                         break;
                     case "Ringtones":
+                        if(!op.ringtoneList.contains(element))
                         op.ringtoneList.add(element);
                         break;
                     case "Notifications":
+                        if(!op.notifList.contains(element))
                         op.notifList.add(element);
                         break;
                     case "Kernel":
+                        if(!op.kernelList.contains(element))
                         op.kernelList.add(element);
                         break;
                 }
@@ -164,21 +170,27 @@ public class ImportZip extends SwingWorker<Void,Void>{
                         String splitName[] = temp.split("/");
                         switch (splitName[0]){
                             case "APKs-System":
+                                if(!op.map.containsValue(splitName[1], newFile.getAbsolutePath()))
                                 mvm.put(splitName[1],newFile.getAbsolutePath());
                                 break;
                             case "APKs-Data":
+                                if(!op.map.containsValue(splitName[1], newFile.getAbsolutePath()))
                                 mvm.put(splitName[1],newFile.getAbsolutePath());
                                 break;
                             case "Ringtones":
+                                if(!op.map.containsValue(splitName[1], newFile.getAbsolutePath()))
                                 mvm.put(splitName[1],newFile.getAbsolutePath());
                                 break;
                             case "Notifications":
+                                if(!op.map.containsValue(splitName[1], newFile.getAbsolutePath()))
                                 mvm.put(splitName[1],newFile.getAbsolutePath());
                                 break;
                             case "BootAnimations":
+                                if(!op.map.containsValue(splitName[1], newFile.getAbsolutePath()))
                                 mvm.put(splitName[1],newFile.getAbsolutePath());
                                 break;
                             case "Kernels":
+                                if(!op.map.containsValue(splitName[1], newFile.getAbsolutePath()))
                                 mvm.put(splitName[1],newFile.getAbsolutePath());
                                 break;
                         }
