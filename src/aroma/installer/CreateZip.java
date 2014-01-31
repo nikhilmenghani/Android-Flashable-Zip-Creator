@@ -211,7 +211,7 @@ public class CreateZip extends SwingWorker<Void,Void>{
             }
         }
         if(!op.selectedDevice.equals("")){
-            in = this.getClass().getResourceAsStream("META-INF/com/google/android/binary files/" + op.selectedDevice + "_update-binary");
+            in = this.getClass().getResourceAsStream("META-INF/com/google/android/binary files/" + op.selectedDevice );//+ "_update-binary");
         }
         else{
             in = new FileInputStream(new File(op.updateBinaryPath));
