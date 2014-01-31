@@ -102,7 +102,7 @@ public class Operations {
         try {
             InputStream is;
             BufferedReader br;
-            is = this.getClass().getResourceAsStream("META-INF/com/google/android/binary files/" + this.selectedDevice + "_mountpoint");
+            is = this.getClass().getResourceAsStream("META-INF/com/google/android/mount-points/" + this.selectedDevice );//+ "_mountpoint");
             br = new BufferedReader(new InputStreamReader(is));
             return br.readLine();
         } catch (FileNotFoundException ex) {
