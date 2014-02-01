@@ -152,6 +152,7 @@ public class ImportZip extends SwingWorker<Void,Void>{
                 ju.setValue(progressValue);
                 while(ze!=null){
                     String fileName = ze.getName();
+                    System.out.println("File Name Extracting is.. " + op.getNameFromPath(fileName));
                     if(fileName.equals(op.appConfigPath)){
                         op.deleteApkList = this.getArrayListFromFileInZip(zis);
                     }

@@ -48,6 +48,8 @@ public class Operations {
     String appConfigPath = "customize/DeleteSystemApps/app-config";
     String kernelMountPoint = "";
     
+    double progress = 0.0;
+    
     ArrayList<String> groupArrayList = new ArrayList<>();
     ArrayList<String> systemList = new ArrayList<>();
     ArrayList<String> dataList = new ArrayList<>();
@@ -124,6 +126,16 @@ public class Operations {
         }
         return tempString[0];
     }
+    
+//    public double addProgressFraction(){
+//        try{
+//            progress += 0.01*(90/this.map.totalSize());
+//            return progress;
+//        }
+//        catch(NullPointerException npe){
+//            return 0;
+//        }
+//    }
     
     public ArrayList<String> returnPathArray(String str, MultiValueMap mvm){
         if(mvm.containsKey(str)){
@@ -252,14 +264,17 @@ public class Operations {
                             switch (propFile) {
                                 case "kernel_choices.prop":
                                     this.updater_script += "if (file_getprop(\"/tmp/aroma/" + propFile + "\", \"selected.1" + "\")==\"" + s + "\") then ui_print(\"Flashing " + list.substring(list.lastIndexOf("_") + 1, list.length()) + "\");\n";
+                                    //this.updater_script += "\n\"set_progress(" + addProgressFraction() + ")\"\n";
                                     this.updater_script += "assert(package_extract_file(\"customize/" + getListName(list) + "/" + list + "/" + getNameFromPath(system_list_files) + "\", \"" + location + "\"));\n";
                                     break;
                                 case "boot_anim_choices.prop":
                                     this.updater_script += "if (file_getprop(\"/tmp/aroma/" + propFile + "\", \"selected.1" + "\")==\"" + s + "\") then ui_print(\"Installing " + list.substring(list.lastIndexOf("_") + 1, list.length()) + "\");\n";
+                                    //this.updater_script += "\n\"set_progress(" + addProgressFraction() + ")\"\n";
                                     this.updater_script += "package_extract_file(\"customize/" + getListName(list) + "/" + list + "/" + getNameFromPath(system_list_files) + "\", \"" + location + "\");\n";
                                     break;
                                 default:
                                     this.updater_script += "if (file_getprop(\"/tmp/aroma/" + propFile + "\", \"item." + s + "." + i + "\")==\"1\") then ui_print(\"Installing " + this.removeExtension(getNameFromPath(system_list_files)) + "\");\n";
+                                    //this.updater_script += "\n\"set_progress(" + addProgressFraction() + ")\"\n";
                                     this.updater_script += "package_extract_dir(\"customize/" + getListName(list) + "/" + list + "\", \"" + location + "\");\n";
                                     break;
                             }
@@ -271,12 +286,15 @@ public class Operations {
                                     switch (propFile) {
                                         case "kernel_choices.prop":
                                             this.updater_script += "package_extract_file(\"customize/" + getListName(list) + "/" + list + "/" + getNameFromPath(system_list_files) + "\", \"" + location + "\");\n";
+                                            //this.updater_script += "\n\"set_progress(" + addProgressFraction() + ")\"\n";
                                             break;
                                         case "boot_anim_choices.prop":
                                             this.updater_script += "package_extract_file(\"customize/" + getListName(list) + "/" + list + "/" + getNameFromPath(system_list_files) + "\", \"" + location + "\");\n";
+                                            //this.updater_script += "\n\"set_progress(" + addProgressFraction() + ")\"\n";
                                             break;
                                         default:
                                             this.updater_script += "package_extract_dir(\"customize/" + getListName(list) + "/" + list + "\", \"" + location + "\");\n";
+                                            //this.updater_script += "\n\"set_progress(" + addProgressFraction() + ")\"\n";
                                             break;
                                     }
                                 }
@@ -295,25 +313,25 @@ public class Operations {
     public void createUpdaterScriptFile() throws FileNotFoundException, IOException{
         this.updater_script = "ui_print(\"@Starting the install process\");\n" +
                 "ui_print(\"Setting up required tools...\");\n" +
-                "package_extract_file(\"utils/mount\", \"/tmp/mount\");\n" +
-                "set_perm(0, 0, 0755, \"/tmp/mount\");\n" +
-                "ui_print(\"Mounting...\");\n" +
+                //"package_extract_file(\"utils/mount\", \"/tmp/mount\");\n" +
+                //"set_perm(0, 0, 0755, \"/tmp/mount\");\n" +
+                "ui_print(\"Mounting Partitions...\");\n" +
                 "ui_print(\" \");\n" +
-                "run_program(\"/tmp/mount\", \"/data\");\n" +
-                "run_program(\"/tmp/mount\", \"/system\");\n";
-        
+                "run_program(\"/sbin/busybox\",\"mount\", \"/system\");\n" +
+                "run_program(\"/sbin/busybox\",\"mount\", \"/data\");\n";
+        //this.progress = 0.0;
         extractFilesUpdaterScript(this.systemList, "Installing System Apps", "system_app_choices.prop", "/system/app");
-        
+        this.updater_script += "\n\"set_progress(0.3)\"\n";
         extractFilesUpdaterScript(this.dataList, "Installing Apps", "app_choices.prop", "/data/app");
-        
+        this.updater_script += "\n\"set_progress(0.5)\"\n";
         extractFilesUpdaterScript(this.bootAnimList, "Installing Boot Animation", "boot_anim_choices.prop", "/data/local/bootanimation.zip");
-        
+        this.updater_script += "\n\"set_progress(0.6)\"\n";
         extractFilesUpdaterScript(this.kernelList, "Flashing Kernel", "kernel_choices.prop", this.kernelMountPoint);// + "/boot.img");
-        
+        this.updater_script += "\n\"set_progress(0.7)\"\n";
         extractFilesUpdaterScript(this.ringtoneList, "Adding Ringtones", "ringtone_choices.prop", "/system/media/audio/ringtones");
-        
+        this.updater_script += "\n\"set_progress(0.8)\"\n";
         extractFilesUpdaterScript(this.notifList, "Adding Notification Tones", "notification_choices.prop", "/system/media/audio/notifications");
-        
+        this.updater_script += "\n\"set_progress(0.9)\"\n";
         if(!deleteApkList.isEmpty()){
             for(String appName : deleteApkList){
                 this.updater_script += " \n" + "delete(\"/system/app/" + appName + "\");\n";

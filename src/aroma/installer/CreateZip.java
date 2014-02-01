@@ -41,9 +41,9 @@ public class CreateZip extends SwingWorker<Void,Void>{
         this.close = false;
     }
 
-//    public void CreateZip(AromaInstaller ai, Operations op){
-//        
-//    }
+    public void CreateZip(AromaInstaller ai, Operations op){
+        
+    }
 
     @Override
     protected Void doInBackground() throws Exception {
@@ -132,7 +132,7 @@ public class CreateZip extends SwingWorker<Void,Void>{
     }
     
     public String getJarFileName(){
-        String path[] = this.getClass().getResource("utils/mount").getPath().split("!");
+        String path[] = this.getClass().getResource("META-INF/com/google/android/Supported Devices").getPath().split("!");
         String fileName = path[0].substring(path[0].lastIndexOf("/") + 1, path[0].length());
         //JOptionPane.showMessageDialog(null, fileName);
         return fileName;
@@ -157,7 +157,7 @@ public class CreateZip extends SwingWorker<Void,Void>{
         return tempArray;
     }
     public boolean isExecutingJarFile(){
-        return this.getClass().getResource("utils/mount").getPath().contains("!");
+        return this.getClass().getResource("META-INF/com/google/android/Supported Devices").getPath().contains("!");
     }
     
     public void createZipAt(String destination) throws IOException{
@@ -218,6 +218,7 @@ public class CreateZip extends SwingWorker<Void,Void>{
                     in.close();
                     ai.setLog(op.getNameFromPath(file) + " Imported...", ai.textAreaCZ);
                     progress += 1;
+                    ju.setValue(progress);
                 }
                 progress += 17;
                 ju.setValue(progress);
@@ -264,12 +265,12 @@ public class CreateZip extends SwingWorker<Void,Void>{
                 JOptionPane.showMessageDialog(null, "Something Went Wrong..!! Restart Tool and Try Again..");
         }
         ai.setLog("Nearing Completion....", ai.textAreaCZ);
-        in = this.getClass().getResourceAsStream("utils/mount");
-        this.writeFileToZip(in, zos, "utils/mount");
-        in.close();
-        in = this.getClass().getResourceAsStream("utils/umount");
-        this.writeFileToZip(in, zos, "utils/umount");
-        in.close();
+//        in = this.getClass().getResourceAsStream("utils/mount");
+//        this.writeFileToZip(in, zos, "utils/mount");
+//        in.close();
+//        in = this.getClass().getResourceAsStream("utils/umount");
+//        this.writeFileToZip(in, zos, "utils/umount");
+//        in.close();
         op.createUpdaterScriptFile();
         in = new ByteArrayInputStream(op.updater_script.getBytes());
         ju.setValue(100);
