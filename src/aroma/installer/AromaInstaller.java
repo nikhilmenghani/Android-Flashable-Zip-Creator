@@ -9,6 +9,7 @@ package aroma.installer;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.io.*;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -28,8 +29,8 @@ import org.apache.commons.collections4.map.MultiValueMap;
  * @author Rajat
  */
 public final class AromaInstaller extends javax.swing.JFrame {//implements PropertyChangeListener{
-    private CreateZip CZtask;
-    private ImportZip IZtask;
+    public CreateZip CZtask;
+    public ImportZip IZtask;
     public ProgressBarUpdater ju;
     public AromaInstaller(){
         op.CSDmap = new HashMap<>();
@@ -47,8 +48,10 @@ public final class AromaInstaller extends javax.swing.JFrame {//implements Prope
         String deviceFullName;
         while((deviceFullName = br.readLine()) != null){
             String[] temp = deviceFullName.split("_");
+            System.out.println("Device getting added is : " + temp[0]);
             op.CSDmap.put(temp[0], temp[1]);
         }
+        is.close();
     }
     
     @SuppressWarnings("unchecked")
@@ -130,6 +133,40 @@ public final class AromaInstaller extends javax.swing.JFrame {//implements Prope
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        this.addWindowListener(new WindowListener() {
+            @Override
+            public void windowOpened(WindowEvent we) {
+            }
+
+            @Override
+            public void windowClosing(WindowEvent we) {
+                File f = new File("Temp");
+                if(f.isDirectory()&&f.exists()){
+                    op.deleteDirectories("Temp");
+                }
+                System.out.println("Window Closing..");
+            }
+
+            @Override
+            public void windowIconified(WindowEvent we) {
+            }
+
+            @Override
+            public void windowDeiconified(WindowEvent we) {
+            }
+
+            @Override
+            public void windowActivated(WindowEvent we) {
+            }
+
+            @Override
+            public void windowDeactivated(WindowEvent we) {
+            }
+
+            @Override
+            public void windowClosed(WindowEvent we) {
+            }
+        });
 
         contentPanel.setBackground(new java.awt.Color(255, 255, 255));
         contentPanel.setBorder(new javax.swing.border.MatteBorder(null));
@@ -1392,7 +1429,9 @@ public final class AromaInstaller extends javax.swing.JFrame {//implements Prope
     
     private void CZwindowOpened(WindowEvent evt) {
         //op.removeEmptyGroup();
-        CZtask = new CreateZip(this, this.op);   
+        System.out.println("Create Zip Window Opened");
+        CZtask = new CreateZip(this, this.op);
+        System.out.println("CZtask Object Created..!!");
         CZtask.execute();
     }
     
@@ -1691,17 +1730,14 @@ public final class AromaInstaller extends javax.swing.JFrame {//implements Prope
         if(op.getGroupCount(op.bootAnimList) > 1){
            JOptionPane.showMessageDialog(this, "Including more than one Boot Animation groups in Normal Zip can cause Undesirable results..!!\nJust keep one group and remove others..!!");
         }
-        if(op.getGroupCount(op.kernelList) > 1){
+        else if(op.getGroupCount(op.kernelList) > 1){
            JOptionPane.showMessageDialog(this, "Including more than one kernel is risky..!!\nKindly keep one group and remove others..!!");
         }
-        if(this.checkIfEverythingIsOkay()){
+        else if(this.checkIfEverythingIsOkay()){
             op.flashableZipType = evt.getActionCommand();
             //CZtask = new createZipTask();
             this.createZipUI();
             //JOptionPane.showMessageDialog(this, "Zip File Successfully Created..!! Enjoy..!!");
-            File f = new File("Temp");
-            if(f.isDirectory()&&f.exists())
-                op.deleteDirectories("Temp");
         }
     }                                                  
 
@@ -1709,13 +1745,7 @@ public final class AromaInstaller extends javax.swing.JFrame {//implements Prope
         System.out.println("Create Aroma Zip Clicked..");
         if(this.checkIfEverythingIsOkay()){
             op.flashableZipType = evt.getActionCommand();
-            //op.removeEmptyGroup();
-            //createZipAt(op.zipDestination);
             this.createZipUI();
-            //JOptionPane.showMessageDialog(this, "Zip File Successfully Created..!! Enjoy..!!");
-            File f = new File("Temp");
-            if(f.isDirectory()&&f.exists())
-                op.deleteDirectories("Temp");
         }
     }
     
@@ -1756,9 +1786,28 @@ public final class AromaInstaller extends javax.swing.JFrame {//implements Prope
     private void btnAddDeleteFileActionPerformed(java.awt.event.ActionEvent evt) {                                                 
         System.out.println("Add Delete File Button Clicked..!!");
         if(!deleteApkName.getText().equals("")){
-            op.deleteApkList.add(deleteApkName.getText() + ".apk");
-            deletefileModel.addElement(deleteApkName.getText() + ".apk");
-            deleteApkName.setText("");
+            if(deleteApkName.getText().equals(".apk")){
+                JOptionPane.showMessageDialog(this, "Add Proper File Name..!!");
+                deleteApkName.setText(".apk");
+            }
+            else{
+                if(deleteApkName.getText().endsWith(".apk")){
+                    if(!deletefileModel.contains(deleteApkName.getText())){
+                        deletefileModel.addElement(deleteApkName.getText()); 
+                    }else{
+                        JOptionPane.showMessageDialog(this, "File Name Already Exists..");
+                    }
+                }
+                else{
+                    if(!deletefileModel.contains(deleteApkName.getText() + ".apk")){
+                        deletefileModel.addElement(deleteApkName.getText() + ".apk");
+                    }else{
+                        JOptionPane.showMessageDialog(this, "File Name Already Exists..");
+                    }
+                    
+                }
+                deleteApkName.setText("");
+            }
         }
         else{
             JOptionPane.showMessageDialog(this, "Add File Name First..!!");
@@ -1768,7 +1817,7 @@ public final class AromaInstaller extends javax.swing.JFrame {//implements Prope
     private void btnRemoveDeleteFileActionPerformed(java.awt.event.ActionEvent evt) {                                                    
         System.out.println("Remove Delete File Button Clicked..!!");
         if(!deleteSystemFileList.isSelectionEmpty()){
-            op.deleteApkList.remove(deleteSystemFileList.getSelectedValue());
+            //op.deleteApkList.remove(deleteSystemFileList.getSelectedValue());
             deletefileModel.removeElement(deleteSystemFileList.getSelectedValue());
         }
         else{
@@ -1778,6 +1827,11 @@ public final class AromaInstaller extends javax.swing.JFrame {//implements Prope
 
     private void btnDoneDeleteFileActionPerformed(java.awt.event.ActionEvent evt) {                                                  
         System.out.println("Done Delete File Button Clicked..!!");
+        op.deleteApkList = new ArrayList<>();
+        for(int i = 0; i < deletefileModel.getSize(); i++){
+            op.deleteApkList.add(deletefileModel.getElementAt(i).toString());
+        }
+        System.out.println("Delete File List is : " + op.deleteApkList);
         frame.dispose();
     }                                                 
 
@@ -1958,20 +2012,22 @@ public final class AromaInstaller extends javax.swing.JFrame {//implements Prope
             return false;
         }
         else if(op.zipDestination.equals("")){
-            JOptionPane.showMessageDialog(this, "You forgot to enter destination path of Zip file..!!");
+            JOptionPane.showMessageDialog(this, "You forgot to enter destination path of zip file..!!");
             return false;
         }
-        else if(op.groupArrayList.isEmpty()){
-            JOptionPane.showMessageDialog(this, "Zip cannot be created without group..\nFirst create one..!!");
-            return false;
-        }
-        else if(isAnyGroupEmpty()){
-            JOptionPane.showMessageDialog(this, "One of the group is left empty..!!\n Kindly add items to that group or remove group..!!");
-            return false;
-        }
-        else if(op.map.isEmpty()){
-            JOptionPane.showMessageDialog(this, "Add Files to group..\nWithout files, nothing can be done with Zip file..!!");
-            return false;
+        else if(op.deleteApkList.isEmpty()){
+            if(op.groupArrayList.isEmpty()){
+                JOptionPane.showMessageDialog(this, "Zip cannot be created without group..\nFirst create one..!!");
+                return false;
+            }
+            else if(isAnyGroupEmpty()){
+                JOptionPane.showMessageDialog(this, "One of the group is left empty..!!\n Kindly add items to that group or remove group..!!");
+                return false;
+            }
+            else if(op.map.isEmpty()){
+                JOptionPane.showMessageDialog(this, "Add Files to group..\nWithout files, nothing can be done with Zip file..!!");
+                return false;
+            }
         }
         return true;
     }

@@ -23,7 +23,8 @@ import javax.swing.SwingWorker;
 
 /**
  *
- * @author rajat
+ * @author Nikhil
+ * @author Rajat
  */
 public class CreateZip extends SwingWorker<Void,Void>{
     private int progress;
@@ -31,6 +32,7 @@ public class CreateZip extends SwingWorker<Void,Void>{
     AromaInstaller ai;
     Operations op;
     boolean close;
+    boolean isZipCreated = false;
 
     CreateZip(AromaInstaller aThis, Operations op) {
         this.ai = aThis;
@@ -39,9 +41,9 @@ public class CreateZip extends SwingWorker<Void,Void>{
         this.close = false;
     }
 
-    public void CreateZip(AromaInstaller ai, Operations op){
-        
-    }
+//    public void CreateZip(AromaInstaller ai, Operations op){
+//        
+//    }
 
     @Override
     protected Void doInBackground() throws Exception {
@@ -111,12 +113,14 @@ public class CreateZip extends SwingWorker<Void,Void>{
     
     public void writeFileToZip(InputStream in, ZipOutputStream zos, String writeAt) throws IOException{
         byte[] buffer = new byte[1024];
+        System.out.println("Next Zip Entry is " + writeAt);
         ZipEntry ze = new ZipEntry(writeAt);
         zos.putNextEntry(ze);
         int len;
         while ((len = in.read(buffer)) > 0) {
             zos.write(buffer, 0, len);
         }
+        System.out.println("File Written in ZIP : " + writeAt);
         in.close();
     }
     
@@ -135,6 +139,7 @@ public class CreateZip extends SwingWorker<Void,Void>{
     }
     
     public ArrayList<String> getJarFileList(){
+        ArrayList<String> tempArray = new ArrayList<>();
         try{
             JarFile jarFile = new JarFile(getJarFileName());
             for(Enumeration em = jarFile.entries(); em.hasMoreElements();) {
@@ -142,14 +147,14 @@ public class CreateZip extends SwingWorker<Void,Void>{
                 if(s.startsWith("aroma/installer/META-INF/")){
                     s = s.substring("aroma/installer/".length(), s.length());
                     if(s.endsWith(".ttf")||s.endsWith(".png")||s.endsWith(".prop")||s.endsWith(".lang")||s.endsWith(".txt"))
-                        op.jarFileList.add(s);
+                        tempArray.add(s);
                     }
             }
             jarFile.close();
         }catch (IOException e){
             System.err.println("Error: " + e.getMessage());
         }
-        return op.jarFileList;
+        return tempArray;
     }
     public boolean isExecutingJarFile(){
         return this.getClass().getResource("utils/mount").getPath().contains("!");
@@ -158,10 +163,12 @@ public class CreateZip extends SwingWorker<Void,Void>{
     public void createZipAt(String destination) throws IOException{
         if(isExecutingJarFile()){
             op.jarFileList = this.getJarFileList();
+            System.out.println("Executing Through Jar..!!");
         }else{
             op.jarFileList = op.jarFileList();
+            System.out.println("Executing Through Netbeans..!!");
         }
-        this.removeEmptyGroup();
+        //this.removeEmptyGroup();
         ai.setLog("All Clear...", ai.textAreaCZ);
         ai.setLog("Creating "+op.flashableZipType+" Zip...", ai.textAreaCZ);
         File fileDest = new File(destination);
@@ -169,6 +176,10 @@ public class CreateZip extends SwingWorker<Void,Void>{
         if(!fileDest.exists()){
             fileDest.createNewFile();
             System.out.println("File Created");
+        }else{
+            fileDest.delete();
+            System.out.println("Existing File Deleted..!!");
+            fileDest.createNewFile();
         }
         InputStream in;
         OutputStream out;
@@ -180,6 +191,7 @@ public class CreateZip extends SwingWorker<Void,Void>{
                 this.createDeleteApkConfigList();
                 in = new ByteArrayInputStream(op.deleteApkConfigList.getBytes());
                 this.writeFileToZip(in, zos, "customize/DeleteSystemApps/app-config");
+                in.close();
                 ai.setLog("Imported System Files To Delete...", ai.textAreaCZ);
             }else{
                 System.out.println("Delete List Empty..!!");
@@ -196,10 +208,14 @@ public class CreateZip extends SwingWorker<Void,Void>{
             if(op.map.containsKey(groupName)){
                 for(String file: op.returnPathArray(groupName, op.map)){
                     System.out.println("Group Name : " +groupName + " File Name : " + file);
+                    System.out.println("Creating Stream.. ");
                     in = new FileInputStream(new File(file));
+                    System.out.println("Stream Created.. " + in);
                     file = op.getNameFromPath(file);
                     file = "customize/" + op.getListName(groupName) + "/" + groupName + "/" + file;
+                    System.out.println("File to be written is : " + file);
                     this.writeFileToZip(in, zos, file);
+                    in.close();
                     ai.setLog(op.getNameFromPath(file) + " Imported...", ai.textAreaCZ);
                     progress += 1;
                 }
@@ -222,21 +238,26 @@ public class CreateZip extends SwingWorker<Void,Void>{
         switch(op.flashableZipType){
             case "Create Flashable Zip With Aroma Installer":
                 this.writeFileToZip(in, zos, "META-INF/com/google/android/update-binary-installer");
+                in.close();
                 for(String fileName : op.jarFileList){
                     System.out.println("File Name : " + fileName);
                     in = this.getClass().getResourceAsStream(fileName);
                     this.writeFileToZip(in, zos, fileName);
+                    in.close();
                 }
                 op.createAromaConfigFile();
                 in = new ByteArrayInputStream(op.aroma_config.getBytes());
                 this.writeFileToZip(in, zos, "META-INF/com/google/android/aroma-config");
+                in.close();
                 in = this.getClass().getResourceAsStream("META-INF/com/google/android/update-binary");
                 this.writeFileToZip(in, zos, "META-INF/com/google/android/update-binary");
+                in.close();
                 progress += 1;
                 ju.setValue(progress);
                 break;
             case "Create Normal Flashable Zip":
                 this.writeFileToZip(in, zos, "META-INF/com/google/android/update-binary");
+                in.close();
                 ju.setValue(90);
                 break;
             default:
@@ -245,15 +266,22 @@ public class CreateZip extends SwingWorker<Void,Void>{
         ai.setLog("Nearing Completion....", ai.textAreaCZ);
         in = this.getClass().getResourceAsStream("utils/mount");
         this.writeFileToZip(in, zos, "utils/mount");
+        in.close();
         in = this.getClass().getResourceAsStream("utils/umount");
         this.writeFileToZip(in, zos, "utils/umount");
+        in.close();
         op.createUpdaterScriptFile();
         in = new ByteArrayInputStream(op.updater_script.getBytes());
         ju.setValue(100);
         this.writeFileToZip(in, zos, "META-INF/com/google/android/updater-script");
+        in.close();
         zos.closeEntry();
         zos.close();
+        System.out.println("Closed Zip Output Stream....");
+        out.close();
+        System.out.println("Closed File Output Stream....");
         ai.setLog("Folder Compressed Successfully....", ai.textAreaCZ);
+        this.isZipCreated = true;
         System.out.println("Folder successfully compressed");
         ai.setLog("Zip Successfully Created....", ai.textAreaCZ);
     }
@@ -263,10 +291,13 @@ public class CreateZip extends SwingWorker<Void,Void>{
         Toolkit.getDefaultToolkit().beep();
         ai.CZ_Panel.setCursor(Cursor.getDefaultCursor());
         //setCursor(null); //turn off the wait cursor
-        ai.textAreaCZ.append("Done!\n");
-        this.close = true;
-        ai.frame.setVisible(false);
-        JOptionPane.showMessageDialog(null, "Zip Successfully Created...!!!");
-        ai.frame.dispose();
+        if(isZipCreated){
+            ai.textAreaCZ.append("Done!\n");
+            this.close = true;
+            ai.frame.setVisible(false);
+            JOptionPane.showMessageDialog(null, "Zip Successfully Created...!!!");
+            ai.frame.dispose();
+        }
+        
     }     
 }
