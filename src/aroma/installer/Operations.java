@@ -333,8 +333,13 @@ public class Operations {
         extractFilesUpdaterScript(this.notifList, "Adding Notification Tones", "notification_choices.prop", "/system/media/audio/notifications");
         this.updater_script += "\nset_progress(0.9);\n";
         if(!deleteApkList.isEmpty()){
+            int j = 1;
+            this.updater_script += "ui_print(\"@" + "Deleting System Apps" + "\");\n";
             for(String appName : deleteApkList){
+                this.updater_script += "if (file_getprop(\"/tmp/aroma/" + "delete_choices.prop" + "\", \"item.1." + j + "\")==\"1\") then ui_print(\"Deleting " + appName + "\");\n";
                 this.updater_script += " \n" + "delete(\"/system/app/" + appName + "\");\n";
+                this.updater_script += "endif;\n";
+                j++;
             }
         }
         
