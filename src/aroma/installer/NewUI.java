@@ -74,6 +74,7 @@ public class NewUI extends javax.swing.JFrame {
         jMenuBar1.add(jMenu2);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Android Flashable Zip Creator v1.0");
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
         contentPanel.setBackground(new java.awt.Color(255, 255, 255));
