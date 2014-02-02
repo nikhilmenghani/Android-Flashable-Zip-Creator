@@ -64,8 +64,13 @@ public class ImportZip extends SwingWorker<Void,Void>{
             MultiValueMap mvm  = this.extractTheZip(op.existingZipPath);
             System.out.println("Map Before : "+op.map);
             ai.groupModel.clear();
-            op.map.putAll(mvm);       
-            op.groupArrayList.addAll(this.getGroupListFromMVM(mvm));
+            //op.map.putAll(mvm);  
+            this.parseMap(mvm);
+            for(String grpName : this.getGroupListFromMVM(mvm)){
+                if(!op.groupArrayList.contains(grpName))
+                    op.groupArrayList.add(grpName);
+            }
+            //op.groupArrayList.addAll(this.getGroupListFromMVM(mvm));
             System.out.println("Updated GroupList : "+op.groupArrayList);
             System.out.println("Updated Map : "+op.map);
             for(String element : op.groupArrayList){
@@ -97,7 +102,8 @@ public class ImportZip extends SwingWorker<Void,Void>{
                         break;
                 }
             }
-            ai.refreshGroupList("APKs Group");
+            //ai.btnApkGroupActionPerformed(null);
+            ai.refreshGroupList(ai.lastSelected);
             //ju.setValue(100);
             return null;
         }
@@ -130,8 +136,26 @@ public class ImportZip extends SwingWorker<Void,Void>{
             //setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
             ai.textAreaImportZipLog.append("Done!\n");
             ai.frame.setVisible(false);
-            JOptionPane.showMessageDialog(null, "Zip Import Successful");
+            JOptionPane.showMessageDialog(null, "Zip Import Successful\nBrowse through the groups to confirm.");
             ai.frame.dispose();
+//            System.out.println("Group List after Zip Import : "+op.groupArrayList);
+//            System.out.println("System List after Zip Import : "+op.systemList);
+//            System.out.println("Data List after Zip Import : "+op.dataList);
+//            System.out.print("File List"+op.map.toString());
+////            System.out.println("Group List after Zip Import : "+op.groupArrayList);
+////            System.out.println("Group List after Zip Import : "+op.groupArrayList);
+////            System.out.println("Group List after Zip Import : "+op.groupArrayList);
+        }
+        
+        public void parseMap(MultiValueMap mvm){
+            Set entrySet = mvm.entrySet();
+            Iterator it = entrySet.iterator();
+            while(it.hasNext()){
+                Map.Entry mapEntry = (Map.Entry) it.next();
+                //System.out.println("Map.Entry = "+mapEntry.getKey());
+                if(!op.map.containsValue(mapEntry.getValue().toString()))
+                    op.map.put(mapEntry.getKey().toString(), mapEntry.getValue().toString().replace("]", ""));
+            }
         }
         
         public MultiValueMap extractTheZip (String source) throws IOException{ 

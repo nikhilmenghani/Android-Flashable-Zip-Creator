@@ -411,6 +411,9 @@ public class Operations {
     }
     
     public void updateFileListWithSelectedGroupList(String str, DefaultListModel model, MultiValueMap mvm){
+        if(this.groupArrayList.contains(str)){
+            model.removeAllElements();
+        }
         ArrayList<String> list = new ArrayList<>();
         Set entrySet = mvm.entrySet();
         Iterator it = entrySet.iterator();
