@@ -2444,7 +2444,10 @@ public final class AromaInstaller extends javax.swing.JFrame {//implements Prope
     }
     
     public void updateGroupList(String lastSelected){
-        if(!this.groupName.getText().equals("") && !this.groupName.getText().contains("_")){
+        if(op.groupArrayList.toString().toLowerCase().contains(this.groupName.getText().toLowerCase())){
+            JOptionPane.showMessageDialog(null, "Group Name Already Exists..!!");
+        }
+        else if(!this.groupName.getText().equals("") && !this.groupName.getText().contains("_")){
                 switch(lastSelected){
                     case "APKs Group":
                         if(op.groupArrayList.contains("APKs-System_"+this.groupName.getText()) || op.groupArrayList.contains("APKs-Data_"+this.groupName.getText())){
