@@ -132,6 +132,7 @@ public final class AromaInstaller extends javax.swing.JFrame {//implements Prope
         jMenuBar1.add(jMenu2);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Android Flashable Zip Creator v1.0");
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         this.addWindowListener(new WindowListener() {
             @Override
