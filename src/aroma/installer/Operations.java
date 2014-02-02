@@ -321,17 +321,17 @@ public class Operations {
                 "run_program(\"/sbin/busybox\",\"mount\", \"/data\");\n";
         //this.progress = 0.0;
         extractFilesUpdaterScript(this.systemList, "Installing System Apps", "system_app_choices.prop", "/system/app");
-        this.updater_script += "\n\"set_progress(0.3)\"\n";
+        this.updater_script += "\nset_progress(0.3);\n";
         extractFilesUpdaterScript(this.dataList, "Installing Apps", "app_choices.prop", "/data/app");
-        this.updater_script += "\n\"set_progress(0.5)\"\n";
+        this.updater_script += "\nset_progress(0.5);\n";
         extractFilesUpdaterScript(this.bootAnimList, "Installing Boot Animation", "boot_anim_choices.prop", "/data/local/bootanimation.zip");
-        this.updater_script += "\n\"set_progress(0.6)\"\n";
+        this.updater_script += "\nset_progress(0.6);\n";
         extractFilesUpdaterScript(this.kernelList, "Flashing Kernel", "kernel_choices.prop", this.kernelMountPoint);// + "/boot.img");
-        this.updater_script += "\n\"set_progress(0.7)\"\n";
+        this.updater_script += "\nset_progress(0.7);\n";
         extractFilesUpdaterScript(this.ringtoneList, "Adding Ringtones", "ringtone_choices.prop", "/system/media/audio/ringtones");
-        this.updater_script += "\n\"set_progress(0.8)\"\n";
+        this.updater_script += "\nset_progress(0.8);\n";
         extractFilesUpdaterScript(this.notifList, "Adding Notification Tones", "notification_choices.prop", "/system/media/audio/notifications");
-        this.updater_script += "\n\"set_progress(0.9)\"\n";
+        this.updater_script += "\nset_progress(0.9);\n";
         if(!deleteApkList.isEmpty()){
             for(String appName : deleteApkList){
                 this.updater_script += " \n" + "delete(\"/system/app/" + appName + "\");\n";
