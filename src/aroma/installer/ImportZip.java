@@ -138,12 +138,13 @@ public class ImportZip extends SwingWorker<Void,Void>{
             ai.frame.setVisible(false);
             JOptionPane.showMessageDialog(null, "Zip Import Successful\nBrowse through the groups to confirm.");
             ai.frame.dispose();
-            System.out.println("Group List after Zip Import : "+op.groupArrayList);
-            System.out.println("System List after Zip Import : "+op.systemList);
-            System.out.println("Data List after Zip Import : "+op.dataList);
 //            System.out.println("Group List after Zip Import : "+op.groupArrayList);
-//            System.out.println("Group List after Zip Import : "+op.groupArrayList);
-//            System.out.println("Group List after Zip Import : "+op.groupArrayList);
+//            System.out.println("System List after Zip Import : "+op.systemList);
+//            System.out.println("Data List after Zip Import : "+op.dataList);
+//            System.out.print("File List"+op.map.toString());
+////            System.out.println("Group List after Zip Import : "+op.groupArrayList);
+////            System.out.println("Group List after Zip Import : "+op.groupArrayList);
+////            System.out.println("Group List after Zip Import : "+op.groupArrayList);
         }
         
         public void parseMap(MultiValueMap mvm){
@@ -151,8 +152,9 @@ public class ImportZip extends SwingWorker<Void,Void>{
             Iterator it = entrySet.iterator();
             while(it.hasNext()){
                 Map.Entry mapEntry = (Map.Entry) it.next();
-                if(!op.map.containsValue(mapEntry.toString()))
-                    op.map.put(it, mapEntry.toString());
+                //System.out.println("Map.Entry = "+mapEntry.getKey());
+                if(!op.map.containsValue(mapEntry.getValue().toString()))
+                    op.map.put(mapEntry.getKey().toString(), mapEntry.getValue().toString().replace("]", ""));
             }
         }
         
