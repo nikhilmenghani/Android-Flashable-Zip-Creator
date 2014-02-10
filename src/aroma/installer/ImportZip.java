@@ -8,6 +8,7 @@ import java.awt.Toolkit;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -134,10 +135,29 @@ public class ImportZip extends SwingWorker<Void,Void>{
             ai.frame.dispose();
         }
         
+        public void fillDeleteApkListFromZip(String filePath, ZipInputStream zis) throws UnsupportedEncodingException{
+            if(filePath.equals(op.appConfigPath)){
+                op.deleteApkList = this.getArrayListFromFileInZip(zis);
+            }
+        }
+        
+        public void writeFileFromZip(ZipInputStream zis, File outFile) throws FileNotFoundException, IOException{
+            File file = new File(outFile.getParent());
+            if(!file.exists()){
+                file.mkdirs();
+            }
+            FileOutputStream fos = new FileOutputStream(outFile);
+            int len;
+            byte[] buffer = new byte[1024];
+            while ((len = zis.read(buffer)) > 0) {
+                fos.write(buffer, 0, len);
+            }
+            fos.close();
+        }
+        
         public MultiValueMap extractTheZip (String source) throws IOException{ 
             int progressValue = 20;
             ai.setLog("Extracting File from given Location...", ai.textAreaImportZipLog);
-            byte[] buffer = new byte[1024];
             MultiValueMap mvm = new MultiValueMap();
             try{
                 File folder = new File("Temp");
@@ -151,49 +171,28 @@ public class ImportZip extends SwingWorker<Void,Void>{
                 ai.setLog("Extracting Data...", ai.textAreaImportZipLog);
                 ju.setValue(progressValue);
                 while(ze!=null){
-                    String fileName = ze.getName();
-                    System.out.println("File Name Extracting is.. " + op.getNameFromPath(fileName));
-                    if(fileName.equals(op.appConfigPath)){
-                        op.deleteApkList = this.getArrayListFromFileInZip(zis);
-                    }
-                    File newFile = new File("Temp" + File.separator + fileName);
                     String filePath = ze.getName();
+                    System.out.println("File Name Extracting is.. " + op.getNameFromPath(filePath));
+                    
+                    this.fillDeleteApkListFromZip(filePath, zis);
+                    
+                    File outputFile = new File("Temp" + File.separator + filePath);
                     ai.setLog(filePath, ai.textAreaImportZipLog);
-                    new File(newFile.getParent()).mkdirs();
-                    FileOutputStream fos = new FileOutputStream(newFile);             
-                    int len;
-                    while ((len = zis.read(buffer)) > 0) {
-                        fos.write(buffer, 0, len);
-                    }
-                    fos.close();
+                    
+                    this.writeFileFromZip(zis, outputFile);
+                    
                     if(filePath.startsWith("customize/")){
-                        String temp = filePath.replace("customize/", "");
-                        String splitName[] = temp.split("/");
+                        filePath = filePath.substring(filePath.indexOf("/") + 1, filePath.length());
+                        String splitName[] = filePath.split("/");
                         switch (splitName[0]){
                             case "APKs-System":
-                                if(!op.map.containsValue(splitName[1], newFile.getAbsolutePath()))
-                                mvm.put(splitName[1],newFile.getAbsolutePath());
-                                break;
                             case "APKs-Data":
-                                if(!op.map.containsValue(splitName[1], newFile.getAbsolutePath()))
-                                mvm.put(splitName[1],newFile.getAbsolutePath());
-                                break;
                             case "Ringtones":
-                                if(!op.map.containsValue(splitName[1], newFile.getAbsolutePath()))
-                                mvm.put(splitName[1],newFile.getAbsolutePath());
-                                break;
                             case "Notifications":
-                                if(!op.map.containsValue(splitName[1], newFile.getAbsolutePath()))
-                                mvm.put(splitName[1],newFile.getAbsolutePath());
-                                break;
-                            case "BootAnimations":
-                                if(!op.map.containsValue(splitName[1], newFile.getAbsolutePath()))
-                                mvm.put(splitName[1],newFile.getAbsolutePath());
-                                break;
+                            case "BootAnimations":    
                             case "Kernels":
-                                if(!op.map.containsValue(splitName[1], newFile.getAbsolutePath()))
-                                mvm.put(splitName[1],newFile.getAbsolutePath());
-                                break;
+                                if(!op.map.containsValue(splitName[1], outputFile.getAbsolutePath()))
+                                mvm.put(splitName[1],outputFile.getAbsolutePath());
                         }
                     }
                     ze = zis.getNextEntry();
@@ -205,7 +204,6 @@ public class ImportZip extends SwingWorker<Void,Void>{
                 ju.setValue(100);
                 ai.setLog("Crunching Data for Application.....Hold Tight ;)", ai.textAreaImportZipLog);
                 System.out.println("Done");
-                //op.zipDestination = source;
                 ju.setValue(100);
             }catch(IOException ex){
                 ex.printStackTrace(); 

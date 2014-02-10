@@ -48,7 +48,7 @@ public final class AromaInstaller extends javax.swing.JFrame {//implements Prope
         String deviceFullName;
         while((deviceFullName = br.readLine()) != null){
             String[] temp = deviceFullName.split("_");
-            System.out.println("Device getting added is : " + temp[0]);
+            System.out.println("Device getting added from jar is : " + temp[0]);
             op.CSDmap.put(temp[0], temp[1]);
         }
         is.close();
@@ -57,11 +57,12 @@ public final class AromaInstaller extends javax.swing.JFrame {//implements Prope
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
     public void initComponents() {
-        this.setResizable(false);
+        //this.setResizable(false);
         jMenuBar1 = new JMenuBar();
         jMenu1 = new JMenu();
         jMenu2 = new JMenu();
         contentPanel = new JPanel();
+        //contentPanel.setEnabled(false);
         fileModel = new DefaultListModel();
         fileListScrollPane = new JScrollPane();
         fileList = new JList(fileModel);
@@ -571,7 +572,7 @@ public final class AromaInstaller extends javax.swing.JFrame {//implements Prope
         );
 
         pack();
-        setLocationRelativeTo(null);
+        setLocationRelativeTo(this);
         //setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
     }
     
@@ -977,6 +978,7 @@ public final class AromaInstaller extends javax.swing.JFrame {//implements Prope
     
     //This is UI of Add Apk Group in Aroma Tab..
     public void addApkGroupUI(){
+        
         frame= new JFrame();
         
         JDialog dialog = new JDialog(frame,"Create Group Name",true);
@@ -1085,7 +1087,7 @@ public final class AromaInstaller extends javax.swing.JFrame {//implements Prope
         );
 
         pack();
-        dialog.setContentPane(addGroupPanel);
+        dialog.getContentPane().add(addGroupPanel);
         dialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
         dialog.addWindowListener(new WindowAdapter() {
         public void windowClosing(WindowEvent we) {
@@ -2693,7 +2695,8 @@ public final class AromaInstaller extends javax.swing.JFrame {//implements Prope
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 
-                new AromaInstaller().setVisible(true);
+                AromaInstaller ai = new AromaInstaller();
+                ai.setVisible(true);
             }
         });
     }

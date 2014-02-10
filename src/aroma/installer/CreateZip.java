@@ -56,71 +56,70 @@ public class CreateZip extends SwingWorker<Void,Void>{
 
     
     
-    public void removeEmptyGroup(){
-        ai.setLog("Checking If Any Group is Empty...", ai.textAreaCZ);
-        ArrayList<String> arrayList = new ArrayList<>();
-        arrayList = op.groupArrayList;
-        for(String groupName: arrayList){
-            System.out.println("Considering " + groupName);
-            if(!op.map.containsKey(groupName)){
-                this.removeEmptyGroup(groupName);
-                System.out.println(groupName + " Removed..!!" + " Now GroupList Contains " + op.groupArrayList);
-                //recursion is used here..
-                removeEmptyGroup();
-                JOptionPane.showMessageDialog(ai, "Removed Empty Group : " + groupName);
-                ai.setLog("Removing Empty group " + groupName, ai.textAreaCZ);
-            }
-            else{
-                System.out.println("Nothing to remove..!!");
-                continue;
-            }
-        }
-    }
-    
-    public void removeEmptyGroup(String groupName){
-        String str = groupName.substring(0,groupName.indexOf("_"));
-        //JOptionPane.showMessageDialog(null, "String is " + str);
-        switch(str){
-                case "APKs-System":
-                    op.systemList.remove(groupName);
-                    op.groupArrayList.remove(groupName);
-                    break;
-                case "APKs-Data":
-                    op.dataList.remove(groupName);
-                    op.groupArrayList.remove(groupName);
-                    break;
-                case "BootAnimations":
-                    op.bootAnimList.remove(groupName);
-                    op.groupArrayList.remove(groupName);
-                    break;
-                case "Ringtones":
-                    op.ringtoneList.remove(groupName);
-                    op.groupArrayList.remove(groupName);
-                    break;
-                case "Notifications":
-                    op.notifList.remove(groupName);
-                    op.groupArrayList.remove(groupName);
-                    break;
-                case "Kernel":
-                    op.kernelList.remove(groupName);
-                    op.groupArrayList.remove(groupName);
-                    break;
-                default:
-                System.out.println("Something Went Wrong..!!");
-        }
-    }
+//    public void removeEmptyGroup(){
+//        ai.setLog("Checking If Any Group is Empty...", ai.textAreaCZ);
+//        ArrayList<String> arrayList;
+//        arrayList = op.groupArrayList;
+//        for(String groupName: arrayList){
+//            System.out.println("Considering " + groupName);
+//            if(!op.map.containsKey(groupName)){
+//                this.removeEmptyGroup(groupName);
+//                System.out.println(groupName + " Removed..!!" + " Now GroupList Contains " + op.groupArrayList);
+//                //recursion is used here..
+//                removeEmptyGroup();
+//                JOptionPane.showMessageDialog(ai, "Removed Empty Group : " + groupName);
+//                ai.setLog("Removing Empty group " + groupName, ai.textAreaCZ);
+//            }
+//            else{
+//                System.out.println("Nothing to remove..!!");
+//            }
+//        }
+//    }
+//    
+//    public void removeEmptyGroup(String groupName){
+//        String str = groupName.substring(0,groupName.indexOf("_"));
+//        //JOptionPane.showMessageDialog(null, "String is " + str);
+//        switch(str){
+//                case "APKs-System":
+//                    op.systemList.remove(groupName);
+//                    op.groupArrayList.remove(groupName);
+//                    break;
+//                case "APKs-Data":
+//                    op.dataList.remove(groupName);
+//                    op.groupArrayList.remove(groupName);
+//                    break;
+//                case "BootAnimations":
+//                    op.bootAnimList.remove(groupName);
+//                    op.groupArrayList.remove(groupName);
+//                    break;
+//                case "Ringtones":
+//                    op.ringtoneList.remove(groupName);
+//                    op.groupArrayList.remove(groupName);
+//                    break;
+//                case "Notifications":
+//                    op.notifList.remove(groupName);
+//                    op.groupArrayList.remove(groupName);
+//                    break;
+//                case "Kernel":
+//                    op.kernelList.remove(groupName);
+//                    op.groupArrayList.remove(groupName);
+//                    break;
+//                default:
+//                System.out.println("Something Went Wrong..!!");
+//        }
+//    }
     
     
     public void writeFileToZip(InputStream in, ZipOutputStream zos, String writeAt) throws IOException{
+        System.out.println("File Writing at " + writeAt);
         byte[] buffer = new byte[1024];
-        System.out.println("Next Zip Entry is " + writeAt);
         ZipEntry ze = new ZipEntry(writeAt);
         zos.putNextEntry(ze);
         int len;
         while ((len = in.read(buffer)) > 0) {
             zos.write(buffer, 0, len);
         }
-        System.out.println("File Written in ZIP : " + writeAt);
+        System.out.println("File Written..");
         in.close();
     }
     
@@ -141,16 +140,17 @@ public class CreateZip extends SwingWorker<Void,Void>{
     public ArrayList<String> getJarFileList(){
         ArrayList<String> tempArray = new ArrayList<>();
         try{
-            JarFile jarFile = new JarFile(getJarFileName());
-            for(Enumeration em = jarFile.entries(); em.hasMoreElements();) {
-                String s= em.nextElement().toString();
-                if(s.startsWith("aroma/installer/META-INF/")){
-                    s = s.substring("aroma/installer/".length(), s.length());
-                    if(s.endsWith(".ttf")||s.endsWith(".png")||s.endsWith(".prop")||s.endsWith(".lang")||s.endsWith(".txt"))
-                        tempArray.add(s);
+            try (JarFile jarFile = new JarFile(getJarFileName())) {
+                for(Enumeration em = jarFile.entries(); em.hasMoreElements();) {
+                    String s= em.nextElement().toString();
+                    if(s.startsWith("aroma/installer/META-INF/")){
+                        s = s.substring("aroma/installer/".length(), s.length());
+                        if(s.endsWith(".ttf")||s.endsWith(".png")||s.endsWith(".prop")||s.endsWith(".lang")||s.endsWith(".txt")||s.endsWith(".edify")||s.endsWith(".sh")||s.contains("displaycapture")||s.contains("sleep")||s.endsWith(".db")){
+                            tempArray.add(s);
+                        }
                     }
+                }
             }
-            jarFile.close();
         }catch (IOException e){
             System.err.println("Error: " + e.getMessage());
         }
@@ -161,6 +161,7 @@ public class CreateZip extends SwingWorker<Void,Void>{
     }
     
     public void createZipAt(String destination) throws IOException{
+        System.out.println("Creating zip process started...");
         if(isExecutingJarFile()){
             op.jarFileList = this.getJarFileList();
             System.out.println("Executing Through Jar..!!");
@@ -171,23 +172,24 @@ public class CreateZip extends SwingWorker<Void,Void>{
         //this.removeEmptyGroup();
         ai.setLog("All Clear...", ai.textAreaCZ);
         ai.setLog("Creating "+op.flashableZipType+" Zip...", ai.textAreaCZ);
+        System.out.println("Output is set to : " + destination);
         File fileDest = new File(destination);
-        System.out.println("Entered Create Zip");
+        System.out.println("Creating Destination zip file..");
         if(!fileDest.exists()){
             fileDest.createNewFile();
-            System.out.println("File Created");
+            System.out.println("File Created..");
         }else{
             fileDest.delete();
             System.out.println("Existing File Deleted..!!");
             fileDest.createNewFile();
+            System.out.println("File Created..");
         }
         InputStream in;
         OutputStream out;
         out = new FileOutputStream(fileDest);
-        ZipOutputStream zos = new ZipOutputStream(out);
-        System.out.println("Output To : " + destination);
-        if(!op.deleteApkList.isEmpty()){
-                System.out.println("Delete List Not Empty..!!");
+        try (ZipOutputStream zos = new ZipOutputStream(out)) {
+            if(!op.deleteApkList.isEmpty()){
+                System.out.println("Creating Delete System Apk List..!!");
                 this.createDeleteApkConfigList();
                 in = new ByteArrayInputStream(op.deleteApkConfigList.getBytes());
                 this.writeFileToZip(in, zos, "customize/DeleteSystemApps/app-config");
@@ -196,91 +198,95 @@ public class CreateZip extends SwingWorker<Void,Void>{
             }else{
                 System.out.println("Delete List Empty..!!");
             }
-        ai.setLog("Writing Zip at specified destination...", ai.textAreaCZ);
-        progress += 20;
-        //Write Apk, Zip, etc files to ZIP..
-        ju.setValue(progress);
-        ai.setLog("Opening I/O Streams...", ai.textAreaCZ);
-        ai.setLog("Parsing Zip Data...", ai.textAreaCZ);
-        
-        for(String groupName: op.groupArrayList){
-            System.out.println("Now Group under consideration is : " + groupName);
-            if(op.map.containsKey(groupName)){
-                for(String file: op.returnPathArray(groupName, op.map)){
-                    System.out.println("Group Name : " +groupName + " File Name : " + file);
-                    System.out.println("Creating Stream.. ");
-                    in = new FileInputStream(new File(file));
-                    System.out.println("Stream Created.. " + in);
-                    file = op.getNameFromPath(file);
-                    file = "customize/" + op.getListName(groupName) + "/" + groupName + "/" + file;
-                    System.out.println("File to be written is : " + file);
-                    this.writeFileToZip(in, zos, file);
-                    in.close();
-                    ai.setLog(op.getNameFromPath(file) + " Imported...", ai.textAreaCZ);
-                    progress += 1;
+            ai.setLog("Writing Zip at specified destination...", ai.textAreaCZ);
+            progress += 20;
+            //Write Apk, Zip, etc files to ZIP..
+            ju.setValue(progress);
+            ai.setLog("Opening I/O Streams...", ai.textAreaCZ);
+            ai.setLog("Parsing Zip Data...", ai.textAreaCZ);
+            
+            for(String groupName: op.groupArrayList){
+                System.out.println("Writing " + groupName + "Group to zip");
+                if(op.map.containsKey(groupName)){
+                    for(String file: op.returnPathArray(groupName, op.map)){
+                        System.out.println("Creating Stream.. ");
+                        in = new FileInputStream(new File(file));
+                        System.out.println("Stream Created.. " + in);
+                        file = op.getNameFromPath(file);
+                        file = "customize/" + op.getListName(groupName) + "/" + groupName + "/" + file;
+                        System.out.println("Adding " + file + " to Group " + groupName);
+                        this.writeFileToZip(in, zos, file);
+                        in.close();
+                        ai.setLog(op.getNameFromPath(file) + " Imported...", ai.textAreaCZ);
+                        progress += 1;
+                        ju.setValue(progress);
+                    }
+                    progress += 17;
                     ju.setValue(progress);
                 }
-                progress += 17;
-                ju.setValue(progress);
+                else{
+                    JOptionPane.showMessageDialog(null, "Removed Empty Group : " + groupName);
+                }
+            }
+            if(!op.selectedDevice.equals("")){
+                in = this.getClass().getResourceAsStream("META-INF/com/google/android/binary files/" + op.selectedDevice );//+ "_update-binary");
             }
             else{
-                JOptionPane.showMessageDialog(null, "Removed Empty Group : " + groupName);
+                in = new FileInputStream(new File(op.updateBinaryPath));
             }
-        }
-        if(!op.selectedDevice.equals("")){
-            in = this.getClass().getResourceAsStream("META-INF/com/google/android/binary files/" + op.selectedDevice );//+ "_update-binary");
-        }
-        else{
-            in = new FileInputStream(new File(op.updateBinaryPath));
-        }
-        ai.setLog("Creating Config Files....", ai.textAreaCZ);
-        progress = 90;
-        ju.setValue(progress);
-        switch(op.flashableZipType){
-            case "Create Flashable Zip With Aroma Installer":
-                this.writeFileToZip(in, zos, "META-INF/com/google/android/update-binary-installer");
-                in.close();
-                for(String fileName : op.jarFileList){
-                    System.out.println("File Name : " + fileName);
-                    in = this.getClass().getResourceAsStream(fileName);
-                    this.writeFileToZip(in, zos, fileName);
+            ai.setLog("Creating Config Files....", ai.textAreaCZ);
+            progress = 90;
+            ju.setValue(progress);
+            switch(op.flashableZipType){
+                case "Create Flashable Zip With Aroma Installer":
+                    System.out.println("Writing update-binary-installer to zip..");
+                    this.writeFileToZip(in, zos, "META-INF/com/google/android/update-binary-installer");
                     in.close();
-                }
-                op.createAromaConfigFile();
-                in = new ByteArrayInputStream(op.aroma_config.getBytes());
-                this.writeFileToZip(in, zos, "META-INF/com/google/android/aroma-config");
-                in.close();
-                in = this.getClass().getResourceAsStream("META-INF/com/google/android/update-binary");
-                this.writeFileToZip(in, zos, "META-INF/com/google/android/update-binary");
-                in.close();
-                progress += 1;
-                ju.setValue(progress);
-                break;
-            case "Create Normal Flashable Zip":
-                this.writeFileToZip(in, zos, "META-INF/com/google/android/update-binary");
-                in.close();
-                ju.setValue(90);
-                break;
-            default:
-                JOptionPane.showMessageDialog(null, "Something Went Wrong..!! Restart Tool and Try Again..");
-        }
-        ai.setLog("Nearing Completion....", ai.textAreaCZ);
+                    System.out.println("Adding Aroma files from jar to zip..");
+                    for(String fileName : op.jarFileList){
+                        System.out.println("Currently Adding " + fileName);
+                        in = this.getClass().getResourceAsStream(fileName);
+                        this.writeFileToZip(in, zos, fileName);
+                        in.close();
+                    }
+                    System.out.println("Added Aroma files from jar to zip..");
+                    op.createAromaConfigFile();
+                    in = new ByteArrayInputStream(op.aroma_config.getBytes());
+                    System.out.println("Writing aroma-config to zip..");
+                    this.writeFileToZip(in, zos, "META-INF/com/google/android/aroma-config");
+                    in.close();
+                    System.out.println("Writing update-binary to zip..");
+                    in = this.getClass().getResourceAsStream("META-INF/com/google/android/update-binary");
+                    this.writeFileToZip(in, zos, "META-INF/com/google/android/update-binary");
+                    in.close();
+                    progress += 1;
+                    ju.setValue(progress);
+                    break;
+                case "Create Normal Flashable Zip":
+                    System.out.println("Writing update-binary to zip..");
+                    this.writeFileToZip(in, zos, "META-INF/com/google/android/update-binary");
+                    in.close();
+                    ju.setValue(90);
+                    break;
+                default:
+                    JOptionPane.showMessageDialog(null, "Something Went Wrong..!! Restart Tool and Try Again..");
+            }
+            ai.setLog("Nearing Completion....", ai.textAreaCZ);
 //        in = this.getClass().getResourceAsStream("utils/mount");
 //        this.writeFileToZip(in, zos, "utils/mount");
 //        in.close();
 //        in = this.getClass().getResourceAsStream("utils/umount");
 //        this.writeFileToZip(in, zos, "utils/umount");
 //        in.close();
-        op.createUpdaterScriptFile();
-        in = new ByteArrayInputStream(op.updater_script.getBytes());
-        ju.setValue(100);
-        this.writeFileToZip(in, zos, "META-INF/com/google/android/updater-script");
-        in.close();
-        zos.closeEntry();
-        zos.close();
-        System.out.println("Closed Zip Output Stream....");
+            op.createUpdaterScriptFile();
+            in = new ByteArrayInputStream(op.updater_script.getBytes());
+            ju.setValue(100);
+            System.out.println("Writing updater-script to zip..");
+            this.writeFileToZip(in, zos, "META-INF/com/google/android/updater-script");
+            in.close();
+            zos.closeEntry();
+        }
         out.close();
-        System.out.println("Closed File Output Stream....");
         ai.setLog("Folder Compressed Successfully....", ai.textAreaCZ);
         this.isZipCreated = true;
         System.out.println("Folder successfully compressed");

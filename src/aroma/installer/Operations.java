@@ -70,6 +70,8 @@ public class Operations {
         
     }
         
+    
+    
     public int getGroupCount(ArrayList<String> groupType){
         int count = 0;
         for(String temp : groupType){
@@ -101,6 +103,7 @@ public class Operations {
     }
     
     public String getKernelMountPoint(){
+        
         try {
             InputStream is;
             BufferedReader br;
@@ -138,8 +141,10 @@ public class Operations {
 //    }
     
     public ArrayList<String> returnPathArray(String str, MultiValueMap mvm){
+        System.out.println("ArrayList of file names based on key " + str + " in map is requested..");
+        System.out.println("Map values are " + map);
         if(mvm.containsKey(str)){
-            System.out.println("Yes, map contains : " + str + " and proof is : " + mvm);
+            System.out.println("Map contains key : " + str);
             Set entrySet = mvm.entrySet();
             Iterator it = entrySet.iterator();
             while(it.hasNext()){
@@ -149,6 +154,10 @@ public class Operations {
                 }
             }
         }
+        else{
+            System.out.println("Map doesnt contains key : " + str);
+        }
+        System.out.println("ArrayList obtained based on key : " + str + " is : " + arrayList);
         return arrayList;
     }
     
@@ -192,10 +201,36 @@ public class Operations {
         }
     }
     
+    public void configAromaThemes(){
+        this.aroma_config += "selectbox(\"Themes\",\"Choose your desired theme from following\",\"@personalize\",\"theme.prop\",\n" +
+                "\"MIUI Theme\", \"\", 1,\n" +
+                "\"ICS Theme\", \"\", 0,\n" +
+                "\"MIUI 4 Theme\", \"\", 0,\n" +
+                "\"Touchwiz Theme\", \"\", 0,\n" +
+                "\"Franzyroy\", \"\", 0\n" +
+                ");\n\n";
+        this.aroma_config += "if prop(\"theme.prop\", \"selected.0\")==\"1\" then\n" +
+                "theme(\"miui\");\n" +
+                "endif;\n\n";
+        this.aroma_config += "if prop(\"theme.prop\", \"selected.0\")==\"2\" then\n" +
+                "theme(\"ics\");\n" +
+                "endif;\n\n";
+        this.aroma_config += "if prop(\"theme.prop\", \"selected.0\")==\"3\" then\n" +
+                "theme(\"miui4\");\n" +
+                "endif;\n\n";
+        this.aroma_config += "if prop(\"theme.prop\", \"selected.0\")==\"4\" then\n" +
+                "theme(\"touchwiz\");\n" +
+                "endif;\n\n";
+        this.aroma_config += "if prop(\"theme.prop\", \"selected.0\")==\"5\" then\n" +
+                "theme(\"franzyroy\");\n" +
+                "endif;\n\n";
+    }
+    
     public void createAromaConfigFile(){
         this.aroma_config = "fontresload(\"0\", \"ttf/Roboto-Regular.ttf\", \"12\");\n" +
-                "fontresload(\"1\", \"ttf/Roboto-Regular.ttf\", \"18\");\n" +
-                "theme(\"miui4\");\n";
+                "fontresload(\"1\", \"ttf/Roboto-Regular.ttf\", \"18\");\n";
+
+        this.configAromaThemes();
         
         this.aroma_config += "agreebox(\"Important notes!\", \"Terms & Conditions\", \"@alert\",resread(\"Terms and Conditions.txt\"), \"I agree with these Terms of Use...\", \"You need to agree with the Terms of Use...\");\n";
         
@@ -213,20 +248,33 @@ public class Operations {
         
         displayListInAroma("checkbox", "Remove System Apps List", "Choose Apps To Remove", "personalize", "delete_choices.prop", this.deleteApkList);
         
-        if(!dataList.isEmpty())
-        this.aroma_config += "writetmpfile(\"app_choices.prop\",readtmpfile(\"app_choices.prop\"));\n";
-        if(!systemList.isEmpty())
-        this.aroma_config += "writetmpfile(\"system_app_choices.prop\",readtmpfile(\"system_app_choices.prop\"));\n";
-        if(!bootAnimList.isEmpty())
-        this.aroma_config += "writetmpfile(\"boot_anim_choices.prop\",readtmpfile(\"boot_anim_choices.prop\"));\n";
-        if(!kernelList.isEmpty())
-        this.aroma_config += "writetmpfile(\"kernel_choices.prop\",readtmpfile(\"kernel_choices.prop\"));\n";
-        if(!ringtoneList.isEmpty())
-        this.aroma_config += "writetmpfile(\"ringtone_choices.prop\",readtmpfile(\"ringtone_choices.prop\"));\n";
-        if(!notifList.isEmpty())
-        this.aroma_config += "writetmpfile(\"notification_choices.prop\",readtmpfile(\"notification_choices.prop\"));\n";
-        if(!deleteApkList.isEmpty())
-        this.aroma_config += "writetmpfile(\"delete_choices.prop\",readtmpfile(\"delete_choices.prop\"));\n";
+        if(!dataList.isEmpty()){
+            this.aroma_config += "writetmpfile(\"app_choices.prop\",readtmpfile(\"app_choices.prop\"));\n";
+        }
+        
+        if(!systemList.isEmpty()){
+            this.aroma_config += "writetmpfile(\"system_app_choices.prop\",readtmpfile(\"system_app_choices.prop\"));\n";
+        }
+        
+        if(!bootAnimList.isEmpty()){
+            this.aroma_config += "writetmpfile(\"boot_anim_choices.prop\",readtmpfile(\"boot_anim_choices.prop\"));\n";
+        }
+        
+        if(!kernelList.isEmpty()){
+            this.aroma_config += "writetmpfile(\"kernel_choices.prop\",readtmpfile(\"kernel_choices.prop\"));\n";
+        }
+        
+        if(!ringtoneList.isEmpty()){
+            this.aroma_config += "writetmpfile(\"ringtone_choices.prop\",readtmpfile(\"ringtone_choices.prop\"));\n";
+        }
+        
+        if(!notifList.isEmpty()){
+            this.aroma_config += "writetmpfile(\"notification_choices.prop\",readtmpfile(\"notification_choices.prop\"));\n";
+        }
+        
+        if(!deleteApkList.isEmpty()){
+            this.aroma_config += "writetmpfile(\"delete_choices.prop\",readtmpfile(\"delete_choices.prop\"));\n";
+        }
         
         this.aroma_config += "writetmpfile(\"dalvik_choices.prop\",\"init=no\\n\");\n";
         this.aroma_config += "checkviewbox(\n"+"\"Ready to Install\",\n" +
@@ -373,26 +421,31 @@ public class Operations {
     }
    
     public void fillListModelWithArrayList(DefaultListModel model, ArrayList<String> list, String listType){
+        System.out.println("Filling List " + model.toString() + " started..");
         for(String temp : list){
             String finalStr = temp.replace(listType+"_", "");
             if(!model.contains(finalStr)){
                 model.addElement(finalStr);
+                System.out.println(finalStr + " added to " + model.toString());
             }
         }
+        System.out.println("Filling List " + model.toString() + " completed..");
     }
     
-    public String getNameFromPath(String str){
+    public String getNameFromPath(String path){
+        System.out.println("Getting File name from path : " + path);
         String[] tempString;
-        if(str.contains("\\")){
-            tempString = str.split("\\\\");
+        if(path.contains("\\")){
+            tempString = path.split("\\\\");
         }else{
-            tempString = str.split("/");
+            tempString = path.split("/");
         }
-        System.out.println("Successfully Splitted from " + str + " to " + tempString[tempString.length-1]);
+        System.out.println("File name : " + tempString[tempString.length-1] + " returned..");
         return tempString[tempString.length-1];
     }
     
     public String getFilePath(String key, String name, MultiValueMap mvm){
+        System.out.println("Getting actual File Path of " + name + "...");
         ArrayList<String> list = new ArrayList<>();
         Set entrySet = mvm.entrySet();
         Iterator it = entrySet.iterator();
@@ -402,6 +455,7 @@ public class Operations {
                 list = (ArrayList<String>) mvm.get(mapEntry.getKey());
                 for(String path: list){
                     if(path.contains(name)){
+                        System.out.println("Actual path of file : " + name + " is : " + path);
                         return path;
                     }
                 }
@@ -410,21 +464,22 @@ public class Operations {
         return "";
     }
     
-    public void updateFileListWithSelectedGroupList(String str, DefaultListModel model, MultiValueMap mvm){
-        ArrayList<String> list = new ArrayList<>();
+    public void updateFileListWithSelectedGroupList(String key, DefaultListModel model, MultiValueMap mvm){
+        System.out.println("Updating file list of group " + key + "...");
+        ArrayList<String> list;
         Set entrySet = mvm.entrySet();
         Iterator it = entrySet.iterator();
         while(it.hasNext()){
             Map.Entry mapEntry = (Map.Entry) it.next();
-            if(str.equals(mapEntry.getKey())){
+            if(key.equals(mapEntry.getKey())){
                 list = (ArrayList<String>) mvm.get(mapEntry.getKey());
                 for (int j = 0; j < list.size(); j++) {
-                    System.out.println("Testing.. "+getNameFromPath(list.get(j)));
-                    System.out.println("\t" + mapEntry.getKey() + "\t  " + getNameFromPath(list.get(j)));
+                    System.out.println(getNameFromPath(list.get(j)) + " added to file list");
                     model.addElement(getNameFromPath(list.get(j)));
                 }
             }
         }
+        System.out.println("File list updated...");
     }
     
     public void filterFile(JFileChooser fileChooser, Component cmpnt, JList groupList, DefaultListModel fileModel, String type){        
@@ -482,79 +537,34 @@ public class Operations {
             System.out.println("File is deleted : " + file.getAbsolutePath());
         }
     }
+    
+    //This function is used to prepare an array list which contains path of default aroma files that are required to be added in zip file.
+    
+    public void addFilePathInArrayList(String path, ArrayList<String> tempArray){
+        File file = new File(path);
+        if(file.isDirectory()){
+            for(String temp : file.list()){
+                addFilePathInArrayList(path + File.separator + temp, tempArray);
+            }
+        }
+        else if(file.isFile()){
+            String s = file.getAbsolutePath();
+            s = s.substring(s.indexOf("META-INF"), s.length());
+            if(s.endsWith(".ttf")||s.endsWith(".png")||s.endsWith(".prop")||s.endsWith(".lang")||s.endsWith(".txt")||s.endsWith(".edify")||s.endsWith(".sh")||s.contains("displaycapture")||s.contains("sleep")||s.endsWith(".db")){
+                s = s.replace("\\", "/");
+                tempArray.add(s);
+                System.out.println("File Added to List is : " + s);
+            }
+        }
+    }
+
     //This function will not be needed once final product is ready.
     
     public ArrayList<String> jarFileList() throws IOException{
         ArrayList<String> tempArray = new ArrayList<>();
-        tempArray.add("META-INF/com/google/android/aroma/Terms and Conditions.txt");
-        tempArray.add("META-INF/com/google/android/aroma/fonts/big.png");
-        tempArray.add("META-INF/com/google/android/aroma/fonts/small.png");
-        
-        tempArray.add("META-INF/com/google/android/aroma/icons/agreement.png");
-        tempArray.add("META-INF/com/google/android/aroma/icons/alert.png");
-        tempArray.add("META-INF/com/google/android/aroma/icons/apps.png");
-        tempArray.add("META-INF/com/google/android/aroma/icons/confirm.png");
-        tempArray.add("META-INF/com/google/android/aroma/icons/customize.png");
-        tempArray.add("META-INF/com/google/android/aroma/icons/default.png");
-        tempArray.add("META-INF/com/google/android/aroma/icons/info.png");
-        tempArray.add("META-INF/com/google/android/aroma/icons/install.png");
-        tempArray.add("META-INF/com/google/android/aroma/icons/license.png");
-        tempArray.add("META-INF/com/google/android/aroma/icons/personalize.png");
-        tempArray.add("META-INF/com/google/android/aroma/icons/update.png");
-        tempArray.add("META-INF/com/google/android/aroma/icons/welcome.png");
-        
-        tempArray.add("META-INF/com/google/android/aroma/langs/ar.lang");
-        tempArray.add("META-INF/com/google/android/aroma/langs/cn.lang");
-        tempArray.add("META-INF/com/google/android/aroma/langs/de.lang");
-        tempArray.add("META-INF/com/google/android/aroma/langs/en.lang");
-        tempArray.add("META-INF/com/google/android/aroma/langs/fr.lang");
-        tempArray.add("META-INF/com/google/android/aroma/langs/he.lang");
-        tempArray.add("META-INF/com/google/android/aroma/langs/id.lang");
-        tempArray.add("META-INF/com/google/android/aroma/langs/it.lang");
-        tempArray.add("META-INF/com/google/android/aroma/langs/ru.lang");
-        tempArray.add("META-INF/com/google/android/aroma/langs/es.lang");
-        
-        tempArray.add("META-INF/com/google/android/aroma/themes/miui4/bg.png");
-        tempArray.add("META-INF/com/google/android/aroma/themes/miui4/button.9.png");
-        tempArray.add("META-INF/com/google/android/aroma/themes/miui4/button_focus.9.png");
-        tempArray.add("META-INF/com/google/android/aroma/themes/miui4/button_press.9.png");
-        tempArray.add("META-INF/com/google/android/aroma/themes/miui4/cb.png");
-        tempArray.add("META-INF/com/google/android/aroma/themes/miui4/cb_focus.png");
-        tempArray.add("META-INF/com/google/android/aroma/themes/miui4/cb_on.png");
-        tempArray.add("META-INF/com/google/android/aroma/themes/miui4/cb_on_focus.png");
-        tempArray.add("META-INF/com/google/android/aroma/themes/miui4/cb_on_press.png");
-        tempArray.add("META-INF/com/google/android/aroma/themes/miui4/cb_press.png");
-        tempArray.add("META-INF/com/google/android/aroma/themes/miui4/dialog.9.png");
-        tempArray.add("META-INF/com/google/android/aroma/themes/miui4/dialog_titlebar.9.png");
-        tempArray.add("META-INF/com/google/android/aroma/themes/miui4/font.roboto.big.png");
-        tempArray.add("META-INF/com/google/android/aroma/themes/miui4/font.roboto.small.png");
-        tempArray.add("META-INF/com/google/android/aroma/themes/miui4/icon.agreement.png");
-        tempArray.add("META-INF/com/google/android/aroma/themes/miui4/icon.alert.png");
-        tempArray.add("META-INF/com/google/android/aroma/themes/miui4/icon.apps.png");
-        tempArray.add("META-INF/com/google/android/aroma/themes/miui4/icon.confirm.png");
-        tempArray.add("META-INF/com/google/android/aroma/themes/miui4/icon.customize.png");
-        tempArray.add("META-INF/com/google/android/aroma/themes/miui4/icon.default.png");
-        tempArray.add("META-INF/com/google/android/aroma/themes/miui4/icon.info.png");
-        tempArray.add("META-INF/com/google/android/aroma/themes/miui4/icon.install.png");
-        tempArray.add("META-INF/com/google/android/aroma/themes/miui4/icon.license.png");
-        tempArray.add("META-INF/com/google/android/aroma/themes/miui4/icon.personalize.png");
-        tempArray.add("META-INF/com/google/android/aroma/themes/miui4/icon.update.png");
-        tempArray.add("META-INF/com/google/android/aroma/themes/miui4/icon.welcome.png");
-        tempArray.add("META-INF/com/google/android/aroma/themes/miui4/list.9.png");
-        tempArray.add("META-INF/com/google/android/aroma/themes/miui4/navbar.png");
-        tempArray.add("META-INF/com/google/android/aroma/themes/miui4/radio.png");
-        tempArray.add("META-INF/com/google/android/aroma/themes/miui4/radio_focus.png");
-        tempArray.add("META-INF/com/google/android/aroma/themes/miui4/radio_on.png");
-        tempArray.add("META-INF/com/google/android/aroma/themes/miui4/radio_on_focus.png");
-        tempArray.add("META-INF/com/google/android/aroma/themes/miui4/radio_on_press.png");
-        tempArray.add("META-INF/com/google/android/aroma/themes/miui4/radio_press.png");
-        tempArray.add("META-INF/com/google/android/aroma/themes/miui4/theme.prop");
-        tempArray.add("META-INF/com/google/android/aroma/themes/miui4/titlebar.9.png");
-        
-        tempArray.add("META-INF/com/google/android/aroma/ttf/DroidSans.ttf");
-        tempArray.add("META-INF/com/google/android/aroma/ttf/DroidSansArabic.ttf");
-        tempArray.add("META-INF/com/google/android/aroma/ttf/DroidSansFallback.ttf");
-        tempArray.add("META-INF/com/google/android/aroma/ttf/Roboto-Regular.ttf");
+        System.out.println("Adding of aroma files in list started..");
+        this.addFilePathInArrayList("src/aroma/installer/META-INF/com/google/android/aroma", tempArray);
+        System.out.println("Adding of aroma files in list finished..");
         return tempArray;
     }
 }
