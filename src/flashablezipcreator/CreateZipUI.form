@@ -209,11 +209,17 @@
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Clear All"/>
                   </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnClearLogCZActionPerformed"/>
+                  </Events>
                 </Component>
                 <Component class="javax.swing.JButton" name="btnSaveLogCZ">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Save Logs"/>
                   </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnSaveLogCZActionPerformed"/>
+                  </Events>
                 </Component>
               </SubComponents>
             </Container>

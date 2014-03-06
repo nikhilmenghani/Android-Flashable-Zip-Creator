@@ -49,6 +49,7 @@ public class Operations {
     String descriptionConfigList = "";
     String appConfigPath = "customize/DeleteSystemApps/app-config";
     String descConfigPath = "customize/File Description/desc-config";
+    String splashPath = "";
     String kernelMountPoint = "";
 
     double progress = 0.0;
@@ -118,9 +119,9 @@ public class Operations {
             System.out.println("Splitted from " + desc + " to " + str);
             if (desc.endsWith("??")) {
                 return "";
-            }else if(desc.endsWith("?_?")){
+            } else if (desc.endsWith("?_?")) {
                 return "";
-            }else {
+            } else {
                 return str;
             }
         } catch (ArrayIndexOutOfBoundsException ex) {
@@ -271,7 +272,18 @@ public class Operations {
     }
 
     public void createAromaConfigFile() {
-        this.aroma_config = "fontresload(\"0\", \"ttf/Roboto-Regular.ttf;ttf/DroidSansFallback.ttf;\", \"12\");\n"
+        this.aroma_config = "anisplash(\n"
+                + "4,\n"
+                + "\"splash/";
+        if (this.splashPath.equals("")) {
+            this.aroma_config += "AFZC";
+        } else {
+            this.aroma_config += "logo";
+        }
+        this.aroma_config += "\", 1200\n"
+                + ");\n";
+        
+        this.aroma_config += "fontresload(\"0\", \"ttf/Roboto-Regular.ttf;ttf/DroidSansFallback.ttf;\", \"12\");\n"
                 + "fontresload(\"1\", \"ttf/Roboto-Regular.ttf;ttf/DroidSansFallback.ttf;\", \"14\");\n";
 
         this.configAromaThemes();

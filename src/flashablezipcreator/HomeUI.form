@@ -9,6 +9,22 @@
             <Property name="text" type="java.lang.String" value="File"/>
           </Properties>
           <SubComponents>
+            <MenuItem class="javax.swing.JMenuItem" name="loadMenuItem">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Load Project"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="loadMenuItemActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="saveMenuItem">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Save Project"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="saveMenuItemActionPerformed"/>
+              </Events>
+            </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="exitMenuItem">
               <Properties>
                 <Property name="mnemonic" type="int" value="120"/>
@@ -618,7 +634,7 @@
             </Component>
             <Component class="javax.swing.JButton" name="btnAddDescription">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Edit File Description..."/>
+                <Property name="text" type="java.lang.String" value="Modify File Description..."/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnAddDescriptionActionPerformed"/>
@@ -713,7 +729,7 @@
             </Component>
             <Component class="javax.swing.JButton" name="btnAddSplash">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Add Custom Splash Screen"/>
+                <Property name="text" type="java.lang.String" value="Set Custom Splash Screen"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnAddSplashActionPerformed"/>

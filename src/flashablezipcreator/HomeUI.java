@@ -70,6 +70,8 @@ public class HomeUI extends javax.swing.JFrame {
         btnCreateAromaZip = new javax.swing.JButton();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
+        loadMenuItem = new javax.swing.JMenuItem();
+        saveMenuItem = new javax.swing.JMenuItem();
         exitMenuItem = new javax.swing.JMenuItem();
         helpMenu = new javax.swing.JMenu();
         aboutMenuItem = new javax.swing.JMenuItem();
@@ -309,7 +311,7 @@ public class HomeUI extends javax.swing.JFrame {
             }
         });
 
-        btnAddDescription.setText("Edit File Description...");
+        btnAddDescription.setText("Modify File Description...");
         btnAddDescription.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddDescriptionActionPerformed(evt);
@@ -399,7 +401,7 @@ public class HomeUI extends javax.swing.JFrame {
             }
         });
 
-        btnAddSplash.setText("Add Custom Splash Screen");
+        btnAddSplash.setText("Set Custom Splash Screen");
         btnAddSplash.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddSplashActionPerformed(evt);
@@ -524,6 +526,22 @@ public class HomeUI extends javax.swing.JFrame {
         );
 
         fileMenu.setText("File");
+
+        loadMenuItem.setText("Load Project");
+        loadMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                loadMenuItemActionPerformed(evt);
+            }
+        });
+        fileMenu.add(loadMenuItem);
+
+        saveMenuItem.setText("Save Project");
+        saveMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveMenuItemActionPerformed(evt);
+            }
+        });
+        fileMenu.add(saveMenuItem);
 
         exitMenuItem.setMnemonic('x');
         exitMenuItem.setText("Exit");
@@ -674,6 +692,14 @@ public class HomeUI extends javax.swing.JFrame {
         System.exit(0);
     }//GEN-LAST:event_exitMenuItemActionPerformed
 
+    private void saveMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveMenuItemActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_saveMenuItemActionPerformed
+
+    private void loadMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadMenuItemActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_loadMenuItemActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -749,8 +775,10 @@ public class HomeUI extends javax.swing.JFrame {
     private javax.swing.JLabel lblSubHeading;
     private javax.swing.JLabel lblTitle;
     private javax.swing.JLabel lblZipDestination;
+    private javax.swing.JMenuItem loadMenuItem;
     private javax.swing.JPanel mainPanel;
     private javax.swing.JMenuBar menuBar;
+    private javax.swing.JMenuItem saveMenuItem;
     private javax.swing.JPanel sideButtonPanel;
     private javax.swing.JTextField textFieldUpdateBinary;
     private javax.swing.JTextField textFieldZipDestination;

@@ -8,8 +8,12 @@ package flashablezipcreator;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.BufferedWriter;
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -124,6 +128,8 @@ public class MainUI extends javax.swing.JFrame {
         btnCreateAromaZip = new javax.swing.JButton();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
+        loadMenuItem = new javax.swing.JMenuItem();
+        saveMenuItem = new javax.swing.JMenuItem();
         exitMenuItem = new javax.swing.JMenuItem();
         helpMenu = new javax.swing.JMenu();
         aboutMenuItem = new javax.swing.JMenuItem();
@@ -453,10 +459,14 @@ public class MainUI extends javax.swing.JFrame {
             }
         });
 
-        btnAddSplash.setText("Add Custom Splash Screen");
+        btnAddSplash.setText("Set Custom Splash Screen");
         btnAddSplash.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                //btnAddSplashActionPerformed(evt);
+                btnAddSplashActionPerformed(evt);
+            }
+
+            private void btnAddSplashActionPerformed(ActionEvent evt) {
+                browseSplashScreen();
             }
         });
 
@@ -589,6 +599,30 @@ public class MainUI extends javax.swing.JFrame {
 
         fileMenu.setText("File");
 
+        loadMenuItem.setText("Load Project");
+        loadMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                loadMenuItemActionPerformed(evt);
+            }
+
+            private void loadMenuItemActionPerformed(ActionEvent evt) {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+        });
+        fileMenu.add(loadMenuItem);
+
+        saveMenuItem.setText("Save Project");
+        saveMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveMenuItemActionPerformed(evt);
+            }
+
+            private void saveMenuItemActionPerformed(ActionEvent evt) {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+        });
+        fileMenu.add(saveMenuItem);
+        
         exitMenuItem.setMnemonic('x');
         exitMenuItem.setText("Exit");
         exitMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -1466,8 +1500,39 @@ public class MainUI extends javax.swing.JFrame {
         debugScrollPaneCZ.setViewportView(debugTextAreaCZ);
 
         btnClearLogCZ.setText("Clear All");
+        btnClearLogCZ.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnClearLogCZActionPerformed(evt);
+            }
+
+            private void btnClearLogCZActionPerformed(ActionEvent evt) {
+                debugTextAreaCZ.setText("");
+            }
+        });
 
         btnSaveLogCZ.setText("Save Logs");
+        btnSaveLogCZ.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSaveLogCZActionPerformed(evt);
+            }
+
+            private void btnSaveLogCZActionPerformed(ActionEvent evt) {
+                BufferedWriter writer = null;
+                try {
+                    writer = new BufferedWriter(new FileWriter("log.config"));
+                    writer.write(debugTextAreaCZ.getText().toString());
+
+                } catch (IOException e) {
+                } finally {
+                    try {
+                        if (writer != null) {
+                            writer.close();
+                        }
+                    } catch (IOException e) {
+                    }
+                }
+            }
+        });
 
         javax.swing.GroupLayout debugPanelLayout = new javax.swing.GroupLayout(debugPanel);
         debugPanel.setLayout(debugPanelLayout);
@@ -1555,24 +1620,24 @@ public class MainUI extends javax.swing.JFrame {
     public void addDescriptionUI() {
 
         String initDesc = "";
-        try{
+        try {
             if (op.getDescription(groupList.getSelectedValue().toString() + "??" + fileList.getSelectedValue().toString() + "??", op.descriptionList).equals("")) {
+                if (!op.getDescription(groupList.getSelectedValue().toString() + "?_?", op.descriptionList).equals("")) {
+                    initDesc = op.getDescription(groupList.getSelectedValue().toString() + "?_?", op.descriptionList);
+                } else {
+                    initDesc = "";
+                }
+            } else {
+                initDesc = op.getDescription(groupList.getSelectedValue().toString() + "??" + fileList.getSelectedValue().toString() + "??", op.descriptionList);
+            }
+        } catch (NullPointerException npe) {
             if (!op.getDescription(groupList.getSelectedValue().toString() + "?_?", op.descriptionList).equals("")) {
                 initDesc = op.getDescription(groupList.getSelectedValue().toString() + "?_?", op.descriptionList);
             } else {
                 initDesc = "";
             }
-        } else {
-            initDesc = op.getDescription(groupList.getSelectedValue().toString() + "??" + fileList.getSelectedValue().toString() + "??", op.descriptionList);
         }
-        }catch (NullPointerException npe){
-            if (!op.getDescription(groupList.getSelectedValue().toString() + "?_?", op.descriptionList).equals("")) {
-                initDesc = op.getDescription(groupList.getSelectedValue().toString() + "?_?", op.descriptionList);
-            } else {
-                initDesc = "";
-            }
-        }
-        
+
         dialog = new JDialog(frame, "Add Description", true);
         ADPanel = new javax.swing.JPanel();
         AD_headingPanel = new javax.swing.JPanel();
@@ -1981,6 +2046,24 @@ public class MainUI extends javax.swing.JFrame {
         browseUpdateBinary();
     }
 
+    public void browseSplashScreen(){
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        fileChooser.removeChoosableFileFilter(fileChooser.getFileFilter());
+        FileFilter filter = new FileNameExtensionFilter(".png", "png");
+        fileChooser.addChoosableFileFilter(filter);
+        int returnVal = fileChooser.showOpenDialog(btnBrowseZipDestination);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            File file = fileChooser.getSelectedFile();
+            System.out.println("Zip File Destination Location : " + file.getAbsolutePath());
+            op.splashPath = file.getAbsolutePath();
+            //op.splashPath = op.splashPath.replaceAll("\\\\", "/");
+            System.out.println("Splash Screen Path : " + op.splashPath);
+        } else {
+            System.out.println("File access cancelled by user.");
+        }
+    }
+    
     public void browseZipDestination() {
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
@@ -2834,6 +2917,8 @@ public class MainUI extends javax.swing.JFrame {
     private javax.swing.JList fileList;
     private javax.swing.JScrollPane fileListScrollPane;
     private javax.swing.JMenu fileMenu;
+    private javax.swing.JMenuItem loadMenuItem;
+    private javax.swing.JMenuItem saveMenuItem;
     private javax.swing.JList groupList;
     private javax.swing.JScrollPane groupListScrollPane;
     private javax.swing.JPanel headingPanel;

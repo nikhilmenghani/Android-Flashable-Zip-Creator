@@ -95,8 +95,18 @@ public class CreateZipUI extends javax.swing.JFrame {
         debugScrollPaneCZ.setViewportView(debugTextAreaCZ);
 
         btnClearLogCZ.setText("Clear All");
+        btnClearLogCZ.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnClearLogCZActionPerformed(evt);
+            }
+        });
 
         btnSaveLogCZ.setText("Save Logs");
+        btnSaveLogCZ.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSaveLogCZActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout debugPanelLayout = new javax.swing.GroupLayout(debugPanel);
         debugPanel.setLayout(debugPanelLayout);
@@ -157,6 +167,14 @@ public class CreateZipUI extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnClearLogCZActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearLogCZActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnClearLogCZActionPerformed
+
+    private void btnSaveLogCZActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveLogCZActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnSaveLogCZActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -194,39 +212,12 @@ public class CreateZipUI extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel CZPanel;
-    private javax.swing.JPanel CZ_Panel;
-    private javax.swing.JPanel CZ_Panel1;
-    private javax.swing.JPanel CZ_Panel2;
-    private javax.swing.JPanel CZ_Panel3;
-    private javax.swing.JPanel CZ_Panel4;
-    private javax.swing.JPanel CZ_Panel5;
-    private javax.swing.JPanel CZ_Panel6;
-    private javax.swing.JPanel CZ_Panel7;
-    private javax.swing.JPanel CZ_Panel8;
-    private javax.swing.JPanel CZ_headingPanel;
-    private javax.swing.JPanel CZ_headingPanel1;
-    private javax.swing.JPanel CZ_headingPanel2;
-    private javax.swing.JPanel CZ_headingPanel3;
-    private javax.swing.JPanel CZ_headingPanel4;
-    private javax.swing.JPanel CZ_headingPanel5;
-    private javax.swing.JPanel CZ_headingPanel6;
-    private javax.swing.JPanel CZ_headingPanel7;
-    private javax.swing.JPanel CZ_headingPanel8;
     private javax.swing.JPanel CZ_headingPanel9;
     private javax.swing.JButton btnClearLogCZ;
     private javax.swing.JButton btnSaveLogCZ;
     private javax.swing.JPanel debugPanel;
     private javax.swing.JScrollPane debugScrollPaneCZ;
     private javax.swing.JTextArea debugTextAreaCZ;
-    private javax.swing.JLabel lblCZHeading;
-    private javax.swing.JLabel lblCZHeading1;
-    private javax.swing.JLabel lblCZHeading2;
-    private javax.swing.JLabel lblCZHeading3;
-    private javax.swing.JLabel lblCZHeading4;
-    private javax.swing.JLabel lblCZHeading5;
-    private javax.swing.JLabel lblCZHeading6;
-    private javax.swing.JLabel lblCZHeading7;
-    private javax.swing.JLabel lblCZHeading8;
     private javax.swing.JLabel lblCZHeading9;
     private javax.swing.JProgressBar progressCZ;
     private javax.swing.JPanel runPanel;
