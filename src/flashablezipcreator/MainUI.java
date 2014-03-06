@@ -362,10 +362,11 @@ public class MainUI extends javax.swing.JFrame {
             }
         });
 
-        btnAddDescription.setText("Edit File Description...");
+        btnAddDescription.setText("Modify Description...");
+        btnAddDescription.setActionCommand("Add Description");
         btnAddDescription.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                //btnAddDescriptionActionPerformed(evt);
+                btnAddDescriptionActionPerformed(evt);
             }
         });
 
@@ -1551,6 +1552,189 @@ public class MainUI extends javax.swing.JFrame {
         dialog.setVisible(true);
     }
 
+    public void addDescriptionUI() {
+
+        String initDesc = "";
+        try{
+            if (op.getDescription(groupList.getSelectedValue().toString() + "??" + fileList.getSelectedValue().toString() + "??", op.descriptionList).equals("")) {
+            if (!op.getDescription(groupList.getSelectedValue().toString() + "?_?", op.descriptionList).equals("")) {
+                initDesc = op.getDescription(groupList.getSelectedValue().toString() + "?_?", op.descriptionList);
+            } else {
+                initDesc = "";
+            }
+        } else {
+            initDesc = op.getDescription(groupList.getSelectedValue().toString() + "??" + fileList.getSelectedValue().toString() + "??", op.descriptionList);
+        }
+        }catch (NullPointerException npe){
+            if (!op.getDescription(groupList.getSelectedValue().toString() + "?_?", op.descriptionList).equals("")) {
+                initDesc = op.getDescription(groupList.getSelectedValue().toString() + "?_?", op.descriptionList);
+            } else {
+                initDesc = "";
+            }
+        }
+        
+        dialog = new JDialog(frame, "Add Description", true);
+        ADPanel = new javax.swing.JPanel();
+        AD_headingPanel = new javax.swing.JPanel();
+        lblADHeading = new javax.swing.JLabel();
+        addDescriptionScrollPane = new javax.swing.JScrollPane();
+
+        textAreaAddDescription = new javax.swing.JTextArea();
+        textAreaAddDescription.setText(initDesc);
+
+        btnDoneDescription = new javax.swing.JButton();
+        btnResetDescription = new javax.swing.JButton();
+        btnCancelDescription = new javax.swing.JButton();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        AD_headingPanel.setBackground(new java.awt.Color(0, 0, 0));
+
+        lblADHeading.setFont(new java.awt.Font("Verdana", 1, 24)); // NOI18N
+        lblADHeading.setForeground(new java.awt.Color(255, 255, 255));
+        lblADHeading.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblADHeading.setText("Add Description");
+
+        javax.swing.GroupLayout AD_headingPanelLayout = new javax.swing.GroupLayout(AD_headingPanel);
+        AD_headingPanel.setLayout(AD_headingPanelLayout);
+        AD_headingPanelLayout.setHorizontalGroup(
+                AD_headingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(AD_headingPanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(lblADHeading, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap())
+        );
+        AD_headingPanelLayout.setVerticalGroup(
+                AD_headingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(AD_headingPanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(lblADHeading, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap())
+        );
+
+        textAreaAddDescription.setColumns(20);
+        textAreaAddDescription.setRows(5);
+        addDescriptionScrollPane.setViewportView(textAreaAddDescription);
+
+        btnDoneDescription.setText("Done");
+        btnDoneDescription.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDoneDescriptionActionPerformed(evt);
+            }
+
+            private void btnDoneDescriptionActionPerformed(ActionEvent evt) {
+                String descEntry = "";
+                switch (lastSelected) {
+                    case "APKs Group":
+                    case "Ringtones Group":
+                    case "Notifications Group":
+                        System.out.println("Description Added : " + op.getDescription(groupList.getSelectedValue().toString() + "??" + fileList.getSelectedValue().toString() + "??" + textAreaAddDescription.getText()));
+                        descEntry = groupList.getSelectedValue().toString() + "??" + fileList.getSelectedValue().toString() + "??" + op.getDescription(groupList.getSelectedValue().toString() + "??" + fileList.getSelectedValue().toString() + "??", op.descriptionList);
+                        if (op.descriptionList.contains(descEntry)) {
+                            System.out.println("Removing : " + descEntry);
+                            op.descriptionList.remove(descEntry);
+                        }
+                        op.descriptionList.add(groupList.getSelectedValue().toString() + "??" + fileList.getSelectedValue().toString() + "??" + textAreaAddDescription.getText());
+                        break;
+                    case "Kernel Group":
+                    case "Boot Animation Group":
+                    case "Fonts Group":
+                        System.out.println("Description Added : " + op.getDescription(groupList.getSelectedValue().toString() + "?_?" + fileList.getSelectedValue().toString() + "?_?" + textAreaAddDescription.getText()));
+                        descEntry = groupList.getSelectedValue().toString() + "?_?" + op.getDescription(groupList.getSelectedValue().toString() + "?_?", op.descriptionList);
+                        if (op.descriptionList.contains(descEntry)) {
+                            System.out.println("Removing : " + descEntry);
+                            op.descriptionList.remove(descEntry);
+                        }
+                        op.descriptionList.add(groupList.getSelectedValue().toString() + "?_?" + textAreaAddDescription.getText());
+                        break;
+                    default:
+                        System.out.println("Something Went Wrong..!!");
+                }
+
+                dialog.dispose();
+            }
+        });
+
+        btnResetDescription.setText("Reset");
+        btnResetDescription.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnResetDescriptionActionPerformed(evt);
+            }
+
+            private void btnResetDescriptionActionPerformed(ActionEvent evt) {
+                textAreaAddDescription.setText("");
+            }
+        });
+
+        btnCancelDescription.setText("Cancel");
+        btnCancelDescription.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelDescriptionActionPerformed(evt);
+            }
+
+            private void btnCancelDescriptionActionPerformed(ActionEvent evt) {
+                dialog.dispose();
+            }
+        });
+
+        javax.swing.GroupLayout ADPanelLayout = new javax.swing.GroupLayout(ADPanel);
+        ADPanel.setLayout(ADPanelLayout);
+        ADPanelLayout.setHorizontalGroup(
+                ADPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(ADPanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(ADPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(AD_headingPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(ADPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addComponent(addDescriptionScrollPane, javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(ADPanelLayout.createSequentialGroup()
+                                                .addComponent(btnDoneDescription, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGap(18, 18, 18)
+                                                .addComponent(btnResetDescription, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGap(18, 18, 18)
+                                                .addComponent(btnCancelDescription, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        ADPanelLayout.setVerticalGroup(
+                ADPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(ADPanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(AD_headingPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(addDescriptionScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(ADPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(btnDoneDescription, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(btnCancelDescription, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(btnResetDescription, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(ADPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+        );
+        layout.setVerticalGroup(
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(ADPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+
+        pack();
+        dialog.getContentPane().add(ADPanel);
+        dialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+        dialog.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent we) {
+                //JOptionPane.showMessageDialog(null, "Thwarted user attempt to close window.");
+                dialog.dispose();
+            }
+        });
+        dialog.pack();
+        dialog.setLocationRelativeTo(this);
+        dialog.setVisible(true);
+    }
+
     private void CZwindowOpened(WindowEvent evt) {
         //op.removeEmptyGroup();
         System.out.println("Create Zip Window Opened");
@@ -1862,6 +2046,33 @@ public class MainUI extends javax.swing.JFrame {
         } else {
             setLog("Cancelled By User", textAreaImportZipLog);
         }
+    }
+
+    private void btnAddDescriptionActionPerformed(ActionEvent evt) {
+        System.out.println("Add Descrition Button Clicked..");
+        switch (lastSelected) {
+            case "APKs Group":
+            case "Ringtones Group":
+            case "Notifications Group":
+                if (!this.fileList.isSelectionEmpty()) {
+                    addDescriptionUI();
+                } else {
+                    JOptionPane.showMessageDialog(null, "Select File First..!!");
+                }
+                break;
+            case "Kernel Group":
+            case "Boot Animation Group":
+            case "Fonts Group":
+                if (!this.groupList.isSelectionEmpty()) {
+                    addDescriptionUI();
+                } else {
+                    JOptionPane.showMessageDialog(null, "Select Group First..!!");
+                }
+                break;
+            default:
+                System.out.println("Something Went Wrong..!!");
+        }
+
     }
 
     public boolean setExistingZipPath() {
@@ -2584,6 +2795,15 @@ public class MainUI extends javax.swing.JFrame {
     private javax.swing.JScrollPane runScrollPaneCZ;
     public javax.swing.JTextArea runTextAreaCZ;
     private javax.swing.JTabbedPane tabbedPaneCZ;
+
+    private javax.swing.JPanel ADPanel;
+    private javax.swing.JPanel AD_headingPanel;
+    private javax.swing.JScrollPane addDescriptionScrollPane;
+    private javax.swing.JButton btnDoneDescription;
+    private javax.swing.JButton btnCancelDescription;
+    private javax.swing.JButton btnResetDescription;
+    private javax.swing.JLabel lblADHeading;
+    private javax.swing.JTextArea textAreaAddDescription;
 
     private javax.swing.JMenuItem aboutMenuItem;
     private javax.swing.JButton btnAddDescription;

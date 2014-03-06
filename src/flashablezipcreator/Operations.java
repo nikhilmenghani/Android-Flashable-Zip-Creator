@@ -6,7 +6,6 @@
 package flashablezipcreator;
 
 import java.awt.Component;
-import java.awt.event.ActionEvent;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -47,7 +46,9 @@ public class Operations {
     String jarFileName = "";
     String existingZipPath = "";
     String deleteApkConfigList = "";
+    String descriptionConfigList = "";
     String appConfigPath = "customize/DeleteSystemApps/app-config";
+    String descConfigPath = "customize/File Description/desc-config";
     String kernelMountPoint = "";
 
     double progress = 0.0;
@@ -65,6 +66,7 @@ public class Operations {
     ArrayList<String> deleteApkList = new ArrayList<>();
     ArrayList<String> arrayList = new ArrayList<>();
     ArrayList<String> jarFileList = new ArrayList<>();
+    ArrayList<String> descriptionList = new ArrayList<>();
 
     Map<String, String> CSDmap;
 
@@ -94,12 +96,44 @@ public class Operations {
         return count;
     }
 
+    public String getDescription(String desc, ArrayList<String> descArray) {
+        for (String str : descArray) {
+            if (str.contains(desc)) {
+                return getDescription(str);
+            }
+        }
+        return "";
+    }
+
+    public String getDescription(String desc) {
+        String str = "";
+        try {
+            if (desc.contains("?_?")) {
+                String temp[] = desc.split("\\?_\\?");
+                str = temp[temp.length - 1];
+            } else if (desc.contains("??")) {
+                String temp[] = desc.split("\\?\\?");
+                str = temp[temp.length - 1];
+            }
+            System.out.println("Splitted from " + desc + " to " + str);
+            if (desc.endsWith("??")) {
+                return "";
+            }else if(desc.endsWith("?_?")){
+                return "";
+            }else {
+                return str;
+            }
+        } catch (ArrayIndexOutOfBoundsException ex) {
+            return "";
+        }
+    }
+
     public String getListName(String groupName) {
         if (this.systemList.contains(groupName)) {
             return "APKs-System";
         } else if (this.dataList.contains(groupName)) {
             return "APKs-Data";
-        } else if(this.privAppList.contains(groupName)){
+        } else if (this.privAppList.contains(groupName)) {
             return "APKs-PrivApp";
         } else if (this.bootAnimList.contains(groupName)) {
             return "BootAnimations";
@@ -172,7 +206,7 @@ public class Operations {
         return arrayList;
     }
 
-    public void displayListInAroma(String listType, String listGroup, String heading, String themeFormat, String propFile, ArrayList<String> arrayList) {
+    public void displayListInAroma(String listType, String listGroup, String heading, String themeFormat, String propFile, ArrayList<String> arrayList, ArrayList<String> descArrayList) {
         if (listType.equals("checkbox") && !arrayList.isEmpty()) {
             if (arrayList.equals(deleteApkList)) {
                 System.out.println("ArrayList is Delete Apk List");
@@ -188,7 +222,8 @@ public class Operations {
                     if (map.containsKey(list)) {
                         this.aroma_config += ",\n\"" + list.substring(list.lastIndexOf("_") + 1, list.length()) + "\", \"\", 2";
                         for (String list_files : this.returnPathArray(list, map)) {
-                            this.aroma_config += ",\n\"" + this.removeExtension(getNameFromPath(list_files)) + "\", \"\", 0";
+                            String desc = list.substring(list.lastIndexOf("_") + 1, list.length()) + "??" + getNameFromPath(list_files) + "??";
+                            this.aroma_config += ",\n\"" + this.removeExtension(getNameFromPath(list_files)) + "\", \"" + getDescription(desc, descArrayList) + "\", 0";
                         }
                     }
                 }
@@ -208,7 +243,8 @@ public class Operations {
                     break;
             }
             for (String list : arrayList) {
-                this.aroma_config += ",\n\"" + list.substring(list.lastIndexOf("_") + 1, list.length()) + "\", \"\", 0";
+                String desc = list.substring(list.lastIndexOf("_") + 1, list.length()) + "?_?";
+                this.aroma_config += ",\n\"" + list.substring(list.lastIndexOf("_") + 1, list.length()) + "\", \"" + getDescription(desc, descArrayList) + "\", 0";
             }
             this.aroma_config += ");\n";
         }
@@ -220,9 +256,11 @@ public class Operations {
         this.aroma_config += "selectbox(\"Themes\",\"Choose your desired theme from following\",\"@personalize\",\"theme.prop\",\n";
         for (String theme : themes) {
             this.aroma_config += "\"" + theme + " Theme\", \"\", " + i + ",\n";
-            if (i == 1) i--;
+            if (i == 1) {
+                i--;
+            }
         }
-        this.aroma_config = this.aroma_config.substring(0, this.aroma_config.length()-2) + "\n";
+        this.aroma_config = this.aroma_config.substring(0, this.aroma_config.length() - 2) + "\n";
         this.aroma_config += ");\n\n";
         i = 1;
         for (String theme : themes) {
@@ -240,23 +278,23 @@ public class Operations {
 
         this.aroma_config += "agreebox(\"Important notes!\", \"Terms & Conditions\", \"@alert\",resread(\"Terms and Conditions.txt\"), \"I agree with these Terms of Use...\", \"You need to agree with the Terms of Use...\");\n";
 
-        displayListInAroma("checkbox", "App List", "Choose the apps to be installed to data", "personalize", "app_choices.prop", this.dataList);
+        displayListInAroma("checkbox", "App List", "Choose the apps to be installed to data", "personalize", "app_choices.prop", this.dataList, this.descriptionList);
 
-        displayListInAroma("checkbox", "System App List", "Choose the apps to be installed to system", "personalize", "system_app_choices.prop", this.systemList);
-        
-        displayListInAroma("checkbox", "Priv App List", "Choose the apps to be installed to priv app", "personalize", "priv_app_choices.prop", this.privAppList);
+        displayListInAroma("checkbox", "System App List", "Choose the apps to be installed to system", "personalize", "system_app_choices.prop", this.systemList, this.descriptionList);
 
-        displayListInAroma("selectbox", "Boot Animations List", "Select Boot Animation to be used in current ROM", "personalize", "boot_anim_choices.prop", this.bootAnimList);
+        displayListInAroma("checkbox", "Priv App List", "Choose the apps to be installed to priv app", "personalize", "priv_app_choices.prop", this.privAppList, this.descriptionList);
 
-        displayListInAroma("selectbox", "Kernel List", "Select Kernel to be flashed", "personalize", "kernel_choices.prop", this.kernelList);
+        displayListInAroma("selectbox", "Boot Animations List", "Select Boot Animation to be used in current ROM", "personalize", "boot_anim_choices.prop", this.bootAnimList, this.descriptionList);
 
-        displayListInAroma("selectbox", "Fonts List", "Select Fonts to be flashed", "personalize", "fonts_choices.prop", this.fontsList);
+        displayListInAroma("selectbox", "Kernel List", "Select Kernel to be flashed", "personalize", "kernel_choices.prop", this.kernelList, this.descriptionList);
 
-        displayListInAroma("checkbox", "Ringtone List", "Choose Ringtones to include in Rom", "personalize", "ringtone_choices.prop", this.ringtoneList);
+        displayListInAroma("selectbox", "Fonts List", "Select Fonts to be flashed", "personalize", "fonts_choices.prop", this.fontsList, this.descriptionList);
 
-        displayListInAroma("checkbox", "Notification List", "Choose Notification Tones to include in Rom", "personalize", "notification_choices.prop", this.notifList);
+        displayListInAroma("checkbox", "Ringtone List", "Choose Ringtones to include in Rom", "personalize", "ringtone_choices.prop", this.ringtoneList, this.descriptionList);
 
-        displayListInAroma("checkbox", "Remove System Apps List", "Choose Apps To Remove", "personalize", "delete_choices.prop", this.deleteApkList);
+        displayListInAroma("checkbox", "Notification List", "Choose Notification Tones to include in Rom", "personalize", "notification_choices.prop", this.notifList, this.descriptionList);
+
+        displayListInAroma("checkbox", "Remove System Apps List", "Choose Apps To Remove", "personalize", "delete_choices.prop", this.deleteApkList, this.descriptionList);
 
         if (!dataList.isEmpty()) {
             this.aroma_config += "writetmpfile(\"app_choices.prop\",readtmpfile(\"app_choices.prop\"));\n";
@@ -269,7 +307,7 @@ public class Operations {
         if (!privAppList.isEmpty()) {
             this.aroma_config += "writetmpfile(\"priv_app_choices.prop\",readtmpfile(\"priv_app_choices.prop\"));\n";
         }
-        
+
         if (!bootAnimList.isEmpty()) {
             this.aroma_config += "writetmpfile(\"boot_anim_choices.prop\",readtmpfile(\"boot_anim_choices.prop\"));\n";
         }
@@ -349,7 +387,7 @@ public class Operations {
                                     default:
                                         this.updater_script += "if (file_getprop(\"/tmp/aroma/" + propFile + "\", \"item." + s + "." + i + "\")==\"1\") then ui_print(\"Installing " + this.removeExtension(getNameFromPath(system_list_files)) + "\");\n";
                                         //this.updater_script += "package_extract_dir(\"customize/" + getListName(list) + "/" + list + "\", \"" + location + "\");\n";
-                                        this.updater_script += "package_extract_file(\"customize/" + getListName(list) + "/" + list + "/" + getNameFromPath(system_list_files) + "\", \"" + location + "\");\n";
+                                        this.updater_script += "package_extract_file(\"customize/" + getListName(list) + "/" + list + "/" + getNameFromPath(system_list_files) + "\", \"" + location + "/" + getNameFromPath(system_list_files) + "\");\n";
                                         this.updater_script += "endif;\n";
                                         break;
                                 }
@@ -365,7 +403,7 @@ public class Operations {
                                             this.updater_script += "package_extract_file(\"customize/" + getListName(list) + "/" + list + "/" + getNameFromPath(system_list_files) + "\", \"" + location + "\");\n";
                                             break;
                                         case "fonts_choices.prop":
-                                            if(i == 1){
+                                            if (i == 1) {
                                                 this.updater_script += "package_extract_dir(\"customize/" + getListName(list) + "/" + list + "\", \"" + location + "\");\n";
                                             }
                                             break;
@@ -426,7 +464,7 @@ public class Operations {
         if (!systemList.isEmpty()) {
             this.updater_script += "set_perm_recursive(1000, 1000, 0775, 0644, \"/system/app\");\n";
         }
-        
+
         if (!privAppList.isEmpty()) {
             this.updater_script += "set_perm_recursive(1000, 1000, 0775, 0644, \"/system/priv-app\");\n";
         }

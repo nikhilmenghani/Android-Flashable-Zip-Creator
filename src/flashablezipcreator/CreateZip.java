@@ -130,6 +130,13 @@ public class CreateZip extends SwingWorker<Void,Void>{
         }
     }
     
+    public void createDescriptionConfigList(){
+        for(String temp : op.descriptionList){
+            op.descriptionConfigList = op.descriptionConfigList + temp + "\n";
+            System.out.println(op.descriptionConfigList);
+        }
+    }
+    
     public String getJarFileName(){
         String path[] = this.getClass().getResource("META-INF/com/google/android/Supported Devices").getPath().split("!");
         String fileName = path[0].substring(path[0].lastIndexOf("/") + 1, path[0].length());
@@ -197,6 +204,16 @@ public class CreateZip extends SwingWorker<Void,Void>{
                 ai.setLog("Imported System Files To Delete...", ai.runTextAreaCZ);
             }else{
                 System.out.println("Delete List Empty..!!");
+            }
+            if(!op.descriptionList.isEmpty()){
+                System.out.println("Creating Description List..!!");
+                this.createDescriptionConfigList();
+                in = new ByteArrayInputStream(op.descriptionConfigList.getBytes());
+                this.writeFileToZip(in, zos, "customize/File Description/desc-config");
+                in.close();
+                ai.setLog("Imported Description of files...", ai.runTextAreaCZ);
+            }else{
+                System.out.println("Description List Empty..!!");
             }
             ai.setLog("Writing Zip at specified destination...", ai.runTextAreaCZ);
             progress += 20;
