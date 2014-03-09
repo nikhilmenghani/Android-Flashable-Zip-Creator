@@ -7,11 +7,15 @@ package flashablezipcreator;
 
 import java.awt.Component;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -19,6 +23,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.zip.ZipInputStream;
 import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
 import javax.swing.JList;
@@ -51,6 +56,8 @@ public class Operations {
     String descConfigPath = "customize/File Description/desc-config";
     String splashPath = "";
     String kernelMountPoint = "";
+    String projectPath = "";
+    String projectData = "";
 
     double progress = 0.0;
 
@@ -75,6 +82,189 @@ public class Operations {
 
     Operations() {
 
+    }
+
+    public void saveProject() {
+        if (!groupArrayList.isEmpty()) {
+            projectData += "groupArrayList(=)" + groupArrayList + "\n";
+        }
+        if (!systemList.isEmpty()) {
+            projectData += "systemList(=)" + systemList + "\n";
+        }
+        if (!dataList.isEmpty()) {
+            projectData += "dataList(=)" + dataList + "\n";
+        }
+        if (!privAppList.isEmpty()) {
+            projectData += "privAppList(=)" + privAppList + "\n";
+        }
+        if (!bootAnimList.isEmpty()) {
+            projectData += "bootAnimList(=)" + bootAnimList + "\n";
+        }
+        if (!ringtoneList.isEmpty()) {
+            projectData += "ringtoneList(=)" + ringtoneList + "\n";
+        }
+        if (!notifList.isEmpty()) {
+            projectData += "notifList(=)" + notifList + "\n";
+        }
+        if (!kernelList.isEmpty()) {
+            projectData += "kernelList(=)" + kernelList + "\n";
+        }
+        if (!fontsList.isEmpty()) {
+            projectData += "fontsList(=)" + fontsList + "\n";
+        }
+        if (!deleteApkList.isEmpty()) {
+            projectData += "deleteApkList(=)" + deleteApkList + "\n";
+        }
+        if (!descriptionList.isEmpty()) {
+            projectData += "descriptionList(=)" + descriptionList;
+        }
+        if(!map.isEmpty()){
+            projectData += "(?)" + map;
+        }
+        
+    }
+
+    public void loadProject(String path) throws FileNotFoundException {
+        String data = getStringFromFile(path);
+        if (data.contains("?")) {
+            String tempStringArray[] = data.split("\\(\\?\\)");
+            for (int k = 0; k < tempStringArray.length; k++) {
+                switch (k) {
+                    case 0:
+                        loadArrayLists(tempStringArray[k]);
+                        break;
+                    case 1:
+                        loadMAP(tempStringArray[k]);
+                        break;
+                    default:
+                        System.out.println("Something Went Wrong..!!");
+                }
+            }
+            JOptionPane.showMessageDialog(null, "Loading of Project completed..!!");
+        }else{
+            JOptionPane.showMessageDialog(null, "Project Empty..!!");
+        }
+    }
+
+    public void loadArrayLists(String arrayListString) {
+        String arrayLists[] = arrayListString.split("\n");
+        try {
+            for (int i = 0; i < arrayLists.length; i++) {
+                if (arrayLists[i].contains("=")) {
+                    String group[] = arrayLists[i].split("\\(\\=\\)");
+                    group[1] = group[1].substring(1, group[1].length() - 1);
+                    System.out.println("Temp is : " + group[1]);
+                    for (String str : group[1].split(", ")) {
+                        switch (group[0]) {
+                            case "groupArrayList":
+                                groupArrayList.add(str);
+                                break;
+                            case "systemList":
+                                systemList.add(str);
+                                break;
+                            case "dataList":
+                                dataList.add(str);
+                                break;
+                            case "privAppList":
+                                privAppList.add(str);
+                                break;
+                            case "bootAnimList":
+                                bootAnimList.add(str);
+                                break;
+                            case "ringtoneList":
+                                ringtoneList.add(str);
+                                break;
+                            case "notifList":
+                                notifList.add(str);
+                                break;
+                            case "kernelList":
+                                kernelList.add(str);
+                                break;
+                            case "fontsList":
+                                fontsList.add(str);
+                                break;
+                            case "deleteApkList":
+                                deleteApkList.add(str);
+                                break;
+                            case "descriptionList":
+                                descriptionList.add(str);
+                                break;
+                            default:
+                                System.out.println("Something Went Wrong..!!");
+                        }
+                    }
+                }
+            }
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.out.println("ArrayIndexOutOfBoundException caught..!!");
+            e.printStackTrace();
+        }
+
+    }
+
+    public void loadMAP(String mapString) {
+        mapString = mapString.substring(1, mapString.length() - 1);
+        String groupsWithPaths[] = mapString.split("\\], ");
+        for (int i = 0; i < groupsWithPaths.length; i++) {
+            if (groupsWithPaths[i].contains("=")) {
+                String groups[] = groupsWithPaths[i].split("\\=");
+                groups[1] = groups[1].replace("[", "").replace("]", "");
+                String filePaths[] = groups[1].split(", ");
+                for (int j = 0; j < filePaths.length; j++) {
+                    map.put(groups[0], filePaths[j]);
+                }
+            }
+        }
+    }
+
+    public String getStringFromFile(String filePath) throws FileNotFoundException {
+        String str = "";
+        BufferedReader br = new BufferedReader(new FileReader(filePath));
+        try {
+            while (br.ready()) {
+                str += (char) br.read();
+            }
+        } catch (IOException ioe) {
+            System.out.println("Exception Caught while reading file..!!");
+        }
+        return str;
+    }
+
+    public ArrayList<String> getArrayListFromFileInZip(ZipInputStream zis) throws UnsupportedEncodingException {
+        ArrayList<String> list = new ArrayList<>();
+        String str = "";
+        BufferedReader br = new BufferedReader(new InputStreamReader(zis, "UTF-8"));
+        try {
+            while (br.ready()) {
+                str += (char) br.read();
+            }
+            System.out.println("String is " + str);
+        } catch (IOException e) {
+        }
+        String array[] = str.split("\n");
+        for (String file : array) {
+            list.add(file);
+        }
+        System.out.println("ArrayList obtained is : " + list);
+        return list;
+    }
+
+    public void writeStringToFile(String strToWrite, String filePath) {
+        BufferedWriter writer = null;
+        try {
+            writer = new BufferedWriter(new FileWriter(filePath));
+            writer.write(strToWrite);
+
+        } catch (IOException e) {
+            System.out.println("Exception Caught..!!");
+        } finally {
+            try {
+                if (writer != null) {
+                    writer.close();
+                }
+            } catch (IOException e) {
+            }
+        }
     }
 
     public void generateDeviceList() throws URISyntaxException, IOException {
@@ -282,7 +472,7 @@ public class Operations {
         }
         this.aroma_config += "\", 1200\n"
                 + ");\n";
-        
+
         this.aroma_config += "fontresload(\"0\", \"ttf/Roboto-Regular.ttf;ttf/DroidSansFallback.ttf;\", \"12\");\n"
                 + "fontresload(\"1\", \"ttf/Roboto-Regular.ttf;ttf/DroidSansFallback.ttf;\", \"14\");\n";
 

@@ -11,6 +11,7 @@ import java.awt.event.WindowEvent;
 import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -602,11 +603,33 @@ public class MainUI extends javax.swing.JFrame {
         loadMenuItem.setText("Load Project");
         loadMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                loadMenuItemActionPerformed(evt);
+                try {
+                    loadMenuItemActionPerformed(evt);
+                } catch (FileNotFoundException ex) {
+                    Logger.getLogger(MainUI.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
 
-            private void loadMenuItemActionPerformed(ActionEvent evt) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            private void loadMenuItemActionPerformed(ActionEvent evt) throws FileNotFoundException {
+                JFileChooser fileChooser = new JFileChooser();
+                fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+                fileChooser.removeChoosableFileFilter(fileChooser.getFileFilter());
+                FileFilter filter = new FileNameExtensionFilter(".proj", "proj");
+                fileChooser.addChoosableFileFilter(filter);
+                int returnVal = fileChooser.showOpenDialog(loadMenuItem);
+                if (returnVal == JFileChooser.APPROVE_OPTION) {
+                    File file = fileChooser.getSelectedFile();
+                    op.projectPath = file.getAbsolutePath();
+                    System.out.println("File Path Is : " + op.projectPath);
+                    resetAll();
+                    op.loadProject(op.projectPath);
+                    //JOptionPane.showMessageDialog(null, "Project Loaded..!!");
+                    removeHighlight(lastSelected);
+                    btnApkGroup.setContentAreaFilled(true);
+                    refreshGroupList(lastSelected);
+                } else {
+                    System.out.println("File access cancelled by user.");
+                }
             }
         });
         fileMenu.add(loadMenuItem);
@@ -618,11 +641,25 @@ public class MainUI extends javax.swing.JFrame {
             }
 
             private void saveMenuItemActionPerformed(ActionEvent evt) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                JFileChooser fileChooser = new JFileChooser();
+                fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+                fileChooser.removeChoosableFileFilter(fileChooser.getFileFilter());
+                FileFilter fileFilter = new FileNameExtensionFilter(".proj", "proj");
+                fileChooser.addChoosableFileFilter(fileFilter);
+                int returnVal = fileChooser.showSaveDialog(saveMenuItem);
+                if (returnVal == JFileChooser.APPROVE_OPTION) {
+                    File file = fileChooser.getSelectedFile();
+                    op.projectPath = file.getAbsolutePath();
+                    op.saveProject();
+                    op.writeStringToFile(op.projectData, op.projectPath);
+                    JOptionPane.showMessageDialog(null, "Project Saved..!!");
+                } else {
+                    System.out.println("File access cancelled by user.");
+                }
             }
         });
         fileMenu.add(saveMenuItem);
-        
+
         exitMenuItem.setMnemonic('x');
         exitMenuItem.setText("Exit");
         exitMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -1517,20 +1554,7 @@ public class MainUI extends javax.swing.JFrame {
             }
 
             private void btnSaveLogCZActionPerformed(ActionEvent evt) {
-                BufferedWriter writer = null;
-                try {
-                    writer = new BufferedWriter(new FileWriter("log.config"));
-                    writer.write(debugTextAreaCZ.getText().toString());
-
-                } catch (IOException e) {
-                } finally {
-                    try {
-                        if (writer != null) {
-                            writer.close();
-                        }
-                    } catch (IOException e) {
-                    }
-                }
+                op.writeStringToFile(debugTextAreaCZ.getText().toString(), "log.config");
             }
         });
 
@@ -2046,7 +2070,7 @@ public class MainUI extends javax.swing.JFrame {
         browseUpdateBinary();
     }
 
-    public void browseSplashScreen(){
+    public void browseSplashScreen() {
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         fileChooser.removeChoosableFileFilter(fileChooser.getFileFilter());
@@ -2063,7 +2087,7 @@ public class MainUI extends javax.swing.JFrame {
             System.out.println("File access cancelled by user.");
         }
     }
-    
+
     public void browseZipDestination() {
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
@@ -2483,7 +2507,7 @@ public class MainUI extends javax.swing.JFrame {
     }
 
     public void updateGroupList(String lastSelected) {
-        JOptionPane.showMessageDialog(null, this.buttonGroup.getSelection().getActionCommand());
+        //JOptionPane.showMessageDialog(null, this.buttonGroup.getSelection().getActionCommand());
         if (op.groupArrayList.toString().toLowerCase().contains(this.groupName.getText().toLowerCase())) {
             JOptionPane.showMessageDialog(null, "Group Name Already Exists..!!");
         } else if (!this.groupName.getText().equals("") && !this.groupName.getText().contains("_")) {
