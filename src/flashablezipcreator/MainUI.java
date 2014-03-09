@@ -122,7 +122,7 @@ public class MainUI extends javax.swing.JFrame {
         btnLoadAromaFlashableZip = new javax.swing.JButton();
         btnResetAll = new javax.swing.JButton();
         btnAdvancedGroup = new javax.swing.JButton();
-        btnSaveProject = new javax.swing.JButton();
+        btnAddThemes = new javax.swing.JButton();
         btnAddSplash = new javax.swing.JButton();
         btnPreferences = new javax.swing.JButton();
         btnCreateNormalZip = new javax.swing.JButton();
@@ -453,10 +453,26 @@ public class MainUI extends javax.swing.JFrame {
             }
         });
 
-        btnSaveProject.setText("Save Project");
-        btnSaveProject.addActionListener(new java.awt.event.ActionListener() {
+        btnAddThemes.setText("Add Themes");
+        btnAddThemes.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                //btnSaveProjectActionPerformed(evt);
+                btnAddThemesActionPerformed(evt);
+            }
+
+            private void btnAddThemesActionPerformed(ActionEvent evt) {
+                JFileChooser fileChooser = new JFileChooser();
+                fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+                fileChooser.removeChoosableFileFilter(fileChooser.getFileFilter());
+                int returnVal = fileChooser.showOpenDialog(btnAddThemes);
+                if (returnVal == JFileChooser.APPROVE_OPTION) {
+                    File file = fileChooser.getSelectedFile();
+                    op.themesPath = file.getAbsolutePath();
+                    System.out.println("File Path Is : " + op.themesPath);
+                    
+                    
+                } else {
+                    System.out.println("File access cancelled by user.");
+                }
             }
         });
 
@@ -485,7 +501,7 @@ public class MainUI extends javax.swing.JFrame {
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, sideButtonPanelLayout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(sideButtonPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(btnSaveProject, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnAddThemes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(btnLoadAromaFlashableZip, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(btnAdvancedGroup, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(btnResetAll, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -499,7 +515,7 @@ public class MainUI extends javax.swing.JFrame {
                         .addContainerGap()
                         .addComponent(btnLoadAromaFlashableZip, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(btnSaveProject, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnAddThemes, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(btnAdvancedGroup, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
@@ -2934,7 +2950,7 @@ public class MainUI extends javax.swing.JFrame {
     private javax.swing.JButton btnRemoveGroup;
     private javax.swing.JButton btnResetAll;
     private javax.swing.JButton btnRingtonesGroup;
-    private javax.swing.JButton btnSaveProject;
+    private javax.swing.JButton btnAddThemes;
     private javax.swing.JButton btnSelectDevice;
     private javax.swing.JPanel contentPanel;
     private javax.swing.JMenuItem exitMenuItem;

@@ -660,7 +660,7 @@
                   <Group type="102" alignment="1" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="1" attributes="0">
-                          <Component id="btnSaveProject" alignment="1" max="32767" attributes="0"/>
+                          <Component id="btnAddThemes" alignment="1" max="32767" attributes="0"/>
                           <Component id="btnLoadAromaFlashableZip" alignment="0" max="32767" attributes="0"/>
                           <Component id="btnAdvancedGroup" alignment="0" max="32767" attributes="0"/>
                           <Component id="btnResetAll" alignment="0" max="32767" attributes="0"/>
@@ -677,7 +677,7 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="btnLoadAromaFlashableZip" min="-2" pref="40" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Component id="btnSaveProject" min="-2" pref="40" max="-2" attributes="0"/>
+                      <Component id="btnAddThemes" min="-2" pref="40" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Component id="btnAdvancedGroup" min="-2" pref="40" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
@@ -719,12 +719,12 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnAdvancedGroupActionPerformed"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JButton" name="btnSaveProject">
+            <Component class="javax.swing.JButton" name="btnAddThemes">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Save Project"/>
+                <Property name="text" type="java.lang.String" value="Add Themes"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnSaveProjectActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnAddThemesActionPerformed"/>
               </Events>
             </Component>
             <Component class="javax.swing.JButton" name="btnAddSplash">

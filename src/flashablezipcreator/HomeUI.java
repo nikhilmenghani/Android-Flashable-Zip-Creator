@@ -63,7 +63,7 @@ public class HomeUI extends javax.swing.JFrame {
         btnLoadAromaFlashableZip = new javax.swing.JButton();
         btnResetAll = new javax.swing.JButton();
         btnAdvancedGroup = new javax.swing.JButton();
-        btnSaveProject = new javax.swing.JButton();
+        btnAddThemes = new javax.swing.JButton();
         btnAddSplash = new javax.swing.JButton();
         btnPreferences = new javax.swing.JButton();
         btnCreateNormalZip = new javax.swing.JButton();
@@ -394,10 +394,10 @@ public class HomeUI extends javax.swing.JFrame {
             }
         });
 
-        btnSaveProject.setText("Save Project");
-        btnSaveProject.addActionListener(new java.awt.event.ActionListener() {
+        btnAddThemes.setText("Add Themes");
+        btnAddThemes.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSaveProjectActionPerformed(evt);
+                btnAddThemesActionPerformed(evt);
             }
         });
 
@@ -422,7 +422,7 @@ public class HomeUI extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, sideButtonPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(sideButtonPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(btnSaveProject, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnAddThemes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnLoadAromaFlashableZip, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnAdvancedGroup, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnResetAll, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -436,7 +436,7 @@ public class HomeUI extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(btnLoadAromaFlashableZip, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(btnSaveProject, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnAddThemes, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(btnAdvancedGroup, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
@@ -664,9 +664,9 @@ public class HomeUI extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_btnAdvancedGroupActionPerformed
 
-    private void btnSaveProjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveProjectActionPerformed
+    private void btnAddThemesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddThemesActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_btnSaveProjectActionPerformed
+    }//GEN-LAST:event_btnAddThemesActionPerformed
 
     private void btnAddSplashActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddSplashActionPerformed
         // TODO add your handling code here:
@@ -741,6 +741,7 @@ public class HomeUI extends javax.swing.JFrame {
     private javax.swing.JButton btnAddFile;
     private javax.swing.JButton btnAddGroup;
     private javax.swing.JButton btnAddSplash;
+    private javax.swing.JButton btnAddThemes;
     private javax.swing.JButton btnAdvancedGroup;
     private javax.swing.JButton btnApkGroup;
     private javax.swing.JButton btnBootAnimGroup;
@@ -758,7 +759,6 @@ public class HomeUI extends javax.swing.JFrame {
     private javax.swing.JButton btnRemoveGroup;
     private javax.swing.JButton btnResetAll;
     private javax.swing.JButton btnRingtonesGroup;
-    private javax.swing.JButton btnSaveProject;
     private javax.swing.JButton btnSelectDevice;
     private javax.swing.JPanel contentPanel;
     private javax.swing.JMenuItem exitMenuItem;

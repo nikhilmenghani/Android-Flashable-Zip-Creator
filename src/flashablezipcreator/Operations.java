@@ -54,6 +54,7 @@ public class Operations {
     String descriptionConfigList = "";
     String appConfigPath = "customize/DeleteSystemApps/app-config";
     String descConfigPath = "customize/File Description/desc-config";
+    String themesPath = "";
     String splashPath = "";
     String kernelMountPoint = "";
     String projectPath = "";
@@ -444,6 +445,9 @@ public class Operations {
     public void configAromaThemes() {
         int i = 1;
         ArrayList<String> themes = getThemesList("src/flashablezipcreator/META-INF/com/google/android/aroma/themes");
+        if(!themesPath.equals("")){
+            themes.add(new File(themesPath).getName());
+        }
         this.aroma_config += "selectbox(\"Themes\",\"Choose your desired theme from following\",\"@personalize\",\"theme.prop\",\n";
         for (String theme : themes) {
             this.aroma_config += "\"" + theme + " Theme\", \"\", " + i + ",\n";
@@ -814,6 +818,17 @@ public class Operations {
         }
     }
 
+    public ArrayList<String> getThemeFilesList(String path){
+        File f = new File(path);
+        ArrayList <String> themesList = new ArrayList<>();
+        if(f.isDirectory()){
+            for(String temp : f.list()){
+                themesList.add(path + File.separator + temp);
+            }
+        }
+        return themesList;
+    }
+    
     //This function is used to prepare an array list which contains path of default aroma files that are required to be added in zip file.
     public void addFilePathInArrayList(String path, ArrayList<String> tempArray) {
         File file = new File(path);
