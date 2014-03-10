@@ -77,6 +77,7 @@ public class Operations {
     ArrayList<String> arrayList = new ArrayList<>();
     ArrayList<String> jarFileList = new ArrayList<>();
     ArrayList<String> descriptionList = new ArrayList<>();
+    ArrayList<String> themesList = new ArrayList<>();
 
     Map<String, String> CSDmap;
 
@@ -120,10 +121,15 @@ public class Operations {
         if (!descriptionList.isEmpty()) {
             projectData += "descriptionList(=)" + descriptionList;
         }
-        if(!map.isEmpty()){
+        if (!map.isEmpty()) {
             projectData += "(?)" + map;
         }
-        
+        if (!themesPath.equals("")) {
+            projectData += "(?)" + "themesPath" + ", " + themesPath + "\n";
+        }
+        if (!splashPath.equals("")) {
+            projectData += "splashPath" + ", " + splashPath;
+        }
     }
 
     public void loadProject(String path) throws FileNotFoundException {
@@ -138,12 +144,14 @@ public class Operations {
                     case 1:
                         loadMAP(tempStringArray[k]);
                         break;
+                    case 2:
+                        loadStrings(tempStringArray[k]);
                     default:
                         System.out.println("Something Went Wrong..!!");
                 }
             }
             JOptionPane.showMessageDialog(null, "Loading of Project completed..!!");
-        }else{
+        } else {
             JOptionPane.showMessageDialog(null, "Project Empty..!!");
         }
     }
@@ -215,6 +223,23 @@ public class Operations {
                 for (int j = 0; j < filePaths.length; j++) {
                     map.put(groups[0], filePaths[j]);
                 }
+            }
+        }
+    }
+
+    public void loadStrings(String strng) {
+        String path[] = strng.split("\n");
+        for (int i = 0; i < path.length; i++) {
+            String variable[] = path[i].split(", ");
+            switch (variable[0]) {
+                case "themesPath":
+                    themesPath = variable[1];
+                    break;
+                case "splashPath":
+                    splashPath = variable[1];
+                    break;
+                default:
+                    System.out.println("Something Went Wrong..!!");
             }
         }
     }
@@ -444,10 +469,19 @@ public class Operations {
         }
     }
 
+    public boolean isExecutingJarFile() {
+        return this.getClass().getResource("META-INF/com/google/android/Supported Devices").getPath().contains("!");
+    }
+
     public void configAromaThemes() {
         int i = 1;
-        ArrayList<String> themes = getThemesList("src/flashablezipcreator/META-INF/com/google/android/aroma/themes");
-        if(!themesPath.equals("")){
+        ArrayList<String> themes = new ArrayList<>();
+        if (isExecutingJarFile()) {
+            themes = themesList;
+        } else {
+            themes = getThemesList("src/flashablezipcreator/META-INF/com/google/android/aroma/themes");
+        }
+        if (!themesPath.equals("")) {
             themes.add(new File(themesPath).getName());
         }
         this.aroma_config += "selectbox(\"Themes\",\"Choose your desired theme from following\",\"@personalize\",\"theme.prop\",\n";
@@ -575,18 +609,18 @@ public class Operations {
                             case "Create Flashable Zip With Aroma Installer":
                                 switch (propFile) {
                                     case "kernel_choices.prop":
-                                        this.updater_script += "if (file_getprop(\"/tmp/aroma/" + propFile + "\", \"selected.1" + "\")==\"" + (s+1) + "\") then ui_print(\"Flashing " + list.substring(list.lastIndexOf("_") + 1, list.length()) + "\");\n";
+                                        this.updater_script += "if (file_getprop(\"/tmp/aroma/" + propFile + "\", \"selected.1" + "\")==\"" + (s + 1) + "\") then ui_print(\"Flashing " + list.substring(list.lastIndexOf("_") + 1, list.length()) + "\");\n";
                                         this.updater_script += "assert(package_extract_file(\"customize/" + getListName(list) + "/" + list + "/" + getNameFromPath(system_list_files) + "\", \"" + location + "\"));\n";
                                         this.updater_script += "endif;\n";
                                         break;
                                     case "boot_anim_choices.prop":
-                                        this.updater_script += "if (file_getprop(\"/tmp/aroma/" + propFile + "\", \"selected.1" + "\")==\"" + (s+1) + "\") then ui_print(\"Installing " + list.substring(list.lastIndexOf("_") + 1, list.length()) + "\");\n";
+                                        this.updater_script += "if (file_getprop(\"/tmp/aroma/" + propFile + "\", \"selected.1" + "\")==\"" + (s + 1) + "\") then ui_print(\"Installing " + list.substring(list.lastIndexOf("_") + 1, list.length()) + "\");\n";
                                         this.updater_script += "package_extract_file(\"customize/" + getListName(list) + "/" + list + "/" + getNameFromPath(system_list_files) + "\", \"" + location + "\");\n";
                                         this.updater_script += "endif;\n";
                                         break;
                                     case "fonts_choices.prop":
                                         if (i == 1) {
-                                            this.updater_script += "if (file_getprop(\"/tmp/aroma/" + propFile + "\", \"selected.1" + "\")==\"" + (s+1) + "\") then ui_print(\"Installing " + list.substring(list.lastIndexOf("_") + 1, list.length()) + "\");\n";
+                                            this.updater_script += "if (file_getprop(\"/tmp/aroma/" + propFile + "\", \"selected.1" + "\")==\"" + (s + 1) + "\") then ui_print(\"Installing " + list.substring(list.lastIndexOf("_") + 1, list.length()) + "\");\n";
                                             //this.updater_script += "\n\"set_progress(" + addProgressFraction() + ")\"\n";
                                             this.updater_script += "package_extract_dir(\"customize/" + getListName(list) + "/" + list + "\", \"" + location + "\");\n";
                                             this.updater_script += "endif;\n";
@@ -820,33 +854,15 @@ public class Operations {
         }
     }
 
-    public ArrayList<String> getThemeFilesList(String path){
+    public ArrayList<String> getThemeFilesList(String path) {
         File f = new File(path);
-        ArrayList <String> themesList = new ArrayList<>();
-        if(f.isDirectory()){
-            for(String temp : f.list()){
+        ArrayList<String> themesList = new ArrayList<>();
+        if (f.isDirectory()) {
+            for (String temp : f.list()) {
                 themesList.add(path + File.separator + temp);
             }
         }
         return themesList;
-    }
-    
-    //This function is used to prepare an array list which contains path of default aroma files that are required to be added in zip file.
-    public void addFilePathInArrayList(String path, ArrayList<String> tempArray) {
-        File file = new File(path);
-        if (file.isDirectory()) {
-            for (String temp : file.list()) {
-                addFilePathInArrayList(path + File.separator + temp, tempArray);
-            }
-        } else if (file.isFile()) {
-            String s = file.getAbsolutePath();
-            s = s.substring(s.indexOf("META-INF"), s.length());
-            if (s.endsWith(".ttf") || s.endsWith(".png") || s.endsWith(".prop") || s.endsWith(".lang") || s.endsWith(".txt") || s.endsWith(".edify") || s.endsWith(".sh") || s.contains("displaycapture") || s.contains("sleep") || s.endsWith(".db")) {
-                s = s.replace("\\", "/");
-                tempArray.add(s);
-                System.out.println("File Added to List is : " + s);
-            }
-        }
     }
 
     public String toNormalCase(String str) {
@@ -864,15 +880,6 @@ public class Operations {
             tempArray.add(toNormalCase(theme));
         }
         //JOptionPane.showMessageDialog(null, tempArray);
-        return tempArray;
-    }
-
-    //This function will not be needed once final product is ready.
-    public ArrayList<String> jarFileList() throws IOException {
-        ArrayList<String> tempArray = new ArrayList<>();
-        System.out.println("Adding of aroma files in list started..");
-        this.addFilePathInArrayList("src/flashablezipcreator/META-INF/com/google/android/aroma", tempArray);
-        System.out.println("Adding of aroma files in list finished..");
         return tempArray;
     }
 }

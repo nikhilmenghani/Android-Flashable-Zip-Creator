@@ -8,6 +8,7 @@ package flashablezipcreator;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -18,6 +19,7 @@ import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.logging.Filter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ButtonGroup;
@@ -140,6 +142,41 @@ public class MainUI extends javax.swing.JFrame {
 
         mainPanel.setBackground(new java.awt.Color(255, 255, 255));
         mainPanel.setToolTipText("Android Flashable Zip Creator 2.0");
+
+        frame.addWindowListener(new WindowListener() {
+            @Override
+            public void windowOpened(WindowEvent we) {
+            }
+
+            @Override
+            public void windowClosing(WindowEvent we) {
+                File f = new File("Temp");
+                if (f.isDirectory() && f.exists()) {
+                    op.deleteDirectories("Temp");
+                }
+                System.out.println("Window Closing..");
+            }
+
+            @Override
+            public void windowIconified(WindowEvent we) {
+            }
+
+            @Override
+            public void windowDeiconified(WindowEvent we) {
+            }
+
+            @Override
+            public void windowActivated(WindowEvent we) {
+            }
+
+            @Override
+            public void windowDeactivated(WindowEvent we) {
+            }
+
+            @Override
+            public void windowClosed(WindowEvent we) {
+            }
+        });
 
         headingPanel.setBackground(new java.awt.Color(75, 60, 57));
         headingPanel.setForeground(new java.awt.Color(255, 255, 255));
@@ -463,13 +500,14 @@ public class MainUI extends javax.swing.JFrame {
                 JFileChooser fileChooser = new JFileChooser();
                 fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
                 fileChooser.removeChoosableFileFilter(fileChooser.getFileFilter());
+                FileFilter filter = new FileNameExtensionFilter(".png", "png");
+                fileChooser.addChoosableFileFilter(filter);
                 int returnVal = fileChooser.showOpenDialog(btnAddThemes);
                 if (returnVal == JFileChooser.APPROVE_OPTION) {
                     File file = fileChooser.getSelectedFile();
                     op.themesPath = file.getAbsolutePath();
                     System.out.println("File Path Is : " + op.themesPath);
-                    
-                    
+                    JOptionPane.showMessageDialog(null, file.getName() + " Theme" + " Added..!!");
                 } else {
                     System.out.println("File access cancelled by user.");
                 }
@@ -680,7 +718,7 @@ public class MainUI extends javax.swing.JFrame {
         exitMenuItem.setText("Exit");
         exitMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                //exitMenuItemActionPerformed(evt);
+                exitMenuItemActionPerformed();
             }
         });
         fileMenu.add(exitMenuItem);
@@ -693,7 +731,11 @@ public class MainUI extends javax.swing.JFrame {
         aboutMenuItem.setText("About");
         aboutMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                //aboutMenuItemActionPerformed(evt);
+                aboutMenuItemActionPerformed(evt);
+            }
+
+            private void aboutMenuItemActionPerformed(ActionEvent evt) {
+                aboutUsUI();
             }
         });
         helpMenu.add(aboutMenuItem);
@@ -1840,6 +1882,276 @@ public class MainUI extends javax.swing.JFrame {
         dialog.setVisible(true);
     }
 
+    public void aboutUsUI() {
+
+        dialog = new JDialog(frame, "About Us", true);
+
+        aboutUsPanel = new javax.swing.JPanel();
+        devByPanel = new javax.swing.JPanel();
+        lblDevBy = new javax.swing.JLabel();
+        NikhilPanel = new javax.swing.JPanel();
+        jPanel5 = new javax.swing.JPanel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        Nik_textArea = new javax.swing.JTextArea();
+        RajatPanel = new javax.swing.JPanel();
+        jPanel6 = new javax.swing.JPanel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
+        jLabel12 = new javax.swing.JLabel();
+        jLabel13 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        Rajat_textArea = new javax.swing.JTextArea();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        devByPanel.setBackground(new java.awt.Color(0, 0, 0));
+
+        lblDevBy.setFont(new java.awt.Font("Verdana", 1, 24)); // NOI18N
+        lblDevBy.setForeground(new java.awt.Color(255, 255, 255));
+        lblDevBy.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblDevBy.setText("Developed By");
+
+        javax.swing.GroupLayout devByPanelLayout = new javax.swing.GroupLayout(devByPanel);
+        devByPanel.setLayout(devByPanelLayout);
+        devByPanelLayout.setHorizontalGroup(
+                devByPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(devByPanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(lblDevBy, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap())
+        );
+        devByPanelLayout.setVerticalGroup(
+                devByPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(devByPanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(lblDevBy)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        NikhilPanel.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+
+        jPanel5.setBackground(new java.awt.Color(0, 0, 0));
+
+        jLabel2.setBackground(new java.awt.Color(0, 0, 0));
+        jLabel2.setFont(new java.awt.Font("Verdana", 3, 14)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel2.setText("Nikhil Menghani");
+
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+                jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap())
+        );
+        jPanel5Layout.setVerticalGroup(
+                jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(jLabel2)
+        );
+
+        jLabel4.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel4.setText("XDA Profile ");
+
+        jLabel8.setText("Nikhil");
+
+        jLabel9.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel9.setText("My Github");
+
+        jLabel10.setText("github.com/nikhilmenghani");
+
+        Nik_textArea.setEditable(false);
+        Nik_textArea.setBackground(new java.awt.Color(240, 240, 240));
+        Nik_textArea.setColumns(20);
+        Nik_textArea.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
+        Nik_textArea.setLineWrap(true);
+        Nik_textArea.setRows(5);
+        Nik_textArea.setText("Pursuing Bachelor of Engineering in IT, and trying to get best out of my knowledge.");
+        Nik_textArea.setWrapStyleWord(true);
+        jScrollPane2.setViewportView(Nik_textArea);
+
+        javax.swing.GroupLayout NikhilPanelLayout = new javax.swing.GroupLayout(NikhilPanel);
+        NikhilPanel.setLayout(NikhilPanelLayout);
+        NikhilPanelLayout.setHorizontalGroup(
+                NikhilPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(NikhilPanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(NikhilPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(NikhilPanelLayout.createSequentialGroup()
+                                        .addGroup(NikhilPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, 89, Short.MAX_VALUE))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addGroup(NikhilPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 260, Short.MAX_VALUE))
+                        .addContainerGap())
+        );
+        NikhilPanelLayout.setVerticalGroup(
+                NikhilPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(NikhilPanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(NikhilPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(NikhilPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jLabel9)
+                                .addComponent(jLabel10))
+                        .addContainerGap())
+        );
+
+        RajatPanel.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+
+        jPanel6.setBackground(new java.awt.Color(0, 0, 0));
+
+        jLabel3.setFont(new java.awt.Font("Verdana", 3, 14)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel3.setText("Rajat Patel");
+
+        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
+        jPanel6.setLayout(jPanel6Layout);
+        jPanel6Layout.setHorizontalGroup(
+                jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap())
+        );
+        jPanel6Layout.setVerticalGroup(
+                jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(jLabel3)
+        );
+
+        jLabel5.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel5.setText("XDA Profile ");
+
+        jLabel11.setText("RajatPatel");
+
+        jLabel12.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel12.setText("My Github");
+
+        jLabel13.setText("github.com/rajatpatel92");
+
+        Rajat_textArea.setEditable(false);
+        Rajat_textArea.setBackground(new java.awt.Color(240, 240, 240));
+        Rajat_textArea.setColumns(20);
+        Rajat_textArea.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
+        Rajat_textArea.setLineWrap(true);
+        Rajat_textArea.setRows(5);
+        Rajat_textArea.setText("Student, Geek and Tech Lover who dreams in binary. Java and Android inherited in my blood ;)");
+        Rajat_textArea.setWrapStyleWord(true);
+        Rajat_textArea.setCaretColor(new java.awt.Color(255, 255, 255));
+        Rajat_textArea.setOpaque(false);
+        jScrollPane1.setViewportView(Rajat_textArea);
+
+        javax.swing.GroupLayout RajatPanelLayout = new javax.swing.GroupLayout(RajatPanel);
+        RajatPanel.setLayout(RajatPanelLayout);
+        RajatPanelLayout.setHorizontalGroup(
+                RajatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(RajatPanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(RajatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(RajatPanelLayout.createSequentialGroup()
+                                        .addGroup(RajatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, 84, Short.MAX_VALUE))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addGroup(RajatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addComponent(jLabel13, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 248, Short.MAX_VALUE))
+                        .addContainerGap())
+        );
+        RajatPanelLayout.setVerticalGroup(
+                RajatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(RajatPanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(RajatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(RajatPanelLayout.createSequentialGroup()
+                                        .addGap(9, 9, 9)
+                                        .addComponent(jLabel11))
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, RajatPanelLayout.createSequentialGroup()
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jLabel5)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(RajatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jLabel12)
+                                .addComponent(jLabel13))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout aboutUsPanelLayout = new javax.swing.GroupLayout(aboutUsPanel);
+        aboutUsPanel.setLayout(aboutUsPanelLayout);
+        aboutUsPanelLayout.setHorizontalGroup(
+                aboutUsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(aboutUsPanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(aboutUsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(devByPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(aboutUsPanelLayout.createSequentialGroup()
+                                        .addComponent(NikhilPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(RajatPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addContainerGap())
+        );
+        aboutUsPanelLayout.setVerticalGroup(
+                aboutUsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(aboutUsPanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(devByPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(aboutUsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(NikhilPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(RajatPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addContainerGap())
+        );
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                        .addComponent(aboutUsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+        );
+        layout.setVerticalGroup(
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(aboutUsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+        );
+
+        dialog.getContentPane().add(aboutUsPanel);
+        dialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+        dialog.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent we) {
+                //JOptionPane.showMessageDialog(null, "Thwarted user attempt to close window.");
+                dialog.dispose();
+            }
+        });
+        dialog.pack();
+        dialog.setLocationRelativeTo(this);
+        dialog.setVisible(true);
+    }
+
     private void CZwindowOpened(WindowEvent evt) {
         //op.removeEmptyGroup();
         System.out.println("Create Zip Window Opened");
@@ -2092,13 +2404,14 @@ public class MainUI extends javax.swing.JFrame {
         fileChooser.removeChoosableFileFilter(fileChooser.getFileFilter());
         FileFilter filter = new FileNameExtensionFilter(".png", "png");
         fileChooser.addChoosableFileFilter(filter);
-        int returnVal = fileChooser.showOpenDialog(btnBrowseZipDestination);
+        int returnVal = fileChooser.showOpenDialog(btnAddSplash);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File file = fileChooser.getSelectedFile();
             System.out.println("Zip File Destination Location : " + file.getAbsolutePath());
             op.splashPath = file.getAbsolutePath();
             //op.splashPath = op.splashPath.replaceAll("\\\\", "/");
             System.out.println("Splash Screen Path : " + op.splashPath);
+            JOptionPane.showMessageDialog(null, "Custom Splash Screen Image Added..!!");
         } else {
             System.out.println("File access cancelled by user.");
         }
@@ -2165,6 +2478,9 @@ public class MainUI extends javax.swing.JFrame {
             //setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
             IZtask = new ImportZip(this, this.op);
             IZtask.execute();
+            removeHighlight(lastSelected);
+            btnApkGroup.setContentAreaFilled(true);
+            refreshGroupList(lastSelected);
             //this.textFieldZipDestination.setText(op.zipDestination);
         } else {
             setLog("Cancelled By User", textAreaImportZipLog);
@@ -2198,6 +2514,15 @@ public class MainUI extends javax.swing.JFrame {
 
     }
 
+    private void exitMenuItemActionPerformed() {
+        File f = new File("Temp");
+        if (f.isDirectory() && f.exists()) {
+            op.deleteDirectories("Temp");
+        }
+        System.out.println("Window Closing..");
+        System.exit(0);
+    }
+
     public boolean setExistingZipPath() {
         System.out.println("Load Flashable Zip Clicked..!!");
         JFileChooser fileChooser = new JFileChooser();
@@ -2206,7 +2531,7 @@ public class MainUI extends javax.swing.JFrame {
         fileChooser.removeChoosableFileFilter(fileChooser.getFileFilter());
         FileFilter filter = new FileNameExtensionFilter(".zip", "zip");
         fileChooser.addChoosableFileFilter(filter);
-        int returnVal = fileChooser.showOpenDialog(btnBrowseZip);
+        int returnVal = fileChooser.showOpenDialog(btnLoadAromaFlashableZip);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File file = fileChooser.getSelectedFile();
             System.out.println("Existing Zip File Location : " + file.getAbsolutePath());
@@ -2260,6 +2585,7 @@ public class MainUI extends javax.swing.JFrame {
     }
 
     public void resetAll() {
+
         op.lastActionCommand = "";
         op.updateBinaryPath = "";
         op.zipDestination = "";
@@ -2272,22 +2598,31 @@ public class MainUI extends javax.swing.JFrame {
         op.jarFileName = "";
         op.existingZipPath = "";
         op.deleteApkConfigList = "";
-        op.appConfigPath = "customize/DeleteSystemApps/app-config";
+        op.descriptionConfigList = "";
+        op.appConfigPath = "customize/Config-Files/app-config";
+        op.descConfigPath = "customize/Config-Files/desc-config";
+        op.themeConfigPath = "customize/Config-Files/theme-config";
+        op.themesPath = "";
+        op.splashPath = "";
         op.kernelMountPoint = "";
+        op.projectPath = "";
+        op.projectData = "";
 
         op.groupArrayList = new ArrayList<>();
         op.systemList = new ArrayList<>();
-        op.privAppList = new ArrayList<>();
         op.dataList = new ArrayList<>();
+        op.privAppList = new ArrayList();
         op.bootAnimList = new ArrayList<>();
         op.ringtoneList = new ArrayList<>();
         op.notifList = new ArrayList<>();
         op.kernelList = new ArrayList<>();
         op.advancedList = new ArrayList<>();
-        op.deleteApkList = new ArrayList<>();
         op.fontsList = new ArrayList<>();
+        op.deleteApkList = new ArrayList<>();
         op.arrayList = new ArrayList<>();
         op.jarFileList = new ArrayList<>();
+        op.descriptionList = new ArrayList<>();
+        op.themesList = new ArrayList<>();
 
         op.map = new MultiValueMap();
 
@@ -2927,6 +3262,28 @@ public class MainUI extends javax.swing.JFrame {
     private javax.swing.JButton btnResetDescription;
     private javax.swing.JLabel lblADHeading;
     private javax.swing.JTextArea textAreaAddDescription;
+
+    private javax.swing.JTextArea Nik_textArea;
+    private javax.swing.JPanel NikhilPanel;
+    private javax.swing.JPanel RajatPanel;
+    private javax.swing.JTextArea Rajat_textArea;
+    private javax.swing.JPanel aboutUsPanel;
+    private javax.swing.JPanel devByPanel;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
+    private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JLabel lblDevBy;
 
     private javax.swing.JMenuItem aboutMenuItem;
     private javax.swing.JButton btnAddDescription;
