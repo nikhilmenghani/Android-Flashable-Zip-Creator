@@ -52,8 +52,9 @@ public class Operations {
     String existingZipPath = "";
     String deleteApkConfigList = "";
     String descriptionConfigList = "";
-    String appConfigPath = "customize/DeleteSystemApps/app-config";
-    String descConfigPath = "customize/File Description/desc-config";
+    String appConfigPath = "customize/Config-Files/app-config";
+    String descConfigPath = "customize/Config-Files/desc-config";
+    String themeConfigPath = "customize/Config-Files/theme-config";
     String themesPath = "";
     String splashPath = "";
     String kernelMountPoint = "";
@@ -434,6 +435,7 @@ public class Operations {
                     this.aroma_config += ",\n\"" + "Select one Font" + "\", \"\", 2";
                     break;
             }
+            this.aroma_config += ",\n\"None\",\"Select this if you dont want to select anything else.\", 1";
             for (String list : arrayList) {
                 String desc = list.substring(list.lastIndexOf("_") + 1, list.length()) + "?_?";
                 this.aroma_config += ",\n\"" + list.substring(list.lastIndexOf("_") + 1, list.length()) + "\", \"" + getDescription(desc, descArrayList) + "\", 0";
@@ -573,18 +575,18 @@ public class Operations {
                             case "Create Flashable Zip With Aroma Installer":
                                 switch (propFile) {
                                     case "kernel_choices.prop":
-                                        this.updater_script += "if (file_getprop(\"/tmp/aroma/" + propFile + "\", \"selected.1" + "\")==\"" + s + "\") then ui_print(\"Flashing " + list.substring(list.lastIndexOf("_") + 1, list.length()) + "\");\n";
+                                        this.updater_script += "if (file_getprop(\"/tmp/aroma/" + propFile + "\", \"selected.1" + "\")==\"" + (s+1) + "\") then ui_print(\"Flashing " + list.substring(list.lastIndexOf("_") + 1, list.length()) + "\");\n";
                                         this.updater_script += "assert(package_extract_file(\"customize/" + getListName(list) + "/" + list + "/" + getNameFromPath(system_list_files) + "\", \"" + location + "\"));\n";
                                         this.updater_script += "endif;\n";
                                         break;
                                     case "boot_anim_choices.prop":
-                                        this.updater_script += "if (file_getprop(\"/tmp/aroma/" + propFile + "\", \"selected.1" + "\")==\"" + s + "\") then ui_print(\"Installing " + list.substring(list.lastIndexOf("_") + 1, list.length()) + "\");\n";
+                                        this.updater_script += "if (file_getprop(\"/tmp/aroma/" + propFile + "\", \"selected.1" + "\")==\"" + (s+1) + "\") then ui_print(\"Installing " + list.substring(list.lastIndexOf("_") + 1, list.length()) + "\");\n";
                                         this.updater_script += "package_extract_file(\"customize/" + getListName(list) + "/" + list + "/" + getNameFromPath(system_list_files) + "\", \"" + location + "\");\n";
                                         this.updater_script += "endif;\n";
                                         break;
                                     case "fonts_choices.prop":
                                         if (i == 1) {
-                                            this.updater_script += "if (file_getprop(\"/tmp/aroma/" + propFile + "\", \"selected.1" + "\")==\"" + s + "\") then ui_print(\"Installing " + list.substring(list.lastIndexOf("_") + 1, list.length()) + "\");\n";
+                                            this.updater_script += "if (file_getprop(\"/tmp/aroma/" + propFile + "\", \"selected.1" + "\")==\"" + (s+1) + "\") then ui_print(\"Installing " + list.substring(list.lastIndexOf("_") + 1, list.length()) + "\");\n";
                                             //this.updater_script += "\n\"set_progress(" + addProgressFraction() + ")\"\n";
                                             this.updater_script += "package_extract_dir(\"customize/" + getListName(list) + "/" + list + "\", \"" + location + "\");\n";
                                             this.updater_script += "endif;\n";

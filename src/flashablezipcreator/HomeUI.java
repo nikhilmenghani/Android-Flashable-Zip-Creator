@@ -394,7 +394,7 @@ public class HomeUI extends javax.swing.JFrame {
             }
         });
 
-        btnAddThemes.setText("Add Themes");
+        btnAddThemes.setText("Add Theme");
         btnAddThemes.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddThemesActionPerformed(evt);

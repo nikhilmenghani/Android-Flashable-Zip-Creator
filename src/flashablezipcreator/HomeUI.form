@@ -721,7 +721,7 @@
             </Component>
             <Component class="javax.swing.JButton" name="btnAddThemes">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Add Themes"/>
+                <Property name="text" type="java.lang.String" value="Add Theme"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnAddThemesActionPerformed"/>

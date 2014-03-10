@@ -267,12 +267,16 @@ public class CreateZip extends SwingWorker<Void, Void> {
                     in.close();
                     System.out.println("Themes Path is : " + op.themesPath);
                     if (!op.themesPath.equals("")) {
+                        String theme = new File(op.themesPath).getName();
                         for (String themeFile : op.getThemeFilesList(op.themesPath)) {
                             System.out.println("ThemeFile is : " + themeFile);
                             in = new FileInputStream(themeFile);
-                            this.writeFileToZip(in, zos, "META-INF/com/google/android/aroma/themes/" + new File(op.themesPath).getName() + "/" + new File(themeFile).getName());
+                            this.writeFileToZip(in, zos, "META-INF/com/google/android/aroma/themes/" + theme + "/" + new File(themeFile).getName());
                             in.close();
                         }
+                        in = new ByteArrayInputStream(theme.getBytes());
+                        this.writeFileToZip(in, zos, op.themeConfigPath);
+                        in.close();
                     }
                     System.out.println("Adding Aroma files from jar to zip..");
                     ai.setLog("Adding Aroma files from jar to zip..", ai.debugTextAreaCZ);

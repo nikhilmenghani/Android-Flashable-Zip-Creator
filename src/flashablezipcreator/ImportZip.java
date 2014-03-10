@@ -120,6 +120,19 @@ public class ImportZip extends SwingWorker<Void, Void> {
         return null;
     }
 
+    public String getStringFromFileInZip(ZipInputStream zis) throws UnsupportedEncodingException {
+        String str = "";
+        BufferedReader br = new BufferedReader(new InputStreamReader(zis, "UTF-8"));
+        try {
+            while (br.ready()) {
+                str += (char) br.read();
+            }
+        } catch (IOException ioe) {
+            System.out.println("Exception Caught while reading file in zip..!!");
+        }
+        return str;
+    }
+
     public ArrayList<String> getArrayListFromFileInZip(ZipInputStream zis) throws UnsupportedEncodingException {
         ArrayList<String> list = new ArrayList<>();
         String str = "";
@@ -144,7 +157,7 @@ public class ImportZip extends SwingWorker<Void, Void> {
         Toolkit.getDefaultToolkit().beep();
         ai.btnBrowseZip.setEnabled(true);
         this.close = true;
-            //setCursor(null); //turn off the wait cursor
+        //setCursor(null); //turn off the wait cursor
         //setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         ai.textAreaImportZipLog.append("Done!\n");
         ai.dialog.setVisible(false);
@@ -157,19 +170,23 @@ public class ImportZip extends SwingWorker<Void, Void> {
 //            op.deleteApkList = this.getArrayListFromFileInZip(zis);
 //        }
 //    }
-
     public void writeFileFromZip(ZipInputStream zis, File outFile) throws FileNotFoundException, IOException {
         File file = new File(outFile.getParent());
         if (!file.exists()) {
             file.mkdirs();
         }
-        FileOutputStream fos = new FileOutputStream(outFile);
-        int len;
-        byte[] buffer = new byte[1024];
-        while ((len = zis.read(buffer)) > 0) {
-            fos.write(buffer, 0, len);
+        System.out.println("Path of file to be written from is : " + outFile.getAbsolutePath());
+        try {
+            FileOutputStream fos = new FileOutputStream(outFile);
+            int len;
+            byte[] buffer = new byte[1024];
+            while ((len = zis.read(buffer)) > 0) {
+                fos.write(buffer, 0, len);
+            }
+            fos.close();
+        } catch (FileNotFoundException fnfe) {
+            System.out.println(outFile.getName() + " File not found..!!");
         }
-        fos.close();
     }
 
     public MultiValueMap extractTheZip(String source) throws IOException {
@@ -196,10 +213,14 @@ public class ImportZip extends SwingWorker<Void, Void> {
                     if (filePath.equals(op.appConfigPath)) {
                         op.deleteApkList = this.getArrayListFromFileInZip(zis);
                         i++;
-                    }else if(filePath.equals(op.descConfigPath)){
+                    } else if (filePath.equals(op.descConfigPath)) {
                         op.descriptionList = this.getArrayListFromFileInZip(zis);
                         i++;
                     }
+                }
+
+                if (filePath.equals(op.themeConfigPath)) {
+                    op.themesPath = "Temp" + File.separator + "META-INF" + File.separator + "com" + File.separator + "google" + File.separator + "android" + File.separator + "aroma" + File.separator + "themes" + File.separator + getStringFromFileInZip(zis);
                 }
 
                 File outputFile = new File("Temp" + File.separator + filePath);
