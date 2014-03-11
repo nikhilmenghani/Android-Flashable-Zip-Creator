@@ -78,6 +78,7 @@ public class Operations {
     ArrayList<String> jarFileList = new ArrayList<>();
     ArrayList<String> descriptionList = new ArrayList<>();
     ArrayList<String> themesList = new ArrayList<>();
+    ArrayList<String> nonNeonList = new ArrayList<>();
 
     Map<String, String> CSDmap;
 
@@ -302,6 +303,13 @@ public class Operations {
             String[] temp = deviceFullName.split("_");
             System.out.println("Device getting added from jar is : " + temp[0]);
             this.CSDmap.put(temp[0], temp[1]);
+            try{
+                if(temp[2].equals("nonneon")){
+                    nonNeonList.add(temp[1]);
+                }
+            }catch(ArrayIndexOutOfBoundsException aioobe){
+                System.out.println("Array Index Out Of Bound Exception..!!");
+            }
         }
         is.close();
     }

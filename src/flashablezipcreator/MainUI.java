@@ -74,6 +74,7 @@ public class MainUI extends javax.swing.JFrame {
 
     public void initcomponents() {
         //frame = new JFrame();
+        frame.setResizable(false);
         mainPanel = new javax.swing.JPanel();
         headingPanel = new javax.swing.JPanel();
         lblHeading = new javax.swing.JLabel();
@@ -765,8 +766,9 @@ public class MainUI extends javax.swing.JFrame {
     }
 
     public void supportedDeviceUI() {
-
+        
         dialog = new JDialog(frame, "Currently Supported Devices", true);
+        dialog.setResizable(false);
         CSDPanel = new javax.swing.JPanel();
         CSD_headingPanel = new javax.swing.JPanel();
         lblCSDHeading1 = new javax.swing.JLabel();
@@ -897,7 +899,7 @@ public class MainUI extends javax.swing.JFrame {
     public void addApkGroupUI() {
 
         dialog = new JDialog(frame, "Create Group Name", true);
-
+        dialog.setResizable(false);
         addApkGroupPanel = new javax.swing.JPanel();
         AddApkGroup_headingPanel = new javax.swing.JPanel();
         lblAddApkGroupHeading = new javax.swing.JLabel();
@@ -1063,7 +1065,7 @@ public class MainUI extends javax.swing.JFrame {
     public void addGroupUI() {
 
         dialog = new JDialog(frame, "Create Group Name", true);
-
+        dialog.setResizable(false);
         addGroupPanel = new javax.swing.JPanel();
         AddGroup_headingPanel = new javax.swing.JPanel();
         lblAddGroupHeading = new javax.swing.JLabel();
@@ -1197,7 +1199,7 @@ public class MainUI extends javax.swing.JFrame {
     public void deleteSystemApkUI() {
 
         dialog = new JDialog(frame, "Delete System Apk", true);
-
+        dialog.setResizable(false);
         DSAPanel = new javax.swing.JPanel();
         DSA_headingPanel = new javax.swing.JPanel();
         lblDSAHeading = new javax.swing.JLabel();
@@ -1381,7 +1383,7 @@ public class MainUI extends javax.swing.JFrame {
     public void importZipUI() {
 
         dialog = new JDialog(frame, "Import Zip", true);
-
+        dialog.setResizable(false);
         importZipPanel = new javax.swing.JPanel();
         IZheader_panel = new javax.swing.JPanel();
         lblIZheader = new javax.swing.JLabel();
@@ -1527,7 +1529,7 @@ public class MainUI extends javax.swing.JFrame {
     public void createZipUI() {
 
         dialog = new JDialog(frame, "Creating ZIP", true);
-
+        dialog.setResizable(false);
         CZPanel = new javax.swing.JPanel();
         CZ_headingPanel9 = new javax.swing.JPanel();
         lblCZHeading = new javax.swing.JLabel();
@@ -1721,6 +1723,7 @@ public class MainUI extends javax.swing.JFrame {
         }
 
         dialog = new JDialog(frame, "Add Description", true);
+        dialog.setResizable(false);
         ADPanel = new javax.swing.JPanel();
         AD_headingPanel = new javax.swing.JPanel();
         lblADHeading = new javax.swing.JLabel();
@@ -1786,7 +1789,7 @@ public class MainUI extends javax.swing.JFrame {
                     case "Kernel Group":
                     case "Boot Animation Group":
                     case "Fonts Group":
-                        System.out.println("Description Added : " + op.getDescription(groupList.getSelectedValue().toString() + "?_?" + fileList.getSelectedValue().toString() + "?_?" + textAreaAddDescription.getText()));
+                        System.out.println("Description Added : " + op.getDescription(groupList.getSelectedValue().toString() + "?_?" + textAreaAddDescription.getText()));
                         descEntry = groupList.getSelectedValue().toString() + "?_?" + op.getDescription(groupList.getSelectedValue().toString() + "?_?", op.descriptionList);
                         if (op.descriptionList.contains(descEntry)) {
                             System.out.println("Removing : " + descEntry);
@@ -1885,7 +1888,7 @@ public class MainUI extends javax.swing.JFrame {
     public void aboutUsUI() {
 
         dialog = new JDialog(frame, "About Us", true);
-
+        dialog.setResizable(false);
         aboutUsPanel = new javax.swing.JPanel();
         devByPanel = new javax.swing.JPanel();
         lblDevBy = new javax.swing.JLabel();
