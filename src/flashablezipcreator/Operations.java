@@ -447,6 +447,7 @@ public class Operations {
                 for (String list : arrayList) {
                     if (map.containsKey(list)) {
                         this.aroma_config += ",\n\"" + list.substring(list.lastIndexOf("_") + 1, list.length()) + "\", \"\", 2";
+                        this.aroma_config += ",\n\"Select All\",\"Check this to Install All.\", 1";
                         for (String list_files : this.returnPathArray(list, map)) {
                             String desc = list.substring(list.lastIndexOf("_") + 1, list.length()) + "??" + getNameFromPath(list_files) + "??";
                             this.aroma_config += ",\n\"" + this.removeExtension(getNameFromPath(list_files)) + "\", \"" + getDescription(desc, descArrayList) + "\", 0";
@@ -617,25 +618,36 @@ public class Operations {
                             case "Create Flashable Zip With Aroma Installer":
                                 switch (propFile) {
                                     case "kernel_choices.prop":
-                                        this.updater_script += "if (file_getprop(\"/tmp/aroma/" + propFile + "\", \"selected.1" + "\")==\"" + (s + 1) + "\") then ui_print(\"Flashing " + list.substring(list.lastIndexOf("_") + 1, list.length()) + "\");\n";
+                                        this.updater_script += "if (file_getprop(\"/tmp/aroma/" + propFile + "\", \"selected.1" + "\")==\"" + (s + 1) + "\") then\n"
+                                                + "ui_print(\"Flashing " + list.substring(list.lastIndexOf("_") + 1, list.length()) + "\");\n";
                                         this.updater_script += "assert(package_extract_file(\"customize/" + getListName(list) + "/" + list + "/" + getNameFromPath(system_list_files) + "\", \"" + location + "\"));\n";
                                         this.updater_script += "endif;\n";
                                         break;
                                     case "boot_anim_choices.prop":
-                                        this.updater_script += "if (file_getprop(\"/tmp/aroma/" + propFile + "\", \"selected.1" + "\")==\"" + (s + 1) + "\") then ui_print(\"Installing " + list.substring(list.lastIndexOf("_") + 1, list.length()) + "\");\n";
+                                        this.updater_script += "if (file_getprop(\"/tmp/aroma/" + propFile + "\", \"selected.1" + "\")==\"" + (s + 1) + "\") then\n"
+                                                + "ui_print(\"Installing " + list.substring(list.lastIndexOf("_") + 1, list.length()) + "\");\n";
                                         this.updater_script += "package_extract_file(\"customize/" + getListName(list) + "/" + list + "/" + getNameFromPath(system_list_files) + "\", \"" + location + "\");\n";
                                         this.updater_script += "endif;\n";
                                         break;
                                     case "fonts_choices.prop":
                                         if (i == 1) {
-                                            this.updater_script += "if (file_getprop(\"/tmp/aroma/" + propFile + "\", \"selected.1" + "\")==\"" + (s + 1) + "\") then ui_print(\"Installing " + list.substring(list.lastIndexOf("_") + 1, list.length()) + "\");\n";
+                                            this.updater_script += "if (file_getprop(\"/tmp/aroma/" + propFile + "\", \"selected.1" + "\")==\"" + (s + 1) + "\") then\n"
+                                                    + "ui_print(\"Installing " + list.substring(list.lastIndexOf("_") + 1, list.length()) + "\");\n";
                                             //this.updater_script += "\n\"set_progress(" + addProgressFraction() + ")\"\n";
                                             this.updater_script += "package_extract_dir(\"customize/" + getListName(list) + "/" + list + "\", \"" + location + "\");\n";
                                             this.updater_script += "endif;\n";
                                         }
                                         break;
                                     default:
-                                        this.updater_script += "if (file_getprop(\"/tmp/aroma/" + propFile + "\", \"item." + s + "." + i + "\")==\"1\") then ui_print(\"Installing " + this.removeExtension(getNameFromPath(system_list_files)) + "\");\n";
+                                        if(i == 1){
+                                            this.updater_script += "if (file_getprop(\"/tmp/aroma/" + propFile + "\", \"item." + s + "." + i + "\")==\"1\") then \n";
+                                            for(String list_files : this.returnPathArray(list, map)){
+                                                this.updater_script += "ui_print(\"Installing " + this.removeExtension(getNameFromPath(list_files)) + "\");\n";
+                                                this.updater_script += "package_extract_file(\"customize/" + getListName(list) + "/" + list + "/" + getNameFromPath(list_files) + "\", \"" + location + "/" + getNameFromPath(list_files) + "\");\n";
+                                            }
+                                            this.updater_script += "endif;\n";
+                                        }
+                                        this.updater_script += "if (file_getprop(\"/tmp/aroma/" + propFile + "\", \"item." + s + "." + (i+1) + "\")==\"1\") then ui_print(\"Installing " + this.removeExtension(getNameFromPath(system_list_files)) + "\");\n";
                                         //this.updater_script += "package_extract_dir(\"customize/" + getListName(list) + "/" + list + "\", \"" + location + "\");\n";
                                         this.updater_script += "package_extract_file(\"customize/" + getListName(list) + "/" + list + "/" + getNameFromPath(system_list_files) + "\", \"" + location + "/" + getNameFromPath(system_list_files) + "\");\n";
                                         this.updater_script += "endif;\n";
