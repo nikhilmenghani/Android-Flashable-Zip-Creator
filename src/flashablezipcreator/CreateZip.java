@@ -136,12 +136,7 @@ public class CreateZip extends SwingWorker<Void, Void> {
         }
     }
 
-    public String getJarFileName() {
-        String path[] = this.getClass().getResource("META-INF/com/google/android/Supported Devices").getPath().split("!");
-        String fileName = path[0].substring(path[0].lastIndexOf("/") + 1, path[0].length());
-        //JOptionPane.showMessageDialog(null, fileName);
-        return fileName;
-    }
+    
 
 //    public ArrayList<String> getJarFileList() {
 //        ArrayList<String> tempArray = new ArrayList<>();
@@ -171,70 +166,14 @@ public class CreateZip extends SwingWorker<Void, Void> {
 //        }
 //        return tempArray;
 //    }
-
     
 
-    //This function is used to prepare an array list which contains path of default aroma files that are required to be added in zip file.
-    public void addFilePathInArrayList(String path, ArrayList<String> tempArray) {
-        File file = new File(path);
-        if (file.isDirectory()) {
-            for (String temp : file.list()) {
-                addFilePathInArrayList(path + File.separator + temp, tempArray);
-            }
-        } else if (file.isFile()) {
-            String s = file.getAbsolutePath();
-            s = s.substring(s.indexOf("META-INF"), s.length());
-            if (s.endsWith(".ttf") || s.endsWith(".png") || s.endsWith(".prop") || s.endsWith(".lang") || s.endsWith(".txt") || s.endsWith(".edify") || s.endsWith(".sh") || s.contains("displaycapture") || s.contains("sleep") || s.endsWith(".db")) {
-                s = s.replace("\\", "/");
-                tempArray.add(s);
-                System.out.println("File Added to List is : " + s);
-            }
-        }
-    }
-
-    //This function will not be needed once final product is ready.
-    public ArrayList<String> jarFileList() throws IOException {
-        ArrayList<String> tempArray = new ArrayList<>();
-        if (op.isExecutingJarFile()) {
-            //op.jarFileList = this.getJarFileList();
-            System.out.println("Executing Through Jar..!!");
-            try {
-                try (JarFile jarFile = new JarFile(getJarFileName())) {
-                    for (Enumeration em = jarFile.entries(); em.hasMoreElements();) {
-                        String s = em.nextElement().toString();
-                        if (s.startsWith("flashablezipcreator/META-INF/")) {
-                            s = s.substring("flashablezipcreator/".length(), s.length());
-                            if (s.endsWith(".ttf") || s.endsWith(".png") || s.endsWith(".prop") || s.endsWith(".lang") || s.endsWith(".txt") || s.endsWith(".edify") || s.endsWith(".sh") || s.contains("displaycapture") || s.contains("sleep") || s.endsWith(".db")) {
-                                tempArray.add(s);
-                            }
-                            String theme = "META-INF/com/google/android/aroma/themes";
-                            if (s.startsWith(theme) && s.endsWith(".prop")) {
-                                //JOptionPane.showMessageDialog(null, "String with theme path is : " + s);
-                                theme = s.substring(theme.length() + 1, s.length());
-                                theme = theme.substring(0, theme.indexOf("/"));
-                                //JOptionPane.showMessageDialog(null, "String with theme name is : " + theme);
-                                op.themesList.add(op.toNormalCase(theme));
-                            }
-                        }
-                    }
-                }
-            } catch (IOException e) {
-                System.err.println("Error: " + e.getMessage());
-            }
-        } else {
-            //op.jarFileList = this.jarFileList();
-            System.out.println("Executing Through Netbeans..!!");
-            System.out.println("Adding of aroma files in list started..");
-            this.addFilePathInArrayList("src/flashablezipcreator/META-INF/com/google/android/aroma", tempArray);
-            System.out.println("Adding of aroma files in list finished..");
-        }
-        return tempArray;
-    }
+    
 
     public void createZipAt(String destination) throws IOException {
         System.out.println("Creating zip process started...");
         ai.setLog("Creating zip process started...", ai.debugTextAreaCZ);
-        op.jarFileList = this.jarFileList();
+        //op.jarFileList = op.jarFileList();
         //this.removeEmptyGroup();
         ai.setLog("All Clear...", ai.runTextAreaCZ);
         ai.setLog("Creating " + op.flashableZipType + " Zip...", ai.runTextAreaCZ);
@@ -324,17 +263,16 @@ public class CreateZip extends SwingWorker<Void, Void> {
                     this.writeFileToZip(in, zos, "META-INF/com/google/android/update-binary-installer");
                     in.close();
                     System.out.println("Themes Path is : " + op.themesPath);
-                    if (!op.themesPath.equals("")) {
-                        String theme = new File(op.themesPath).getName();
-                        for (String themeFile : op.getThemeFilesList(op.themesPath)) {
-                            System.out.println("ThemeFile is : " + themeFile);
-                            in = new FileInputStream(themeFile);
-                            this.writeFileToZip(in, zos, "META-INF/com/google/android/aroma/themes/" + theme + "/" + new File(themeFile).getName());
-                            in.close();
+                    if (!op.customThemeList.isEmpty()) {
+                        for (String themeFilePath : op.customThemeList) {
+                            String theme = new File(themeFilePath).getName();
+                            for (String themeFile : op.getThemeFilesList(themeFilePath)) {
+                                System.out.println("ThemeFile is : " + themeFile);
+                                in = new FileInputStream(themeFile);
+                                this.writeFileToZip(in, zos, "META-INF/com/google/android/aroma/themes/" + theme + "/" + new File(themeFile).getName());
+                                in.close();
+                            }
                         }
-                        in = new ByteArrayInputStream(theme.getBytes());
-                        this.writeFileToZip(in, zos, op.themeConfigPath);
-                        in.close();
                     }
                     System.out.println("Adding Aroma files from jar to zip..");
                     ai.setLog("Adding Aroma files from jar to zip..", ai.debugTextAreaCZ);
@@ -359,9 +297,9 @@ public class CreateZip extends SwingWorker<Void, Void> {
                     in.close();
                     System.out.println("Writing update-binary to zip..");
                     ai.setLog("Writing update-binary to zip..", ai.debugTextAreaCZ);
-                    if(op.nonNeonList.contains(op.selectedDevice)){
+                    if (op.nonNeonList.contains(op.selectedDevice)) {
                         in = this.getClass().getResourceAsStream("META-INF/com/google/android/nonneon");
-                    }else{
+                    } else {
                         in = this.getClass().getResourceAsStream("META-INF/com/google/android/neon");
                     }
                     this.writeFileToZip(in, zos, "META-INF/com/google/android/update-binary");

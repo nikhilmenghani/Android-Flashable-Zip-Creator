@@ -18,9 +18,11 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.jar.JarFile;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipInputStream;
@@ -35,7 +37,7 @@ import org.apache.commons.collections4.map.MultiValueMap;
  * @author Nikhil
  * @author Rajat
  */
-public class Operations {
+public final class Operations {
 
     int setProgress = 0;
 
@@ -76,8 +78,10 @@ public class Operations {
     ArrayList<String> deleteApkList = new ArrayList<>();
     ArrayList<String> arrayList = new ArrayList<>();
     ArrayList<String> jarFileList = new ArrayList<>();
+    
     ArrayList<String> descriptionList = new ArrayList<>();
     ArrayList<String> themesList = new ArrayList<>();
+    ArrayList<String> customThemeList = new ArrayList<>();
     ArrayList<String> nonNeonList = new ArrayList<>();
 
     Map<String, String> CSDmap;
@@ -85,7 +89,11 @@ public class Operations {
     MultiValueMap map = new MultiValueMap();
 
     Operations() {
-
+        try {
+            jarFileList = jarFileList();
+        } catch (IOException ex) {
+            Logger.getLogger(Operations.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public void saveProject() {
@@ -490,8 +498,10 @@ public class Operations {
         } else {
             themes = getThemesList("src/flashablezipcreator/META-INF/com/google/android/aroma/themes");
         }
-        if (!themesPath.equals("")) {
-            themes.add(new File(themesPath).getName());
+        if (!customThemeList.isEmpty()) {
+            for(String theme : customThemeList){
+                themes.add(toNormalCase(new File(theme).getName()));
+            }
         }
         this.aroma_config += "selectbox(\"Themes\",\"Choose your desired theme from following\",\"@personalize\",\"theme.prop\",\n";
         for (String theme : themes) {
@@ -901,5 +911,71 @@ public class Operations {
         }
         //JOptionPane.showMessageDialog(null, tempArray);
         return tempArray;
+    }
+    
+    public String getJarFileName() {
+        String path[] = this.getClass().getResource("META-INF/com/google/android/Supported Devices").getPath().split("!");
+        String fileName = path[0].substring(path[0].lastIndexOf("/") + 1, path[0].length());
+        //JOptionPane.showMessageDialog(null, fileName);
+        return fileName;
+    }
+    
+    //This function will not be needed once final product is ready.
+    public ArrayList<String> jarFileList() throws IOException {
+        ArrayList<String> tempArray = new ArrayList<>();
+        if (isExecutingJarFile()) {
+            //op.jarFileList = this.getJarFileList();
+            System.out.println("Executing Through Jar..!!");
+            try {
+                try (JarFile jarFile = new JarFile(getJarFileName())) {
+                    for (Enumeration em = jarFile.entries(); em.hasMoreElements();) {
+                        String s = em.nextElement().toString();
+                        if (s.startsWith("flashablezipcreator/META-INF/")) {
+                            s = s.substring("flashablezipcreator/".length(), s.length());
+                            if (s.endsWith(".ttf") || s.endsWith(".png") || s.endsWith(".prop") || s.endsWith(".lang") || s.endsWith(".txt") || s.endsWith(".edify") || s.endsWith(".sh") || s.contains("displaycapture") || s.contains("sleep") || s.endsWith(".db")) {
+                                tempArray.add(s);
+                            }
+                            String theme = "META-INF/com/google/android/aroma/themes";
+                            if (s.startsWith(theme) && s.endsWith(".prop")) {
+                                //JOptionPane.showMessageDialog(null, "String with theme path is : " + s);
+                                theme = s.substring(theme.length() + 1, s.length());
+                                theme = theme.substring(0, theme.indexOf("/"));
+                                //JOptionPane.showMessageDialog(null, "String with theme name is : " + theme);
+                                this.themesList.add(toNormalCase(theme));
+                                //JOptionPane.showMessageDialog(null, "Entered.. " + themesList);
+                            }
+                        }
+                    }
+                }
+            } catch (IOException e) {
+                System.err.println("Error: " + e.getMessage());
+            }
+        } else {
+            //op.jarFileList = this.jarFileList();
+            System.out.println("Executing Through Netbeans..!!");
+            System.out.println("Adding of aroma files in list started..");
+            this.addFilePathInArrayList("src/flashablezipcreator/META-INF/com/google/android/aroma", tempArray);
+            this.themesList = getThemesList("src/flashablezipcreator/META-INF/com/google/android/aroma/themes");
+            System.out.println("Adding of aroma files in list finished..");
+        }
+        return tempArray;
+    }
+    
+    //This function is used to prepare an array list which contains path of default aroma files that are required to be added in zip file.
+    public void addFilePathInArrayList(String path, ArrayList<String> tempArray) {
+        File file = new File(path);
+        if (file.isDirectory()) {
+            for (String temp : file.list()) {
+                addFilePathInArrayList(path + File.separator + temp, tempArray);
+            }
+        } else if (file.isFile()) {
+            String s = file.getAbsolutePath();
+            s = s.substring(s.indexOf("META-INF"), s.length());
+            if (s.endsWith(".ttf") || s.endsWith(".png") || s.endsWith(".prop") || s.endsWith(".lang") || s.endsWith(".txt") || s.endsWith(".edify") || s.endsWith(".sh") || s.contains("displaycapture") || s.contains("sleep") || s.endsWith(".db")) {
+                s = s.replace("\\", "/");
+                tempArray.add(s);
+                System.out.println("File Added to List is : " + s);
+            }
+        }
     }
 }

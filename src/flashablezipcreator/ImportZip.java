@@ -219,6 +219,21 @@ public class ImportZip extends SwingWorker<Void, Void> {
                     }
                 }
 
+                String theme = "META-INF/com/google/android/aroma/themes";
+                if (filePath.startsWith(theme) && filePath.endsWith(".prop")) {
+                    //JOptionPane.showMessageDialog(null, "Entered " + op.themesList);
+                    //JOptionPane.showMessageDialog(null, "String with theme path is : " + s);
+                    theme = filePath.substring(theme.length() + 1, filePath.length());
+                    theme = theme.substring(0, theme.indexOf("/"));
+                    //op.customThemeList.add(op.toNormalCase("Temp/customize/META-INF/com/google/android/aroma/themes" + File.separator + theme));
+                    if(!op.themesList.contains(op.toNormalCase(theme))){
+                        op.customThemeList.add("Temp" + File.separator + "META-INF" + File.separator + "com" + File.separator + "google" + File.separator + "android" + File.separator + "aroma" + File.separator + "themes" + File.separator + theme);
+                        //JOptionPane.showMessageDialog(null, "Custom Theme List " + op.customThemeList);
+                    }
+                    //JOptionPane.showMessageDialog(null, "String with theme name is : " + theme);
+                    //op.themesList.add(op.toNormalCase(theme));
+                }
+                
                 if (filePath.equals(op.themeConfigPath)) {
                     op.themesPath = "Temp" + File.separator + "META-INF" + File.separator + "com" + File.separator + "google" + File.separator + "android" + File.separator + "aroma" + File.separator + "themes" + File.separator + getStringFromFileInZip(zis);
                 }

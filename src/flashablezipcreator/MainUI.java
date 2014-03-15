@@ -498,20 +498,7 @@ public class MainUI extends javax.swing.JFrame {
             }
 
             private void btnAddThemesActionPerformed(ActionEvent evt) {
-                JFileChooser fileChooser = new JFileChooser();
-                fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-                fileChooser.removeChoosableFileFilter(fileChooser.getFileFilter());
-                FileFilter filter = new FileNameExtensionFilter(".png", "png");
-                fileChooser.addChoosableFileFilter(filter);
-                int returnVal = fileChooser.showOpenDialog(btnAddThemes);
-                if (returnVal == JFileChooser.APPROVE_OPTION) {
-                    File file = fileChooser.getSelectedFile();
-                    op.themesPath = file.getAbsolutePath();
-                    System.out.println("File Path Is : " + op.themesPath);
-                    JOptionPane.showMessageDialog(null, file.getName() + " Theme" + " Added..!!");
-                } else {
-                    System.out.println("File access cancelled by user.");
-                }
+                addThemesUI();
             }
         });
 
@@ -766,7 +753,7 @@ public class MainUI extends javax.swing.JFrame {
     }
 
     public void supportedDeviceUI() {
-        
+
         dialog = new JDialog(frame, "Currently Supported Devices", true);
         dialog.setResizable(false);
         CSDPanel = new javax.swing.JPanel();
@@ -2155,6 +2142,201 @@ public class MainUI extends javax.swing.JFrame {
         dialog.setVisible(true);
     }
 
+    public void addThemesUI() {
+
+        dialog = new JDialog(frame, "Add Themes", true);
+        dialog.setResizable(false);
+        addThemesPanel = new javax.swing.JPanel();
+        AddThemes_headingPanel = new javax.swing.JPanel();
+        lblAddThemeHeading = new javax.swing.JLabel();
+        btnAddTheme = new javax.swing.JButton();
+        btnRemoveTheme = new javax.swing.JButton();
+        btnResetThemes = new javax.swing.JButton();
+        btnDoneThemes = new javax.swing.JButton();
+        addThemeScrollPane = new javax.swing.JScrollPane();
+        final DefaultListModel addThemesModel = new DefaultListModel();
+        addThemesList = new JList(addThemesModel);
+        
+        try {
+            addThemesModel.removeAllElements();
+            for (String fileName : op.customThemeList) {
+                System.out.println("File Added To List is : " + fileName);
+                addThemesModel.addElement(fileName);
+            }
+        } catch (NullPointerException npe) {
+            System.out.println("Exception Caught while opening Add Theme UI");
+        }
+        
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        AddThemes_headingPanel.setBackground(new java.awt.Color(0, 0, 0));
+
+        lblAddThemeHeading.setFont(new java.awt.Font("Verdana", 1, 24)); // NOI18N
+        lblAddThemeHeading.setForeground(new java.awt.Color(255, 255, 255));
+        lblAddThemeHeading.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblAddThemeHeading.setText("Add Themes");
+
+        javax.swing.GroupLayout AddThemes_headingPanelLayout = new javax.swing.GroupLayout(AddThemes_headingPanel);
+        AddThemes_headingPanel.setLayout(AddThemes_headingPanelLayout);
+        AddThemes_headingPanelLayout.setHorizontalGroup(
+                AddThemes_headingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(AddThemes_headingPanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(lblAddThemeHeading, javax.swing.GroupLayout.DEFAULT_SIZE, 430, Short.MAX_VALUE)
+                        .addContainerGap())
+        );
+        AddThemes_headingPanelLayout.setVerticalGroup(
+                AddThemes_headingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(AddThemes_headingPanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(lblAddThemeHeading, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap())
+        );
+
+        btnAddTheme.setText("Add");
+        btnAddTheme.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddThemeActionPerformed(evt);
+            }
+
+            private void btnAddThemeActionPerformed(ActionEvent evt) {
+                JFileChooser fileChooser = new JFileChooser();
+                fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+                fileChooser.removeChoosableFileFilter(fileChooser.getFileFilter());
+                FileFilter filter = new FileNameExtensionFilter(".png", "png");
+                fileChooser.addChoosableFileFilter(filter);
+                int returnVal = fileChooser.showOpenDialog(btnAddThemes);
+                if (returnVal == JFileChooser.APPROVE_OPTION) {
+                    File file = fileChooser.getSelectedFile();
+                    if (!addThemesModel.contains(file.getAbsolutePath())) {
+                        addThemesModel.addElement(file.getAbsolutePath());
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Theme Path Already Exists..");
+                    }
+                    System.out.println("File Path Is : " + file.getAbsolutePath());
+                    //JOptionPane.showMessageDialog(null, file.getName() + " Theme" + " Added..!!");
+                } else {
+                    System.out.println("File access cancelled by user.");
+                }
+            }
+        });
+
+        btnRemoveTheme.setText("Remove");
+        btnRemoveTheme.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRemoveThemeActionPerformed(evt);
+            }
+
+            private void btnRemoveThemeActionPerformed(ActionEvent evt) {
+                System.out.println("Remove Theme Button Clicked..!!");
+                if (!addThemesList.isSelectionEmpty()) {
+                    addThemesModel.removeElement(addThemesList.getSelectedValue());
+                } else {
+                    JOptionPane.showMessageDialog(null, "Select Theme Path First..!!");
+                }
+            }
+        }
+        );
+
+        btnResetThemes.setText("Reset");
+        btnResetThemes.addActionListener(new java.awt.event.ActionListener() {
+
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnResetThemesActionPerformed(evt);
+            }
+
+            private void btnResetThemesActionPerformed(ActionEvent evt) {
+                System.out.println("Reset Add Themes Button Clicked..!!");
+                addThemesList.removeAll();
+                op.customThemeList = new ArrayList<String>();
+                addThemesModel.removeAllElements();
+            }
+        }
+        );
+
+        btnDoneThemes.setText("Done");
+        btnDoneThemes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDoneThemesActionPerformed(evt);
+                dialog.dispose();
+            }
+
+            private void btnDoneThemesActionPerformed(ActionEvent evt) {
+                System.out.println("Done Add Themes Button Clicked..!!");
+                op.customThemeList = new ArrayList<>();
+                for (int i = 0; i < addThemesModel.getSize(); i++) {
+                    op.customThemeList.add(addThemesModel.getElementAt(i).toString());
+                }
+                System.out.println("Custom Theme List is : " + op.customThemeList);
+            }
+        });
+
+        addThemeScrollPane.setViewportView(addThemesList);
+
+        javax.swing.GroupLayout addThemesPanelLayout = new javax.swing.GroupLayout(addThemesPanel);
+        addThemesPanel.setLayout(addThemesPanelLayout);
+        addThemesPanelLayout.setHorizontalGroup(
+                addThemesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(addThemesPanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(addThemesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(addThemesPanelLayout.createSequentialGroup()
+                                        .addComponent(AddThemes_headingPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(0, 0, Short.MAX_VALUE))
+                                .addGroup(addThemesPanelLayout.createSequentialGroup()
+                                        .addComponent(addThemeScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 331, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addGroup(addThemesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addComponent(btnAddTheme, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addComponent(btnRemoveTheme, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addComponent(btnResetThemes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addComponent(btnDoneThemes, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addContainerGap())
+        );
+        addThemesPanelLayout.setVerticalGroup(
+                addThemesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(addThemesPanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(AddThemes_headingPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(addThemesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addGroup(addThemesPanelLayout.createSequentialGroup()
+                                        .addComponent(btnAddTheme, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(btnRemoveTheme, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(btnResetThemes, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(btnDoneThemes, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(addThemeScrollPane))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(addThemesPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+        );
+        layout.setVerticalGroup(
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(addThemesPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+        );
+
+        pack();
+        dialog.setContentPane(addThemesPanel);
+        dialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+        dialog.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent we) {
+                //JOptionPane.showMessageDialog(null, "Thwarted user attempt to close window.");
+                dialog.dispose();
+            }
+        });
+        dialog.pack();
+        dialog.setLocationRelativeTo(this);
+        dialog.setVisible(true);
+    }
+
     private void CZwindowOpened(WindowEvent evt) {
         //op.removeEmptyGroup();
         System.out.println("Create Zip Window Opened");
@@ -3181,7 +3363,6 @@ public class MainUI extends javax.swing.JFrame {
     }
 
     JFrame frame = new JFrame();
-    ;
     Operations op = new Operations();
     ImportZip IZtask;// = new ImportZip(this, this.op);
     String lastSelected = "APKs Group";
@@ -3287,6 +3468,16 @@ public class MainUI extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel lblDevBy;
+
+    private javax.swing.JPanel AddThemes_headingPanel;
+    private javax.swing.JScrollPane addThemeScrollPane;
+    private javax.swing.JList addThemesList;
+    private javax.swing.JPanel addThemesPanel;
+    private javax.swing.JButton btnAddTheme;
+    private javax.swing.JButton btnDoneThemes;
+    private javax.swing.JButton btnRemoveTheme;
+    private javax.swing.JButton btnResetThemes;
+    private javax.swing.JLabel lblAddThemeHeading;
 
     private javax.swing.JMenuItem aboutMenuItem;
     private javax.swing.JButton btnAddDescription;
