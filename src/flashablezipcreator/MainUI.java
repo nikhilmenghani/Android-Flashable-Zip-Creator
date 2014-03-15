@@ -2608,7 +2608,7 @@ public class MainUI extends javax.swing.JFrame {
         op.themesPath = "";
         op.splashPath = "";
         op.kernelMountPoint = "";
-        op.projectPath = "";
+        //op.projectPath = "";
         op.projectData = "";
 
         op.groupArrayList = new ArrayList<>();
