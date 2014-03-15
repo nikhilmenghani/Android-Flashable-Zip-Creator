@@ -516,7 +516,12 @@ public class MainUI extends javax.swing.JFrame {
         btnPreferences.setText("Other Preferences");
         btnPreferences.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                //btnPreferencesActionPerformed(evt);
+                btnPreferencesActionPerformed(evt);
+            }
+
+            private void btnPreferencesActionPerformed(ActionEvent evt) {
+                System.out.println("Other Preference Button Clicked..!!");
+                OtherPreferencesUI();
             }
         });
 
@@ -2156,7 +2161,7 @@ public class MainUI extends javax.swing.JFrame {
         addThemeScrollPane = new javax.swing.JScrollPane();
         final DefaultListModel addThemesModel = new DefaultListModel();
         addThemesList = new JList(addThemesModel);
-        
+
         try {
             addThemesModel.removeAllElements();
             for (String fileName : op.customThemeList) {
@@ -2166,7 +2171,7 @@ public class MainUI extends javax.swing.JFrame {
         } catch (NullPointerException npe) {
             System.out.println("Exception Caught while opening Add Theme UI");
         }
-        
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         AddThemes_headingPanel.setBackground(new java.awt.Color(0, 0, 0));
@@ -2325,6 +2330,424 @@ public class MainUI extends javax.swing.JFrame {
 
         pack();
         dialog.setContentPane(addThemesPanel);
+        dialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+        dialog.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent we) {
+                //JOptionPane.showMessageDialog(null, "Thwarted user attempt to close window.");
+                dialog.dispose();
+            }
+        });
+        dialog.pack();
+        dialog.setLocationRelativeTo(this);
+        dialog.setVisible(true);
+    }
+
+    public void OtherPreferencesUI() {
+
+        dialog = new JDialog(frame, "Other Preferences", true);
+        dialog.setResizable(false);
+        OPPanel = new javax.swing.JPanel();
+        OP_headingPanel = new javax.swing.JPanel();
+        lblOPHeading = new javax.swing.JLabel();
+        dalvikCacheCheckBox = new javax.swing.JCheckBox();
+        btnBrowseBuildProp = new javax.swing.JButton();
+        btnBrowseHostsFile = new javax.swing.JButton();
+        ScrollPaneOP = new javax.swing.JScrollPane();
+        TextAreaOP = new javax.swing.JTextArea();
+        buildPropTextField = new javax.swing.JTextField();
+        hostsFileTextField = new javax.swing.JTextField();
+        modifyOptionsPanel = new javax.swing.JPanel();
+        btnModifyAromaUpdaterScript = new javax.swing.JButton();
+        btnModifyNormalUpdaterScript = new javax.swing.JButton();
+        btnModifyAromaConfig = new javax.swing.JButton();
+        btnModifyBuildProp = new javax.swing.JButton();
+        btnModifyHostsFile = new javax.swing.JButton();
+        saveOptionsPanel = new javax.swing.JPanel();
+        btnSaveModify = new javax.swing.JButton();
+        btnDoneModify = new javax.swing.JButton();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        OP_headingPanel.setBackground(new java.awt.Color(0, 0, 0));
+
+        lblOPHeading.setFont(new java.awt.Font("Verdana", 1, 24)); // NOI18N
+        lblOPHeading.setForeground(new java.awt.Color(255, 255, 255));
+        lblOPHeading.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblOPHeading.setText("Other Preferences");
+
+        javax.swing.GroupLayout OP_headingPanelLayout = new javax.swing.GroupLayout(OP_headingPanel);
+        OP_headingPanel.setLayout(OP_headingPanelLayout);
+        OP_headingPanelLayout.setHorizontalGroup(
+                OP_headingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(OP_headingPanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(lblOPHeading, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap())
+        );
+        OP_headingPanelLayout.setVerticalGroup(
+                OP_headingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(OP_headingPanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(lblOPHeading, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap())
+        );
+
+        dalvikCacheCheckBox.setText("Clear Dalvik Cache After Installation By Default");
+        dalvikCacheCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                dalvikCacheCheckBoxActionPerformed(evt);
+            }
+
+            private void dalvikCacheCheckBoxActionPerformed(ActionEvent evt) {
+                op.checkDalvikCache = !op.checkDalvikCache;
+            }
+        });
+
+        btnBrowseBuildProp.setText("browse");
+        btnBrowseBuildProp.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                try {
+                    btnBrowseBuildPropActionPerformed(evt);
+                } catch (FileNotFoundException ex) {
+                    Logger.getLogger(MainUI.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+
+            private void btnBrowseBuildPropActionPerformed(ActionEvent evt) throws FileNotFoundException {
+                JFileChooser fileChooser = new JFileChooser();
+                fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+                fileChooser.removeChoosableFileFilter(fileChooser.getFileFilter());
+                FileFilter filter = new FileNameExtensionFilter(".prop", "prop");
+                fileChooser.addChoosableFileFilter(filter);
+                int returnVal = fileChooser.showOpenDialog(btnBrowseBuildProp);
+                if (returnVal == JFileChooser.APPROVE_OPTION) {
+                    File file = fileChooser.getSelectedFile();
+                    buildPropTextField.setText(file.getAbsolutePath());
+                    op.buildPropPath = file.getAbsolutePath();
+                    op.buildPropData = op.getStringFromFile(op.buildPropPath);
+                    System.out.println("File Path Is : " + file.getAbsolutePath());
+                    JOptionPane.showMessageDialog(null, "Build.prop" + " Imported..!!");
+                } else {
+                    System.out.println("File access cancelled by user.");
+                }
+            }
+        });
+
+        btnBrowseHostsFile.setText("browse");
+        btnBrowseHostsFile.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                try {
+                    btnBrowseHostsFileActionPerformed(evt);
+                } catch (FileNotFoundException ex) {
+                    Logger.getLogger(MainUI.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+
+            private void btnBrowseHostsFileActionPerformed(ActionEvent evt) throws FileNotFoundException {
+                JFileChooser fileChooser = new JFileChooser();
+                fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+                //fileChooser.removeChoosableFileFilter(fileChooser.getFileFilter());
+                //FileFilter filter = new FileNameExtensionFilter(".prop", "prop");
+                //fileChooser.addChoosableFileFilter(filter);
+                int returnVal = fileChooser.showOpenDialog(btnBrowseHostsFile);
+                if (returnVal == JFileChooser.APPROVE_OPTION) {
+                    File file = fileChooser.getSelectedFile();
+                    hostsFileTextField.setText(file.getAbsolutePath());
+                    op.hostsFilePath = file.getAbsolutePath();
+                    op.hostsFileData = op.getStringFromFile(op.hostsFilePath);
+                    System.out.println("File Path Is : " + file.getAbsolutePath());
+                    JOptionPane.showMessageDialog(null, " Hosts File" + " Imported..!!");
+                } else {
+                    System.out.println("File access cancelled by user.");
+                }
+            }
+        });
+
+        TextAreaOP.setColumns(20);
+        TextAreaOP.setRows(5);
+        ScrollPaneOP.setViewportView(TextAreaOP);
+
+        if(op.buildPropPath.equals("")){
+            buildPropTextField.setText("Click here to Import Build.prop...");
+        }else{
+            buildPropTextField.setText(op.buildPropPath);
+        }
+        
+        if(op.hostsFilePath.equals("")){
+            hostsFileTextField.setText("Click here to Import Hosts File...");
+        }else{
+            hostsFileTextField.setText(op.hostsFilePath);
+        }
+
+        modifyOptionsPanel.setBackground(new java.awt.Color(255, 255, 255));
+        modifyOptionsPanel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
+        btnModifyNormalUpdaterScript.setText("Modify Normal updater-script");
+        btnModifyNormalUpdaterScript.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                try {
+                    btnModifyNormalUpdaterScriptActionPerformed(evt);
+                } catch (IOException ex) {
+                    Logger.getLogger(MainUI.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+
+            private void btnModifyNormalUpdaterScriptActionPerformed(ActionEvent evt) throws IOException {
+                op.flashableZipType = "Create Normal Flashable Zip";
+                op.createUpdaterScriptFile();
+                TextAreaOP.setText(op.updater_script);
+                op.lastModified = "Updater Script";
+                op.flashableZipType = "";
+            }
+        });
+
+        btnModifyAromaUpdaterScript.setText("Modify Aroma updater-script");
+        btnModifyAromaUpdaterScript.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                try {
+                    btnModifyAromaUpdaterScriptActionPerformed(evt);
+                } catch (IOException ex) {
+                    Logger.getLogger(MainUI.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+
+            private void btnModifyAromaUpdaterScriptActionPerformed(ActionEvent evt) throws IOException {
+                op.flashableZipType = "Create Flashable Zip With Aroma Installer";
+                op.createUpdaterScriptFile();
+                TextAreaOP.setText(op.updater_script);
+                op.lastModified = "Updater Script";
+                op.flashableZipType = "";
+            }
+        });
+
+        btnModifyAromaConfig.setText("Modify aroma-config");
+        btnModifyAromaConfig.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnModifyAromaConfigActionPerformed(evt);
+            }
+
+            private void btnModifyAromaConfigActionPerformed(ActionEvent evt) {
+                op.createAromaConfigFile();
+                TextAreaOP.setText(op.aroma_config);
+                op.lastModified = "Aroma Config";
+            }
+        });
+
+        btnModifyBuildProp.setText("Modify Build.prop");
+        btnModifyBuildProp.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                try {
+                    btnModifyBuildPropActionPerformed(evt);
+                } catch (FileNotFoundException ex) {
+                    Logger.getLogger(MainUI.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+
+            private void btnModifyBuildPropActionPerformed(ActionEvent evt) throws FileNotFoundException {
+                if (!op.buildPropData.equals("")) {
+                    TextAreaOP.setText(op.buildPropData);
+                    op.lastModified = "Build Prop";
+                }else{
+                    JOptionPane.showMessageDialog(null, "Import Build.prop First..!!");
+                }
+            }
+        });
+
+        btnModifyHostsFile.setText("Modify Hosts File");
+        btnModifyHostsFile.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                try {
+                    btnModifyHostsFileActionPerformed(evt);
+                } catch (FileNotFoundException ex) {
+                    Logger.getLogger(MainUI.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+
+            private void btnModifyHostsFileActionPerformed(ActionEvent evt) throws FileNotFoundException {
+                if (!op.hostsFileData.equals("")) {
+                    TextAreaOP.setText(op.hostsFileData);
+                    op.lastModified = "Hosts File";
+                }else{
+                    JOptionPane.showMessageDialog(null, "Import Hosts File First..!!");
+                }
+            }
+        });
+
+        javax.swing.GroupLayout modifyOptionsPanelLayout = new javax.swing.GroupLayout(modifyOptionsPanel);
+        modifyOptionsPanel.setLayout(modifyOptionsPanelLayout);
+        modifyOptionsPanelLayout.setHorizontalGroup(
+                modifyOptionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, modifyOptionsPanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(modifyOptionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(btnModifyAromaConfig, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnModifyBuildProp, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnModifyHostsFile, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, modifyOptionsPanelLayout.createSequentialGroup()
+                                        .addGroup(modifyOptionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addComponent(btnModifyAromaUpdaterScript)
+                                                .addComponent(btnModifyNormalUpdaterScript))
+                                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addContainerGap())
+        );
+        modifyOptionsPanelLayout.setVerticalGroup(
+                modifyOptionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(modifyOptionsPanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(btnModifyAromaUpdaterScript, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
+                        .addComponent(btnModifyNormalUpdaterScript, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnModifyAromaConfig, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnModifyBuildProp, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnModifyHostsFile, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())
+        );
+
+        saveOptionsPanel.setBackground(new java.awt.Color(255, 255, 255));
+        saveOptionsPanel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
+        btnSaveModify.setText("Save");
+        btnSaveModify.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSaveModifyActionPerformed(evt);
+            }
+
+            private void btnSaveModifyActionPerformed(ActionEvent evt) {
+                switch (op.lastModified) {
+                    case "Updater Script":
+                        op.updater_script = TextAreaOP.getText().toString();
+                        op.isUpdaterScriptModified = true;
+                        JOptionPane.showMessageDialog(null, "Updater Script Updated..!!");
+                        break;
+                    case "Aroma Config":
+                        op.aroma_config = TextAreaOP.getText().toString();
+                        op.isAromaConfigModified = true;
+                        JOptionPane.showMessageDialog(null, "Aroma Config Updated..!!");
+                        break;
+                    case "Build Prop":
+                        op.buildPropData = TextAreaOP.getText().toString();
+                        op.isBuildPropModified = true;
+                        op.otherFileList.add("customize/script/build.prop");
+                        JOptionPane.showMessageDialog(null, "Build.prop Updated..!!");
+                        System.out.println(op.buildPropData);
+                        break;
+                    case "Hosts File":
+                        op.hostsFileData = TextAreaOP.getText().toString();
+                        op.isHostsFileModified = true;
+                        op.otherFileList.add("customize/script/hosts");
+                        JOptionPane.showMessageDialog(null, "Hosts File Updated..!!");
+                        System.out.println(op.hostsFileData);
+                        break;
+                    default:
+                        JOptionPane.showMessageDialog(null, "Failed to save..!!");
+                }
+            }
+        });
+
+        btnDoneModify.setText("Done!");
+        btnDoneModify.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDoneModifyActionPerformed(evt);
+            }
+
+            private void btnDoneModifyActionPerformed(ActionEvent evt) {
+                dialog.dispose();
+            }
+        });
+
+        javax.swing.GroupLayout saveOptionsPanelLayout = new javax.swing.GroupLayout(saveOptionsPanel);
+        saveOptionsPanel.setLayout(saveOptionsPanelLayout);
+        saveOptionsPanelLayout.setHorizontalGroup(
+                saveOptionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(saveOptionsPanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(saveOptionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(btnSaveModify, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnDoneModify, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addContainerGap())
+        );
+        saveOptionsPanelLayout.setVerticalGroup(
+                saveOptionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(saveOptionsPanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(btnSaveModify, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnDoneModify, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout OPPanelLayout = new javax.swing.GroupLayout(OPPanel);
+        OPPanel.setLayout(OPPanelLayout);
+        OPPanelLayout.setHorizontalGroup(
+                OPPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, OPPanelLayout.createSequentialGroup()
+                        .addGroup(OPPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addGroup(OPPanelLayout.createSequentialGroup()
+                                        .addContainerGap()
+                                        .addComponent(OP_headingPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, OPPanelLayout.createSequentialGroup()
+                                        .addGap(255, 255, 255)
+                                        .addGroup(OPPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, OPPanelLayout.createSequentialGroup()
+                                                        .addComponent(hostsFileTextField)
+                                                        .addGap(10, 10, 10)
+                                                        .addComponent(btnBrowseHostsFile))
+                                                .addGroup(OPPanelLayout.createSequentialGroup()
+                                                        .addComponent(buildPropTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 464, Short.MAX_VALUE)
+                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                        .addComponent(btnBrowseBuildProp))))
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, OPPanelLayout.createSequentialGroup()
+                                        .addContainerGap()
+                                        .addComponent(ScrollPaneOP)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addGroup(OPPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                .addComponent(modifyOptionsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addComponent(saveOptionsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                .addGroup(OPPanelLayout.createSequentialGroup()
+                                        .addGap(0, 0, Short.MAX_VALUE)
+                                        .addComponent(dalvikCacheCheckBox)))
+                        .addContainerGap())
+        );
+        OPPanelLayout.setVerticalGroup(
+                OPPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(OPPanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(OP_headingPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(OPPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(btnBrowseBuildProp)
+                                .addComponent(buildPropTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(OPPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(btnBrowseHostsFile)
+                                .addComponent(hostsFileTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(OPPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addGroup(OPPanelLayout.createSequentialGroup()
+                                        .addComponent(modifyOptionsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(saveOptionsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(ScrollPaneOP))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(dalvikCacheCheckBox)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(OPPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        layout.setVerticalGroup(
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(OPPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+
+        dialog.setContentPane(OPPanel);
         dialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
         dialog.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent we) {
@@ -2786,7 +3209,7 @@ public class MainUI extends javax.swing.JFrame {
         op.descriptionConfigList = "";
         op.appConfigPath = "customize/Config-Files/app-config";
         op.descConfigPath = "customize/Config-Files/desc-config";
-        op.themeConfigPath = "customize/Config-Files/theme-config";
+        //op.themeConfigPath = "customize/Config-Files/theme-config";
         op.themesPath = "";
         op.splashPath = "";
         op.kernelMountPoint = "";
@@ -2808,6 +3231,7 @@ public class MainUI extends javax.swing.JFrame {
         op.jarFileList = new ArrayList<>();
         op.descriptionList = new ArrayList<>();
         op.themesList = new ArrayList<>();
+        op.customThemeList = new ArrayList<>();
 
         op.map = new MultiValueMap();
 
@@ -3478,6 +3902,26 @@ public class MainUI extends javax.swing.JFrame {
     private javax.swing.JButton btnRemoveTheme;
     private javax.swing.JButton btnResetThemes;
     private javax.swing.JLabel lblAddThemeHeading;
+
+    private javax.swing.JPanel OPPanel;
+    private javax.swing.JPanel OP_headingPanel;
+    private javax.swing.JScrollPane ScrollPaneOP;
+    private javax.swing.JTextArea TextAreaOP;
+    private javax.swing.JButton btnBrowseBuildProp;
+    private javax.swing.JButton btnBrowseHostsFile;
+    private javax.swing.JButton btnModifyAromaConfig;
+    private javax.swing.JButton btnModifyBuildProp;
+    private javax.swing.JButton btnModifyHostsFile;
+    private javax.swing.JButton btnModifyAromaUpdaterScript;
+    private javax.swing.JButton btnModifyNormalUpdaterScript;
+    private javax.swing.JButton btnSaveModify;
+    private javax.swing.JButton btnDoneModify;
+    private javax.swing.JTextField buildPropTextField;
+    private javax.swing.JCheckBox dalvikCacheCheckBox;
+    private javax.swing.JTextField hostsFileTextField;
+    private javax.swing.JLabel lblOPHeading;
+    private javax.swing.JPanel modifyOptionsPanel;
+    private javax.swing.JPanel saveOptionsPanel;
 
     private javax.swing.JMenuItem aboutMenuItem;
     private javax.swing.JButton btnAddDescription;

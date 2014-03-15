@@ -56,12 +56,22 @@ public final class Operations {
     String descriptionConfigList = "";
     String appConfigPath = "customize/Config-Files/app-config";
     String descConfigPath = "customize/Config-Files/desc-config";
-    String themeConfigPath = "customize/Config-Files/theme-config";
+    //String themeConfigPath = "customize/Config-Files/theme-config";
     String themesPath = "";
     String splashPath = "";
     String kernelMountPoint = "";
     String projectPath = "";
     String projectData = "";
+    String buildPropPath = "";
+    String buildPropData = "";
+    String hostsFilePath = "";
+    String hostsFileData = "";
+    String lastModified = "";
+    Boolean isUpdaterScriptModified = false;
+    Boolean isAromaConfigModified = false;
+    Boolean isBuildPropModified = false;
+    Boolean isHostsFileModified = false;
+    Boolean checkDalvikCache = false;
 
     double progress = 0.0;
 
@@ -78,11 +88,12 @@ public final class Operations {
     ArrayList<String> deleteApkList = new ArrayList<>();
     ArrayList<String> arrayList = new ArrayList<>();
     ArrayList<String> jarFileList = new ArrayList<>();
-    
+
     ArrayList<String> descriptionList = new ArrayList<>();
     ArrayList<String> themesList = new ArrayList<>();
     ArrayList<String> customThemeList = new ArrayList<>();
     ArrayList<String> nonNeonList = new ArrayList<>();
+    ArrayList<String> otherFileList = new ArrayList<>();
 
     Map<String, String> CSDmap;
 
@@ -311,11 +322,11 @@ public final class Operations {
             String[] temp = deviceFullName.split("_");
             System.out.println("Device getting added from jar is : " + temp[0]);
             this.CSDmap.put(temp[0], temp[1]);
-            try{
-                if(temp[2].equals("nonneon")){
+            try {
+                if (temp[2].equals("nonneon")) {
                     nonNeonList.add(temp[1]);
                 }
-            }catch(ArrayIndexOutOfBoundsException aioobe){
+            } catch (ArrayIndexOutOfBoundsException aioobe) {
                 System.out.println("Array Index Out Of Bound Exception..!!");
             }
         }
@@ -450,6 +461,17 @@ public final class Operations {
                     this.aroma_config += ",\n\"" + list + "\", \"\", 0";
                 }
                 this.aroma_config += ");\n";
+            } else if (arrayList.equals(otherFileList)) {
+                System.out.println("ArrayList is Other File List");
+                this.aroma_config += "" + listType + "(\"" + listGroup + "\",\"" + heading + "\",\"@" + themeFormat + "\",\"" + propFile + "\"";
+                this.aroma_config += ",\n\"" + "Other Files" + "\", \"\", 2";
+                if (!buildPropData.equals("")) {
+                    this.aroma_config += ",\n\"" + "build.prop" + "\", \"\", 0";
+                }
+                if (!hostsFileData.equals("")) {
+                    this.aroma_config += ",\n\"" + "hosts" + "\", \"\", 0";
+                }
+                this.aroma_config += ");\n";
             } else {
                 this.aroma_config += "" + listType + "(\"" + listGroup + "\",\"" + heading + "\",\"@" + themeFormat + "\",\"" + propFile + "\"";
                 for (String list : arrayList) {
@@ -499,7 +521,7 @@ public final class Operations {
             themes = getThemesList("src/flashablezipcreator/META-INF/com/google/android/aroma/themes");
         }
         if (!customThemeList.isEmpty()) {
-            for(String theme : customThemeList){
+            for (String theme : customThemeList) {
                 themes.add(toNormalCase(new File(theme).getName()));
             }
         }
@@ -543,6 +565,8 @@ public final class Operations {
 
         displayListInAroma("checkbox", "System App List", "Choose the apps to be installed to system", "personalize", "system_app_choices.prop", this.systemList, this.descriptionList);
 
+        displayListInAroma("checkbox", "Other File List", "Choose the files to be replaced", "personalize", "other_choices.prop", this.otherFileList, this.descriptionList);
+
         displayListInAroma("checkbox", "Priv App List", "Choose the apps to be installed to priv app", "personalize", "priv_app_choices.prop", this.privAppList, this.descriptionList);
 
         displayListInAroma("selectbox", "Boot Animations List", "Select Boot Animation to be used in current ROM", "personalize", "boot_anim_choices.prop", this.bootAnimList, this.descriptionList);
@@ -563,6 +587,10 @@ public final class Operations {
 
         if (!systemList.isEmpty()) {
             this.aroma_config += "writetmpfile(\"system_app_choices.prop\",readtmpfile(\"system_app_choices.prop\"));\n";
+        }
+
+        if (!otherFileList.isEmpty()) {
+            this.aroma_config += "writetmpfile(\"other_choices.prop\",readtmpfile(\"other_choices.prop\"));\n";
         }
 
         if (!privAppList.isEmpty()) {
@@ -599,8 +627,15 @@ public final class Operations {
                 + "	\"Press <b>Next</b> to begin the installation.\\n\\n\"+\n"
                 + "	\"If you want to review or change any of your installation settings, press <b>Back</b>. Press Left Hard Button -> Quit Installation to exit the wizard.\\n\\n\\n\\n\\n\\n\\n\",\n"
                 + "    \"@install\",\n"
-                + "\"<b>Clear Dalvik Cache</b> After Installation.\",\n"
-                + "\"0\",\n"
+                + "\"<b>Clear Dalvik Cache</b> After Installation.\",\n";
+
+        if (checkDalvikCache) {
+            this.aroma_config += "\"1\"";
+        } else {
+            this.aroma_config += "\"0\"";
+        }
+
+        this.aroma_config += ",\n"
                 + "\"clear_it\""
                 + ");\n";
 
@@ -620,6 +655,34 @@ public final class Operations {
         if (!arrayList.isEmpty()) {
             this.updater_script += "ui_print(\"@" + title + "\");\n";
             int s = 1;
+            if (arrayList.equals(otherFileList)) {
+                switch (this.flashableZipType) {
+                    case "Create Flashable Zip With Aroma Installer":
+                        if (!buildPropData.equals("")) {
+                            this.updater_script += "if (file_getprop(\"/tmp/aroma/" + propFile + "\", \"selected.1" + "\")==\"" + s + "\") then\n"
+                                    + "ui_print(\"Replacing " + "Build.prop" + "\");\n";
+                            this.updater_script += "package_extract_file(\"customize/" + "script" + "/" + "build.prop" + "\", \"" + location + "/build.prop\");\n";
+                            this.updater_script += "endif;\n";
+                            s++;
+                        }
+                        if (!hostsFileData.equals("")) {
+                            this.updater_script += "if (file_getprop(\"/tmp/aroma/" + propFile + "\", \"selected.1" + "\")==\"" + s + "\") then\n"
+                                    + "ui_print(\"Replacing " + "Hosts" + "\");\n";
+                            this.updater_script += "package_extract_file(\"customize/" + "script" + "/" + "hosts" + "\", \"" + location + "/etc/hosts\");\n";
+                            this.updater_script += "endif;\n";
+                            s++;
+                        }
+                        break;
+                    case "Create Normal Flashable Zip":
+                        if (!buildPropData.equals("")) {
+                            this.updater_script += "package_extract_file(\"customize/" + "script" + "/" + "build.prop" + "\", \"" + location + "/build.prop\");\n";
+                        }
+                        if (!hostsFileData.equals("")) {
+                            this.updater_script += "package_extract_file(\"customize/" + "script" + "/" + "hosts" + "\", \"" + location + "/etc/hosts\");\n";
+                        }
+                        break;
+                }
+            }
             for (String list : arrayList) {
                 if (map.containsKey(list)) {
                     int i = 1;
@@ -649,15 +712,15 @@ public final class Operations {
                                         }
                                         break;
                                     default:
-                                        if(i == 1){
+                                        if (i == 1) {
                                             this.updater_script += "if (file_getprop(\"/tmp/aroma/" + propFile + "\", \"item." + s + "." + i + "\")==\"1\") then \n";
-                                            for(String list_files : this.returnPathArray(list, map)){
+                                            for (String list_files : this.returnPathArray(list, map)) {
                                                 this.updater_script += "ui_print(\"Installing " + this.removeExtension(getNameFromPath(list_files)) + "\");\n";
                                                 this.updater_script += "package_extract_file(\"customize/" + getListName(list) + "/" + list + "/" + getNameFromPath(list_files) + "\", \"" + location + "/" + getNameFromPath(list_files) + "\");\n";
                                             }
                                             this.updater_script += "endif;\n";
                                         }
-                                        this.updater_script += "if (file_getprop(\"/tmp/aroma/" + propFile + "\", \"item." + s + "." + (i+1) + "\")==\"1\") then ui_print(\"Installing " + this.removeExtension(getNameFromPath(system_list_files)) + "\");\n";
+                                        this.updater_script += "if (file_getprop(\"/tmp/aroma/" + propFile + "\", \"item." + s + "." + (i + 1) + "\")==\"1\") then ui_print(\"Installing " + this.removeExtension(getNameFromPath(system_list_files)) + "\");\n";
                                         //this.updater_script += "package_extract_dir(\"customize/" + getListName(list) + "/" + list + "\", \"" + location + "\");\n";
                                         this.updater_script += "package_extract_file(\"customize/" + getListName(list) + "/" + list + "/" + getNameFromPath(system_list_files) + "\", \"" + location + "/" + getNameFromPath(system_list_files) + "\");\n";
                                         this.updater_script += "endif;\n";
@@ -677,6 +740,13 @@ public final class Operations {
                                         case "fonts_choices.prop":
                                             if (i == 1) {
                                                 this.updater_script += "package_extract_dir(\"customize/" + getListName(list) + "/" + list + "\", \"" + location + "\");\n";
+                                            }
+                                            break;
+                                        case "other_choices.prop":
+                                            if (!buildPropData.equals("")) {
+                                                this.updater_script += "package_extract_file(\"customize/" + "script" + "/" + "build.prop" + "\", \"" + location + "/build.prop\");\n";
+                                            } else if (!hostsFileData.equals("")) {
+                                                this.updater_script += "package_extract_file(\"customize/" + "script" + "/" + "hosts" + "\", \"" + location + "/etc/hosts\");\n";
                                             }
                                             break;
                                         default:
@@ -706,6 +776,8 @@ public final class Operations {
                 + "run_program(\"/sbin/busybox\",\"mount\", \"/system\");\n"
                 + "run_program(\"/sbin/busybox\",\"mount\", \"/data\");\n";
         //this.progress = 0.0;
+        extractFilesUpdaterScript(otherFileList, "Replacing System Files", "other_choices.prop", "/system");
+        this.updater_script += "\nset_progress(0.1);\n";
         extractFilesUpdaterScript(this.systemList, "Installing System Apps", "system_app_choices.prop", "/system/app");
         this.updater_script += "\nset_progress(0.2);\n";
         extractFilesUpdaterScript(this.privAppList, "Installing Priv Apps", "prive_app_choices.prop", "/system/priv-app");
@@ -741,6 +813,10 @@ public final class Operations {
             this.updater_script += "set_perm_recursive(1000, 1000, 0775, 0644, \"/system/priv-app\");\n";
         }
 
+        if (!otherFileList.isEmpty()) {
+            this.updater_script += "set_perm_recursive(1000, 1000, 0775, 0644, \"/system/etc\");\n";
+        }
+
         if (!dataList.isEmpty()) {
             this.updater_script += "set_perm_recursive(1000, 1000, 0771, 0644, \"/data/app\");\n";
         }
@@ -762,6 +838,8 @@ public final class Operations {
                     + "ui_print(\"@Wiping dalvik-cache\");\n"
                     + "delete_recursive(\"/data/dalvik-cache\");\n"
                     + "endif;\n";
+        } else if (checkDalvikCache) {
+            this.updater_script += "delete_recursive(\"/data/dalvik-cache\");\n";
         }
 
         this.updater_script += "unmount(\"/data\");\n";
@@ -912,14 +990,14 @@ public final class Operations {
         //JOptionPane.showMessageDialog(null, tempArray);
         return tempArray;
     }
-    
+
     public String getJarFileName() {
         String path[] = this.getClass().getResource("META-INF/com/google/android/Supported Devices").getPath().split("!");
         String fileName = path[0].substring(path[0].lastIndexOf("/") + 1, path[0].length());
         //JOptionPane.showMessageDialog(null, fileName);
         return fileName;
     }
-    
+
     //This function will not be needed once final product is ready.
     public ArrayList<String> jarFileList() throws IOException {
         ArrayList<String> tempArray = new ArrayList<>();
@@ -960,7 +1038,7 @@ public final class Operations {
         }
         return tempArray;
     }
-    
+
     //This function is used to prepare an array list which contains path of default aroma files that are required to be added in zip file.
     public void addFilePathInArrayList(String path, ArrayList<String> tempArray) {
         File file = new File(path);
