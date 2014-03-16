@@ -79,6 +79,7 @@ public final class Operations {
     ArrayList<String> systemList = new ArrayList<>();
     ArrayList<String> dataList = new ArrayList<>();
     ArrayList<String> privAppList = new ArrayList();
+    ArrayList<String> preloadList = new ArrayList<>();
     ArrayList<String> bootAnimList = new ArrayList<>();
     ArrayList<String> ringtoneList = new ArrayList<>();
     ArrayList<String> notifList = new ArrayList<>();
@@ -380,6 +381,8 @@ public final class Operations {
             return "APKs-Data";
         } else if (this.privAppList.contains(groupName)) {
             return "APKs-PrivApp";
+        }else if (this.preloadList.contains(groupName)) {
+            return "APKs-Preload";
         } else if (this.bootAnimList.contains(groupName)) {
             return "BootAnimations";
         } else if (this.kernelList.contains(groupName)) {
@@ -568,6 +571,8 @@ public final class Operations {
         displayListInAroma("checkbox", "Other File List", "Choose the files to be replaced", "personalize", "other_choices.prop", this.otherFileList, this.descriptionList);
 
         displayListInAroma("checkbox", "Priv App List", "Choose the apps to be installed to priv app", "personalize", "priv_app_choices.prop", this.privAppList, this.descriptionList);
+        
+        displayListInAroma("checkbox", "Preload List", "Choose the apps to be installed to preload directory", "personalize", "preload_choices.prop", this.preloadList, this.descriptionList);
 
         displayListInAroma("selectbox", "Boot Animations List", "Select Boot Animation to be used in current ROM", "personalize", "boot_anim_choices.prop", this.bootAnimList, this.descriptionList);
 
@@ -595,6 +600,10 @@ public final class Operations {
 
         if (!privAppList.isEmpty()) {
             this.aroma_config += "writetmpfile(\"priv_app_choices.prop\",readtmpfile(\"priv_app_choices.prop\"));\n";
+        }
+        
+        if (!preloadList.isEmpty()) {
+            this.aroma_config += "writetmpfile(\"preload_choices.prop\",readtmpfile(\"preload_choices.prop\"));\n";
         }
 
         if (!bootAnimList.isEmpty()) {
@@ -780,7 +789,9 @@ public final class Operations {
         this.updater_script += "\nset_progress(0.1);\n";
         extractFilesUpdaterScript(this.systemList, "Installing System Apps", "system_app_choices.prop", "/system/app");
         this.updater_script += "\nset_progress(0.2);\n";
-        extractFilesUpdaterScript(this.privAppList, "Installing Priv Apps", "prive_app_choices.prop", "/system/priv-app");
+        extractFilesUpdaterScript(this.privAppList, "Installing Priv Apps", "priv_app_choices.prop", "/system/priv-app");
+        this.updater_script += "\nset_progress(0.25);\n";
+        extractFilesUpdaterScript(this.preloadList, "Installing Preload Apps", "preload_choices.prop", "/preload/symlink/system/app");
         this.updater_script += "\nset_progress(0.3);\n";
         extractFilesUpdaterScript(this.dataList, "Installing Apps", "app_choices.prop", "/data/app");
         this.updater_script += "\nset_progress(0.4);\n";
@@ -811,6 +822,10 @@ public final class Operations {
 
         if (!privAppList.isEmpty()) {
             this.updater_script += "set_perm_recursive(1000, 1000, 0775, 0644, \"/system/priv-app\");\n";
+        }
+        
+        if (!preloadList.isEmpty()) {
+            this.updater_script += "set_perm_recursive(1000, 1000, 0775, 0644, \"/preload/symlink/system/app\");\n";
         }
 
         if (!otherFileList.isEmpty()) {

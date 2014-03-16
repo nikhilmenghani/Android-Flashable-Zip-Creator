@@ -88,6 +88,11 @@ public class ImportZip extends SwingWorker<Void, Void> {
                         op.privAppList.add(element);
                     }
                     break;
+                case "APKs-Preload":
+                    if (!op.preloadList.contains(element)) {
+                        op.preloadList.add(element);
+                    }
+                    break;
                 case "BootAnimations":
                     if (!op.bootAnimList.contains(element)) {
                         op.bootAnimList.add(element);
@@ -232,27 +237,28 @@ public class ImportZip extends SwingWorker<Void, Void> {
                 ai.setLog(filePath, ai.textAreaImportZipLog);
 
                 this.writeFileFromZip(zis, outputFile);
-                
+
                 if (filePath.startsWith("customize/")) {
                     if (filePath.equals("customize/script/hosts")) {
-                    op.otherFileList.add("hosts");
-                    op.isHostsFileModified = true;
-                    op.hostsFilePath = "Temp" + File.separator + "customize" + File.separator + "script" + File.separator + "hosts";
-                    op.hostsFileData = op.getStringFromFile(op.hostsFilePath);
-                }
+                        op.otherFileList.add("hosts");
+                        op.isHostsFileModified = true;
+                        op.hostsFilePath = "Temp" + File.separator + "customize" + File.separator + "script" + File.separator + "hosts";
+                        op.hostsFileData = op.getStringFromFile(op.hostsFilePath);
+                    }
 
-                if (filePath.equals("customize/script/build.prop")) {
-                    op.otherFileList.add("build.prop");
-                    op.isBuildPropModified = true;
-                    op.buildPropPath = "Temp" + File.separator + "customize" + File.separator + "script" + File.separator + "build.prop";
-                    op.buildPropData = op.getStringFromFile(op.buildPropPath);
-                }
+                    if (filePath.equals("customize/script/build.prop")) {
+                        op.otherFileList.add("build.prop");
+                        op.isBuildPropModified = true;
+                        op.buildPropPath = "Temp" + File.separator + "customize" + File.separator + "script" + File.separator + "build.prop";
+                        op.buildPropData = op.getStringFromFile(op.buildPropPath);
+                    }
                     filePath = filePath.substring(filePath.indexOf("/") + 1, filePath.length());
                     String splitName[] = filePath.split("/");
                     switch (splitName[0]) {
                         case "APKs-System":
                         case "APKs-Data":
                         case "APKs-PrivApp":
+                        case "APKs-Preload":
                         case "Ringtones":
                         case "Notifications":
                         case "BootAnimations":

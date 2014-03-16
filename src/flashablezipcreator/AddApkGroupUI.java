@@ -39,6 +39,7 @@ public class AddApkGroupUI extends javax.swing.JFrame {
         addApkGroupRadPrivApp = new javax.swing.JRadioButton();
         btnContinue = new javax.swing.JButton();
         btnCancel = new javax.swing.JButton();
+        addApkGroupRadPreload = new javax.swing.JRadioButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -55,7 +56,7 @@ public class AddApkGroupUI extends javax.swing.JFrame {
             AddApkGroup_headingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(AddApkGroup_headingPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(lblAddApkGroupHeading, javax.swing.GroupLayout.DEFAULT_SIZE, 360, Short.MAX_VALUE)
+                .addComponent(lblAddApkGroupHeading, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
         AddApkGroup_headingPanelLayout.setVerticalGroup(
@@ -90,6 +91,8 @@ public class AddApkGroupUI extends javax.swing.JFrame {
             }
         });
 
+        addApkGroupRadPreload.setText("Installs to /preload/symlink/system/app");
+
         javax.swing.GroupLayout addApkGroupPanelLayout = new javax.swing.GroupLayout(addApkGroupPanel);
         addApkGroupPanel.setLayout(addApkGroupPanelLayout);
         addApkGroupPanelLayout.setHorizontalGroup(
@@ -98,19 +101,20 @@ public class AddApkGroupUI extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(AddApkGroup_headingPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
+            .addGroup(addApkGroupPanelLayout.createSequentialGroup()
+                .addGap(106, 106, 106)
+                .addComponent(btnContinue, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(46, 46, 46)
+                .addComponent(btnCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(106, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, addApkGroupPanelLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(addApkGroupPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(addApkGroupRadPreload)
                     .addComponent(addApkGroupRadSystem)
                     .addComponent(addApkGroupRadData)
                     .addComponent(addApkGroupRadPrivApp))
-                .addGap(95, 95, 95))
-            .addGroup(addApkGroupPanelLayout.createSequentialGroup()
-                .addGap(91, 91, 91)
-                .addComponent(btnContinue, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(btnCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(96, 96, 96))
             .addGroup(addApkGroupPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(addApkGroupPanelLayout.createSequentialGroup()
                     .addGap(73, 73, 73)
@@ -120,24 +124,26 @@ public class AddApkGroupUI extends javax.swing.JFrame {
                             .addComponent(addGroupNameTitle)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                             .addComponent(groupName, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addContainerGap(74, Short.MAX_VALUE)))
+                    .addContainerGap(130, Short.MAX_VALUE)))
         );
         addApkGroupPanelLayout.setVerticalGroup(
             addApkGroupPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(addApkGroupPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(AddApkGroup_headingPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 92, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 88, Short.MAX_VALUE)
                 .addComponent(addApkGroupRadSystem)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(addApkGroupRadData)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(addApkGroupRadPrivApp)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(addApkGroupRadPreload)
                 .addGap(18, 18, 18)
                 .addGroup(addApkGroupPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnContinue)
                     .addComponent(btnCancel))
-                .addGap(35, 35, 35))
+                .addGap(39, 39, 39))
             .addGroup(addApkGroupPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(addApkGroupPanelLayout.createSequentialGroup()
                     .addGap(94, 94, 94)
@@ -146,18 +152,20 @@ public class AddApkGroupUI extends javax.swing.JFrame {
                     .addGroup(addApkGroupPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(addGroupNameTitle)
                         .addComponent(groupName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addContainerGap(161, Short.MAX_VALUE)))
+                    .addContainerGap(184, Short.MAX_VALUE)))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(addApkGroupPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(addApkGroupPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(addApkGroupPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(addApkGroupPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         pack();
@@ -208,9 +216,9 @@ public class AddApkGroupUI extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel AddApkGroup_headingPanel;
-    private javax.swing.JPanel CZ_headingPanel;
     private javax.swing.JPanel addApkGroupPanel;
     private javax.swing.JRadioButton addApkGroupRadData;
+    private javax.swing.JRadioButton addApkGroupRadPreload;
     private javax.swing.JRadioButton addApkGroupRadPrivApp;
     private javax.swing.JRadioButton addApkGroupRadSystem;
     private javax.swing.JLabel addGroupNameTitle;
@@ -219,6 +227,5 @@ public class AddApkGroupUI extends javax.swing.JFrame {
     private javax.swing.JButton btnContinue;
     private javax.swing.JTextField groupName;
     private javax.swing.JLabel lblAddApkGroupHeading;
-    private javax.swing.JLabel lblCZHeading1;
     // End of variables declaration//GEN-END:variables
 }
