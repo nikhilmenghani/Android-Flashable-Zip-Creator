@@ -906,7 +906,7 @@ public class MainUI extends javax.swing.JFrame {
 
         addApkGroupRadPrivApp = new javax.swing.JRadioButton();
         addApkGroupRadPrivApp.setActionCommand("Add Priv Apk Group");
-        
+
         addApkGroupRadPreload = new javax.swing.JRadioButton();
         addApkGroupRadPreload.setActionCommand("Add Preload Group");
 
@@ -931,18 +931,18 @@ public class MainUI extends javax.swing.JFrame {
         javax.swing.GroupLayout AddApkGroup_headingPanelLayout = new javax.swing.GroupLayout(AddApkGroup_headingPanel);
         AddApkGroup_headingPanel.setLayout(AddApkGroup_headingPanelLayout);
         AddApkGroup_headingPanelLayout.setHorizontalGroup(
-            AddApkGroup_headingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(AddApkGroup_headingPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(lblAddApkGroupHeading, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                AddApkGroup_headingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(AddApkGroup_headingPanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(lblAddApkGroupHeading, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap())
         );
         AddApkGroup_headingPanelLayout.setVerticalGroup(
-            AddApkGroup_headingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(AddApkGroup_headingPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(lblAddApkGroupHeading, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                AddApkGroup_headingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(AddApkGroup_headingPanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(lblAddApkGroupHeading, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap())
         );
 
         addGroupTitle.setText("Enter the name of group in which apks will be added.");
@@ -955,7 +955,7 @@ public class MainUI extends javax.swing.JFrame {
         addApkGroupRadData.setText("Installs to /data/app");
 
         addApkGroupRadPrivApp.setText("Installs to /system/priv-app");
-        
+
         addApkGroupRadPreload.setText("Installs to /preload/symlink/system/app");
 
         btnContinue.setText("Continue");
@@ -977,76 +977,76 @@ public class MainUI extends javax.swing.JFrame {
         javax.swing.GroupLayout addApkGroupPanelLayout = new javax.swing.GroupLayout(addApkGroupPanel);
         addApkGroupPanel.setLayout(addApkGroupPanelLayout);
         addApkGroupPanelLayout.setHorizontalGroup(
-            addApkGroupPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(addApkGroupPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(AddApkGroup_headingPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-            .addGroup(addApkGroupPanelLayout.createSequentialGroup()
-                .addGap(106, 106, 106)
-                .addComponent(btnContinue, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(46, 46, 46)
-                .addComponent(btnCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(106, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, addApkGroupPanelLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(addApkGroupPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(addApkGroupRadPreload)
-                    .addComponent(addApkGroupRadSystem)
-                    .addComponent(addApkGroupRadData)
-                    .addComponent(addApkGroupRadPrivApp))
-                .addGap(96, 96, 96))
-            .addGroup(addApkGroupPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                addApkGroupPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(addApkGroupPanelLayout.createSequentialGroup()
-                    .addGap(73, 73, 73)
-                    .addGroup(addApkGroupPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(addGroupTitle)
+                        .addContainerGap()
+                        .addComponent(AddApkGroup_headingPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap())
+                .addGroup(addApkGroupPanelLayout.createSequentialGroup()
+                        .addGap(106, 106, 106)
+                        .addComponent(btnContinue, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(46, 46, 46)
+                        .addComponent(btnCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(106, Short.MAX_VALUE))
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, addApkGroupPanelLayout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(addApkGroupPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(addApkGroupRadPreload)
+                                .addComponent(addApkGroupRadSystem)
+                                .addComponent(addApkGroupRadData)
+                                .addComponent(addApkGroupRadPrivApp))
+                        .addGap(96, 96, 96))
+                .addGroup(addApkGroupPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(addApkGroupPanelLayout.createSequentialGroup()
-                            .addComponent(addGroupNameTitle)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addComponent(groupName, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addContainerGap(130, Short.MAX_VALUE)))
+                                .addGap(73, 73, 73)
+                                .addGroup(addApkGroupPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(addGroupTitle)
+                                        .addGroup(addApkGroupPanelLayout.createSequentialGroup()
+                                                .addComponent(addGroupNameTitle)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addComponent(groupName, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addContainerGap(130, Short.MAX_VALUE)))
         );
         addApkGroupPanelLayout.setVerticalGroup(
-            addApkGroupPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(addApkGroupPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(AddApkGroup_headingPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 88, Short.MAX_VALUE)
-                .addComponent(addApkGroupRadSystem)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(addApkGroupRadData)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(addApkGroupRadPrivApp)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(addApkGroupRadPreload)
-                .addGap(18, 18, 18)
-                .addGroup(addApkGroupPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnContinue)
-                    .addComponent(btnCancel))
-                .addGap(39, 39, 39))
-            .addGroup(addApkGroupPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                addApkGroupPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(addApkGroupPanelLayout.createSequentialGroup()
-                    .addGap(94, 94, 94)
-                    .addComponent(addGroupTitle)
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                    .addGroup(addApkGroupPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(addGroupNameTitle)
-                        .addComponent(groupName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addContainerGap(184, Short.MAX_VALUE)))
+                        .addContainerGap()
+                        .addComponent(AddApkGroup_headingPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 88, Short.MAX_VALUE)
+                        .addComponent(addApkGroupRadSystem)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(addApkGroupRadData)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(addApkGroupRadPrivApp)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(addApkGroupRadPreload)
+                        .addGap(18, 18, 18)
+                        .addGroup(addApkGroupPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(btnContinue)
+                                .addComponent(btnCancel))
+                        .addGap(39, 39, 39))
+                .addGroup(addApkGroupPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(addApkGroupPanelLayout.createSequentialGroup()
+                                .addGap(94, 94, 94)
+                                .addComponent(addGroupTitle)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(addApkGroupPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(addGroupNameTitle)
+                                        .addComponent(groupName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addContainerGap(184, Short.MAX_VALUE)))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(addApkGroupPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(addApkGroupPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(addApkGroupPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                        .addComponent(addApkGroupPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
         );
 
         pack();
@@ -2378,7 +2378,7 @@ public class MainUI extends javax.swing.JFrame {
         btnDoneModify = new javax.swing.JButton();
         lblBuildProp = new javax.swing.JLabel();
         lblHostsFile = new javax.swing.JLabel();
-        
+
         lblBuildProp.setText("build.prop Path : ");
 
         lblHostsFile.setText("hosts File Path :");
@@ -2395,18 +2395,18 @@ public class MainUI extends javax.swing.JFrame {
         javax.swing.GroupLayout OP_headingPanelLayout = new javax.swing.GroupLayout(OP_headingPanel);
         OP_headingPanel.setLayout(OP_headingPanelLayout);
         OP_headingPanelLayout.setHorizontalGroup(
-            OP_headingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(OP_headingPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(lblOPHeading, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                OP_headingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(OP_headingPanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(lblOPHeading, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap())
         );
         OP_headingPanelLayout.setVerticalGroup(
-            OP_headingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(OP_headingPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(lblOPHeading, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                OP_headingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(OP_headingPanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(lblOPHeading, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap())
         );
 
         dalvikCacheCheckBox.setText("Clear Dalvik Cache After Installation By Default");
@@ -2485,15 +2485,15 @@ public class MainUI extends javax.swing.JFrame {
         TextAreaOP.setRows(5);
         ScrollPaneOP.setViewportView(TextAreaOP);
 
-        if(op.buildPropPath.equals("")){
+        if (op.buildPropPath.equals("")) {
             buildPropTextField.setText("Click here to Import Build.prop...");
-        }else{
+        } else {
             buildPropTextField.setText(op.buildPropPath);
         }
-        
-        if(op.hostsFilePath.equals("")){
+
+        if (op.hostsFilePath.equals("")) {
             hostsFileTextField.setText("Click here to Import Hosts File...");
-        }else{
+        } else {
             hostsFileTextField.setText(op.hostsFilePath);
         }
 
@@ -2565,7 +2565,7 @@ public class MainUI extends javax.swing.JFrame {
                 if (!op.buildPropData.equals("")) {
                     TextAreaOP.setText(op.buildPropData);
                     op.lastModified = "Build Prop";
-                }else{
+                } else {
                     JOptionPane.showMessageDialog(null, "Import Build.prop First..!!");
                 }
             }
@@ -2585,7 +2585,7 @@ public class MainUI extends javax.swing.JFrame {
                 if (!op.hostsFileData.equals("")) {
                     TextAreaOP.setText(op.hostsFileData);
                     op.lastModified = "Hosts File";
-                }else{
+                } else {
                     JOptionPane.showMessageDialog(null, "Import Hosts File First..!!");
                 }
             }
@@ -2594,31 +2594,31 @@ public class MainUI extends javax.swing.JFrame {
         javax.swing.GroupLayout modifyOptionsPanelLayout = new javax.swing.GroupLayout(modifyOptionsPanel);
         modifyOptionsPanel.setLayout(modifyOptionsPanelLayout);
         modifyOptionsPanelLayout.setHorizontalGroup(
-            modifyOptionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(modifyOptionsPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(btnModifyAromaUpdaterScript)
-                .addGap(18, 18, 18)
-                .addComponent(btnModifyNormalUpdaterScript)
-                .addGap(18, 18, 18)
-                .addComponent(btnModifyAromaConfig, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(btnModifyBuildProp, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(btnModifyHostsFile, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                modifyOptionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(modifyOptionsPanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(btnModifyAromaUpdaterScript)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnModifyNormalUpdaterScript)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnModifyAromaConfig, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnModifyBuildProp, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnModifyHostsFile, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         modifyOptionsPanelLayout.setVerticalGroup(
-            modifyOptionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(modifyOptionsPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(modifyOptionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnModifyAromaUpdaterScript, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnModifyNormalUpdaterScript, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnModifyAromaConfig, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnModifyBuildProp, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnModifyHostsFile, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                modifyOptionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(modifyOptionsPanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(modifyOptionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(btnModifyAromaUpdaterScript, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(btnModifyNormalUpdaterScript, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(btnModifyAromaConfig, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(btnModifyBuildProp, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(btnModifyHostsFile, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         saveOptionsPanel.setBackground(new java.awt.Color(255, 255, 255));
@@ -2676,76 +2676,76 @@ public class MainUI extends javax.swing.JFrame {
         javax.swing.GroupLayout OPPanelLayout = new javax.swing.GroupLayout(OPPanel);
         OPPanel.setLayout(OPPanelLayout);
         OPPanelLayout.setHorizontalGroup(
-            OPPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(OPPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(OPPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(OP_headingPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(modifyOptionsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(ScrollPaneOP)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, OPPanelLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
+                OPPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(OPPanelLayout.createSequentialGroup()
+                        .addContainerGap()
                         .addGroup(OPPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(dalvikCacheCheckBox, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, OPPanelLayout.createSequentialGroup()
-                                .addComponent(btnSaveModify, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(btnDoneModify, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, OPPanelLayout.createSequentialGroup()
-                                .addGroup(OPPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(lblHostsFile, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(lblBuildProp))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(OPPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, OPPanelLayout.createSequentialGroup()
-                                        .addComponent(hostsFileTextField)
-                                        .addGap(10, 10, 10)
-                                        .addComponent(btnBrowseHostsFile))
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, OPPanelLayout.createSequentialGroup()
-                                        .addComponent(buildPropTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 347, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(btnBrowseBuildProp)))))))
-                .addContainerGap())
+                                .addComponent(OP_headingPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(modifyOptionsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(ScrollPaneOP)
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, OPPanelLayout.createSequentialGroup()
+                                        .addGap(0, 0, Short.MAX_VALUE)
+                                        .addGroup(OPPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addComponent(dalvikCacheCheckBox, javax.swing.GroupLayout.Alignment.TRAILING)
+                                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, OPPanelLayout.createSequentialGroup()
+                                                        .addComponent(btnSaveModify, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                        .addGap(18, 18, 18)
+                                                        .addComponent(btnDoneModify, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, OPPanelLayout.createSequentialGroup()
+                                                        .addGroup(OPPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                                                .addComponent(lblHostsFile, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                .addComponent(lblBuildProp))
+                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                        .addGroup(OPPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, OPPanelLayout.createSequentialGroup()
+                                                                        .addComponent(hostsFileTextField)
+                                                                        .addGap(10, 10, 10)
+                                                                        .addComponent(btnBrowseHostsFile))
+                                                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, OPPanelLayout.createSequentialGroup()
+                                                                        .addComponent(buildPropTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 347, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                                        .addComponent(btnBrowseBuildProp)))))))
+                        .addContainerGap())
         );
         OPPanelLayout.setVerticalGroup(
-            OPPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(OPPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(OP_headingPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(OPPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnBrowseBuildProp)
-                    .addComponent(buildPropTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblBuildProp))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(OPPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnBrowseHostsFile)
-                    .addComponent(hostsFileTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblHostsFile))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(modifyOptionsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(ScrollPaneOP, javax.swing.GroupLayout.PREFERRED_SIZE, 463, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(dalvikCacheCheckBox)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(OPPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnSaveModify, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnDoneModify, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 11, Short.MAX_VALUE))
+                OPPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(OPPanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(OP_headingPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(OPPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(btnBrowseBuildProp)
+                                .addComponent(buildPropTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(lblBuildProp))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(OPPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(btnBrowseHostsFile)
+                                .addComponent(hostsFileTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(lblHostsFile))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(modifyOptionsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(ScrollPaneOP, javax.swing.GroupLayout.PREFERRED_SIZE, 463, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(dalvikCacheCheckBox)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(OPPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(btnSaveModify, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(btnDoneModify, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 11, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(OPPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(OPPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(OPPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                        .addComponent(OPPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -3206,7 +3206,7 @@ public class MainUI extends javax.swing.JFrame {
         op.aroma_config = "";
         op.updater_script = "";
         op.flashableZipType = "";
-        op.jarFileName = "";
+        //op.jarFileName = "";
         op.existingZipPath = "";
         op.deleteApkConfigList = "";
         op.descriptionConfigList = "";
@@ -3216,13 +3216,24 @@ public class MainUI extends javax.swing.JFrame {
         op.themesPath = "";
         op.splashPath = "";
         op.kernelMountPoint = "";
-        //op.projectPath = "";
+        op.projectPath = "";
         op.projectData = "";
+        op.buildPropPath = "";
+        op.buildPropData = "";
+        op.hostsFilePath = "";
+        op.hostsFileData = "";
+        op.lastModified = "";
+        op.isUpdaterScriptModified = false;
+        op.isAromaConfigModified = false;
+        op.isBuildPropModified = false;
+        op.isHostsFileModified = false;
+        op.checkDalvikCache = false;
 
         op.groupArrayList = new ArrayList<>();
         op.systemList = new ArrayList<>();
         op.dataList = new ArrayList<>();
         op.privAppList = new ArrayList();
+        op.preloadList = new ArrayList();
         op.bootAnimList = new ArrayList<>();
         op.ringtoneList = new ArrayList<>();
         op.notifList = new ArrayList<>();
@@ -3231,7 +3242,7 @@ public class MainUI extends javax.swing.JFrame {
         op.fontsList = new ArrayList<>();
         op.deleteApkList = new ArrayList<>();
         op.arrayList = new ArrayList<>();
-        op.jarFileList = new ArrayList<>();
+        //op.jarFileList = new ArrayList<>();
         op.descriptionList = new ArrayList<>();
         op.themesList = new ArrayList<>();
         op.customThemeList = new ArrayList<>();
@@ -3629,7 +3640,7 @@ public class MainUI extends javax.swing.JFrame {
                 } else if (op.groupArrayList.contains("APKs-Data_" + groupList.getSelectedValue().toString())) {
                     op.filterFile(fileChooser, btnAddFile, groupList, fileModel, "APKs-Data");
                     System.out.println("Map contains : " + op.map);
-                }else if (op.groupArrayList.contains("APKs-Preload_" + groupList.getSelectedValue().toString())) {
+                } else if (op.groupArrayList.contains("APKs-Preload_" + groupList.getSelectedValue().toString())) {
                     op.filterFile(fileChooser, btnAddFile, groupList, fileModel, "APKs-Preload");
                     System.out.println("Map contains : " + op.map);
                 } else {
@@ -3693,11 +3704,11 @@ public class MainUI extends javax.swing.JFrame {
                         op.map.removeMapping("APKs-Data_" + this.groupList.getSelectedValue().toString(), op.getFilePath("APKs-Data_" + this.groupList.getSelectedValue().toString(), fileName, op.map));
                         this.fileModel.removeAllElements();
                         op.updateFileListWithSelectedGroupList("APKs-Data_" + this.groupList.getSelectedValue().toString(), this.fileModel, op.map);
-                    }else if (op.map.containsKey("APKs-Preload_" + this.groupList.getSelectedValue().toString())) {
+                    } else if (op.map.containsKey("APKs-Preload_" + this.groupList.getSelectedValue().toString())) {
                         op.map.removeMapping("APKs-Preload_" + this.groupList.getSelectedValue().toString(), op.getFilePath("APKs-Preload_" + this.groupList.getSelectedValue().toString(), fileName, op.map));
                         this.fileModel.removeAllElements();
                         op.updateFileListWithSelectedGroupList("APKs-Preload_" + this.groupList.getSelectedValue().toString(), this.fileModel, op.map);
-                    }else {
+                    } else {
                         op.map.removeMapping("APKs-PrivApp_" + this.groupList.getSelectedValue().toString(), op.getFilePath("APKs-PrivApp_" + this.groupList.getSelectedValue().toString(), fileName, op.map));
                         this.fileModel.removeAllElements();
                         op.updateFileListWithSelectedGroupList("APKs-PrivApp_" + this.groupList.getSelectedValue().toString(), this.fileModel, op.map);

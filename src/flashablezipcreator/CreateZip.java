@@ -28,7 +28,7 @@ import javax.swing.SwingWorker;
  */
 public class CreateZip extends SwingWorker<Void, Void> {
 
-    private int progress;
+    public int progress;
     ProgressBarUpdater ju;
     MainUI ai;
     Operations op;

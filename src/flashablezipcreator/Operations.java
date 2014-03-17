@@ -121,8 +121,14 @@ public final class Operations {
         if (!privAppList.isEmpty()) {
             projectData += "privAppList(=)" + privAppList + "\n";
         }
+        if (!preloadList.isEmpty()) {
+            projectData += "preloadList(=)" + preloadList + "\n";
+        }
         if (!bootAnimList.isEmpty()) {
             projectData += "bootAnimList(=)" + bootAnimList + "\n";
+        }
+        if (!customThemeList.isEmpty()) {
+            projectData += "customThemeList(=)" + customThemeList + "\n";
         }
         if (!ringtoneList.isEmpty()) {
             projectData += "ringtoneList(=)" + ringtoneList + "\n";
@@ -143,13 +149,13 @@ public final class Operations {
             projectData += "descriptionList(=)" + descriptionList;
         }
         if (!map.isEmpty()) {
-            projectData += "(?)" + map;
+            projectData += "(?)" + map + "(?)";
         }
         if (!themesPath.equals("")) {
-            projectData += "(?)" + "themesPath" + ", " + themesPath + "\n";
+            projectData += "themesPath" + ", " + themesPath + "\n";
         }
         if (!splashPath.equals("")) {
-            projectData += "splashPath" + ", " + splashPath;
+            projectData += "splashPath" + ", " + splashPath + "\n";
         }
     }
 
@@ -198,6 +204,12 @@ public final class Operations {
                                 break;
                             case "privAppList":
                                 privAppList.add(str);
+                                break;
+                            case "preloadList":
+                                preloadList.add(str);
+                                break;
+                            case "customThemeList":
+                                customThemeList.add(str);
                                 break;
                             case "bootAnimList":
                                 bootAnimList.add(str);
@@ -381,7 +393,7 @@ public final class Operations {
             return "APKs-Data";
         } else if (this.privAppList.contains(groupName)) {
             return "APKs-PrivApp";
-        }else if (this.preloadList.contains(groupName)) {
+        } else if (this.preloadList.contains(groupName)) {
             return "APKs-Preload";
         } else if (this.bootAnimList.contains(groupName)) {
             return "BootAnimations";
@@ -571,7 +583,7 @@ public final class Operations {
         displayListInAroma("checkbox", "Other File List", "Choose the files to be replaced", "personalize", "other_choices.prop", this.otherFileList, this.descriptionList);
 
         displayListInAroma("checkbox", "Priv App List", "Choose the apps to be installed to priv app", "personalize", "priv_app_choices.prop", this.privAppList, this.descriptionList);
-        
+
         displayListInAroma("checkbox", "Preload List", "Choose the apps to be installed to preload directory", "personalize", "preload_choices.prop", this.preloadList, this.descriptionList);
 
         displayListInAroma("selectbox", "Boot Animations List", "Select Boot Animation to be used in current ROM", "personalize", "boot_anim_choices.prop", this.bootAnimList, this.descriptionList);
@@ -601,7 +613,7 @@ public final class Operations {
         if (!privAppList.isEmpty()) {
             this.aroma_config += "writetmpfile(\"priv_app_choices.prop\",readtmpfile(\"priv_app_choices.prop\"));\n";
         }
-        
+
         if (!preloadList.isEmpty()) {
             this.aroma_config += "writetmpfile(\"preload_choices.prop\",readtmpfile(\"preload_choices.prop\"));\n";
         }
@@ -823,7 +835,7 @@ public final class Operations {
         if (!privAppList.isEmpty()) {
             this.updater_script += "set_perm_recursive(1000, 1000, 0775, 0644, \"/system/priv-app\");\n";
         }
-        
+
         if (!preloadList.isEmpty()) {
             this.updater_script += "set_perm_recursive(1000, 1000, 0775, 0644, \"/preload/symlink/system/app\");\n";
         }
