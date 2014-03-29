@@ -42,39 +42,43 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
-                  <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="OP_headingPanel" alignment="1" max="32767" attributes="0"/>
-                      <Component id="modifyOptionsPanel" alignment="0" max="32767" attributes="0"/>
-                      <Component id="ScrollPaneOP" alignment="0" max="32767" attributes="0"/>
                       <Group type="102" alignment="1" attributes="0">
-                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                          <EmptySpace min="-2" pref="694" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
+                              <Group type="102" alignment="1" attributes="0">
+                                  <Group type="103" groupAlignment="1" attributes="0">
+                                      <Group type="102" alignment="1" attributes="0">
+                                          <Component id="lblHostsFile" min="-2" pref="83" max="-2" attributes="0"/>
+                                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                          <Component id="hostsFileTextField" min="-2" pref="347" max="-2" attributes="0"/>
+                                      </Group>
+                                      <Group type="102" alignment="1" attributes="0">
+                                          <Component id="lblBuildProp" min="-2" max="-2" attributes="0"/>
+                                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                          <Component id="buildPropTextField" min="-2" pref="347" max="-2" attributes="0"/>
+                                      </Group>
+                                  </Group>
+                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                      <Component id="btnBrowseHostsFile" pref="94" max="32767" attributes="0"/>
+                                      <Component id="btnBrowseBuildProp" max="32767" attributes="0"/>
+                                  </Group>
+                              </Group>
                               <Component id="dalvikCacheCheckBox" alignment="1" min="-2" max="-2" attributes="0"/>
                               <Group type="102" alignment="1" attributes="0">
                                   <Component id="btnSaveModify" min="-2" pref="129" max="-2" attributes="0"/>
                                   <EmptySpace type="separate" max="-2" attributes="0"/>
                                   <Component id="btnDoneModify" min="-2" pref="129" max="-2" attributes="0"/>
                               </Group>
-                              <Group type="102" alignment="1" attributes="0">
-                                  <Group type="103" groupAlignment="1" attributes="0">
-                                      <Component id="lblHostsFile" min="-2" pref="83" max="-2" attributes="0"/>
-                                      <Component id="lblBuildProp" alignment="1" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                      <Group type="102" alignment="1" attributes="0">
-                                          <Component id="hostsFileTextField" max="32767" attributes="0"/>
-                                          <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
-                                          <Component id="btnBrowseHostsFile" min="-2" max="-2" attributes="0"/>
-                                      </Group>
-                                      <Group type="102" alignment="1" attributes="0">
-                                          <Component id="buildPropTextField" min="-2" pref="347" max="-2" attributes="0"/>
-                                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                          <Component id="btnBrowseBuildProp" min="-2" max="-2" attributes="0"/>
-                                      </Group>
-                                  </Group>
-                              </Group>
+                          </Group>
+                      </Group>
+                      <Group type="102" attributes="0">
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="OP_headingPanel" alignment="1" max="32767" attributes="0"/>
+                              <Component id="modifyOptionsPanel" alignment="0" max="32767" attributes="0"/>
+                              <Component id="ScrollPaneOP" alignment="0" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
@@ -102,7 +106,7 @@
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Component id="modifyOptionsPanel" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                  <Component id="ScrollPaneOP" min="-2" pref="463" max="-2" attributes="0"/>
+                  <Component id="ScrollPaneOP" pref="405" max="32767" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Component id="dalvikCacheCheckBox" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
@@ -110,7 +114,7 @@
                       <Component id="btnSaveModify" alignment="3" min="-2" pref="37" max="-2" attributes="0"/>
                       <Component id="btnDoneModify" alignment="3" min="-2" pref="37" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace min="0" pref="11" max="32767" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -224,16 +228,16 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="btnModifyAromaUpdaterScript" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnModifyAromaUpdaterScript" min="-2" pref="228" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Component id="btnModifyNormalUpdaterScript" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnModifyNormalUpdaterScript" min="-2" pref="228" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Component id="btnModifyAromaConfig" min="-2" pref="171" max="-2" attributes="0"/>
+                      <Component id="btnModifyAromaConfig" max="32767" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Component id="btnModifyBuildProp" min="-2" pref="171" max="-2" attributes="0"/>
+                      <Component id="btnModifyBuildProp" min="-2" pref="226" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Component id="btnModifyHostsFile" min="-2" pref="171" max="-2" attributes="0"/>
-                      <EmptySpace max="32767" attributes="0"/>
+                      <Component id="btnModifyHostsFile" min="-2" pref="226" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>

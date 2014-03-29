@@ -109,6 +109,25 @@ public final class Operations {
         }
     }
 
+    public void getSystemOS(){
+        if (isExecutingJarFile()) {
+            String path[] = this.getClass().getResource("META-INF/com/google/android/Supported Devices").getPath().split("!");
+            if (path[0].startsWith("file:/home")) {
+                this.OS = "Linux";
+            } else {
+                this.OS = "Windows";
+            }
+        } else {
+            File f = new File("src");
+            if (f.getAbsolutePath().contains("/")) {
+                this.OS = "Linux";
+            } else {
+                this.OS = "Windows";
+            }
+        }
+        System.out.println(this.OS + " Operating System Found..!!");
+    }
+    
     public void saveProject() {
         if (!groupArrayList.isEmpty()) {
             projectData += "groupArrayList(=)" + groupArrayList + "\n";
