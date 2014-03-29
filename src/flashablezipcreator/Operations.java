@@ -512,7 +512,7 @@ public final class Operations {
                 for (String list : arrayList) {
                     if (map.containsKey(list)) {
                         this.aroma_config += ",\n\"" + list.substring(list.lastIndexOf("_") + 1, list.length()) + "\", \"\", 2";
-                        this.aroma_config += ",\n\"Select All\",\"Check this to Install All.\", 1";
+                        this.aroma_config += ",\n\"Select All\",\"Installs All Files.\", 1";
                         for (String list_files : this.returnPathArray(list, map)) {
                             String desc = list.substring(list.lastIndexOf("_") + 1, list.length()) + "??" + getNameFromPath(list_files) + "??";
                             this.aroma_config += ",\n\"" + this.removeExtension(getNameFromPath(list_files)) + "\", \"" + getDescription(desc, descArrayList) + "\", 0";
@@ -534,7 +534,7 @@ public final class Operations {
                     this.aroma_config += ",\n\"" + "Select one Font" + "\", \"\", 2";
                     break;
             }
-            this.aroma_config += ",\n\"None\",\"Select this if you dont want to select anything else.\", 1";
+            this.aroma_config += ",\n\"Select None\",\"Skip this Group.\", 1";
             for (String list : arrayList) {
                 String desc = list.substring(list.lastIndexOf("_") + 1, list.length()) + "?_?";
                 this.aroma_config += ",\n\"" + list.substring(list.lastIndexOf("_") + 1, list.length()) + "\", \"" + getDescription(desc, descArrayList) + "\", 0";
