@@ -213,7 +213,7 @@ public class CreateZip extends SwingWorker<Void, Void> {
                     in.close();
                     System.out.println("Writing update-binary to zip..");
                     ai.setLog("Writing update-binary to zip..", ai.debugTextAreaCZ);
-                    if (op.nonNeonList.contains(op.selectedDevice)) {
+                    if (op.nonNeonList.contains(op.selectedDevice) || op.selectedDevice.equals("")) {
                         in = this.getClass().getResourceAsStream("META-INF/com/google/android/nonneon");
                     } else {
                         in = this.getClass().getResourceAsStream("META-INF/com/google/android/neon");

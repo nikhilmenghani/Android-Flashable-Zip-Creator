@@ -67,6 +67,7 @@ public final class Operations {
     String hostsFilePath = "";
     String hostsFileData = "";
     String lastModified = "";
+    String OS = "";
     Boolean isUpdaterScriptModified = false;
     Boolean isAromaConfigModified = false;
     Boolean isBuildPropModified = false;
@@ -680,14 +681,14 @@ public final class Operations {
                 switch (this.flashableZipType) {
                     case "Create Flashable Zip With Aroma Installer":
                         if (!buildPropData.equals("")) {
-                            this.updater_script += "if (file_getprop(\"/tmp/aroma/" + propFile + "\", \"selected.1" + "\")==\"" + s + "\") then\n"
+                            this.updater_script += "if (file_getprop(\"/tmp/aroma/" + propFile + "\", \"item.1." + s + "\")==\"" + "1" + "\") then\n"
                                     + "ui_print(\"Replacing " + "Build.prop" + "\");\n";
                             this.updater_script += "package_extract_file(\"customize/" + "script" + "/" + "build.prop" + "\", \"" + location + "/build.prop\");\n";
                             this.updater_script += "endif;\n";
                             s++;
                         }
                         if (!hostsFileData.equals("")) {
-                            this.updater_script += "if (file_getprop(\"/tmp/aroma/" + propFile + "\", \"selected.1" + "\")==\"" + s + "\") then\n"
+                            this.updater_script += "if (file_getprop(\"/tmp/aroma/" + propFile + "\", \"item.1." + s + "\")==\"" + "1" + "\") then\n"
                                     + "ui_print(\"Replacing " + "Hosts" + "\");\n";
                             this.updater_script += "package_extract_file(\"customize/" + "script" + "/" + "hosts" + "\", \"" + location + "/etc/hosts\");\n";
                             this.updater_script += "endif;\n";
