@@ -358,9 +358,10 @@ public final class Operations {
             try {
                 if (temp[2].equals("nonneon")) {
                     nonNeonList.add(temp[1]);
+                    System.out.println("Device Doesn't Support Neon..!!");
                 }
             } catch (ArrayIndexOutOfBoundsException aioobe) {
-                System.out.println("Array Index Out Of Bound Exception..!!");
+                System.out.println("Device Supports Neon..!!");
             }
         }
         is.close();

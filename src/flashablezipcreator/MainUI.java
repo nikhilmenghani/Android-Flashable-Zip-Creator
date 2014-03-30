@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.logging.Filter;
 import java.util.logging.Level;
@@ -896,7 +897,13 @@ public class MainUI extends javax.swing.JFrame {
         JScrollPane CSDScrollPanel = new JScrollPane();
         CSDScrollPanel.setViewportView(CSDList);
 
+        ArrayList<String> arrayList = new ArrayList<String>();
+        
         for (String deviceName : op.CSDmap.keySet()) {
+            arrayList.add(deviceName);
+        }
+        Collections.sort(arrayList);
+        for(String deviceName : arrayList){
             CSDModel.addElement(deviceName);
         }
 
