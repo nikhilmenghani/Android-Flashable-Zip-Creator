@@ -203,6 +203,15 @@ public class CreateZip extends SwingWorker<Void, Void> {
                         System.out.println("Writing Splash Screen to zip..");
                         in.close();
                     }
+                    if (!op.changeDpiList.isEmpty()) {
+                        ai.setLog("Writing Custom DPI Script to zip", ai.debugTextAreaCZ);
+                        for (String dpi : op.changeDpiList) {
+                            in = new ByteArrayInputStream(op.getDpiScript(dpi).getBytes());
+                            System.out.println("Writing " + dpi + ".sh to zip..");
+                            this.writeFileToZip(in, zos, "customize/" + "ChangeDpi" + "/" + dpi + ".sh");
+                            in.close();
+                        }
+                    }
                     if (!op.isAromaConfigModified) {
                         op.createAromaConfigFile();
                     }

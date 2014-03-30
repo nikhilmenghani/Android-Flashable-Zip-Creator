@@ -68,11 +68,13 @@ public final class Operations {
     String hostsFileData = "";
     String lastModified = "";
     String OS = "";
+    String DPIScript = "";
     Boolean isUpdaterScriptModified = false;
     Boolean isAromaConfigModified = false;
     Boolean isBuildPropModified = false;
     Boolean isHostsFileModified = false;
     Boolean checkDalvikCache = false;
+    Boolean isMountPointAvailable = true;
 
     double progress = 0.0;
 
@@ -90,7 +92,7 @@ public final class Operations {
     ArrayList<String> deleteApkList = new ArrayList<>();
     ArrayList<String> arrayList = new ArrayList<>();
     ArrayList<String> jarFileList = new ArrayList<>();
-
+    ArrayList<String> changeDpiList = new ArrayList<>();
     ArrayList<String> descriptionList = new ArrayList<>();
     ArrayList<String> themesList = new ArrayList<>();
     ArrayList<String> customThemeList = new ArrayList<>();
@@ -109,7 +111,7 @@ public final class Operations {
         }
     }
 
-    public void getSystemOS(){
+    public void getSystemOS() {
         if (isExecutingJarFile()) {
             String path[] = this.getClass().getResource("META-INF/com/google/android/Supported Devices").getPath().split("!");
             if (path[0].startsWith("file:/home")) {
@@ -127,7 +129,17 @@ public final class Operations {
         }
         System.out.println(this.OS + " Operating System Found..!!");
     }
-    
+
+    public String getDpiScript(String dpi) {
+        this.DPIScript += "cp /system/build.prop /system/build.prop.bak\n"
+                + "DPI=" + dpi + "\n"
+                + "sed -i 's/^.*ro.sf.lcd_density.*$/ro.sf.lcd_density='$DPI'/' /system/build.prop\n"
+                + "\n"
+                + "sync\n"
+                + "sleep 2";
+        return this.DPIScript;
+    }
+
     public void saveProject() {
         if (!groupArrayList.isEmpty()) {
             projectData += "groupArrayList(=)" + groupArrayList + "\n";
@@ -166,7 +178,10 @@ public final class Operations {
             projectData += "deleteApkList(=)" + deleteApkList + "\n";
         }
         if (!descriptionList.isEmpty()) {
-            projectData += "descriptionList(=)" + descriptionList;
+            projectData += "descriptionList(=)" + descriptionList + "\n";
+        }
+        if (!changeDpiList.isEmpty()) {
+            projectData += "changeDpiList(=)" + changeDpiList;
         }
         if (!map.isEmpty()) {
             projectData += "(?)" + map + "(?)";
@@ -252,6 +267,8 @@ public final class Operations {
                             case "descriptionList":
                                 descriptionList.add(str);
                                 break;
+                            case "changeDpiList":
+                                changeDpiList.add(str);
                             default:
                                 System.out.println("Something Went Wrong..!!");
                         }
@@ -442,6 +459,9 @@ public final class Operations {
             is.close();
             System.out.println("Returning mount point : " + mp);
             return mp;
+        } catch (NullPointerException npe) {
+            this.isMountPointAvailable = false;
+            System.out.println("Mount Point Not Found..!!");
         } catch (FileNotFoundException ex) {
             Logger.getLogger(Operations.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
@@ -534,11 +554,20 @@ public final class Operations {
                 case "fonts_choices.prop":
                     this.aroma_config += ",\n\"" + "Select one Font" + "\", \"\", 2";
                     break;
+                case "dpi_choices.prop":
+                    this.aroma_config += ",\n\"" + "Select one DPI" + "\", \"\", 2";
+                    break;
             }
             this.aroma_config += ",\n\"Select None\",\"Skip this Group.\", 1";
-            for (String list : arrayList) {
-                String desc = list.substring(list.lastIndexOf("_") + 1, list.length()) + "?_?";
-                this.aroma_config += ",\n\"" + list.substring(list.lastIndexOf("_") + 1, list.length()) + "\", \"" + getDescription(desc, descArrayList) + "\", 0";
+            if (propFile.equals("dpi_choices.prop")) {
+                for (String list : arrayList) {
+                    this.aroma_config += ",\n\"" + list + "\", \"\", 0";
+                }
+            } else {
+                for (String list : arrayList) {
+                    String desc = list.substring(list.lastIndexOf("_") + 1, list.length()) + "?_?";
+                    this.aroma_config += ",\n\"" + list.substring(list.lastIndexOf("_") + 1, list.length()) + "\", \"" + getDescription(desc, descArrayList) + "\", 0";
+                }
             }
             this.aroma_config += ");\n";
         }
@@ -580,7 +609,7 @@ public final class Operations {
 
     public void createAromaConfigFile() {
         this.aroma_config = "anisplash(\n"
-                + "4,\n"
+                + "2,\n"
                 + "\"splash/";
         if (this.splashPath.equals("")) {
             this.aroma_config += "AFZC";
@@ -608,6 +637,8 @@ public final class Operations {
         displayListInAroma("checkbox", "Preload List", "Choose the apps to be installed to preload directory", "personalize", "preload_choices.prop", this.preloadList, this.descriptionList);
 
         displayListInAroma("selectbox", "Boot Animations List", "Select Boot Animation to be used in current ROM", "personalize", "boot_anim_choices.prop", this.bootAnimList, this.descriptionList);
+
+        displayListInAroma("selectbox", "Custom Dpi List", "Choose DPI", "personalize", "dpi_choices.prop", this.changeDpiList, this.descriptionList);
 
         displayListInAroma("selectbox", "Kernel List", "Select Kernel to be flashed", "personalize", "kernel_choices.prop", this.kernelList, this.descriptionList);
 
@@ -641,6 +672,10 @@ public final class Operations {
 
         if (!bootAnimList.isEmpty()) {
             this.aroma_config += "writetmpfile(\"boot_anim_choices.prop\",readtmpfile(\"boot_anim_choices.prop\"));\n";
+        }
+
+        if (!changeDpiList.isEmpty()) {
+            this.aroma_config += "writetmpfile(\"dpi_choices.prop\",readtmpfile(\"dpi_choices.prop\"));\n";
         }
 
         if (!kernelList.isEmpty()) {
@@ -748,7 +783,6 @@ public final class Operations {
                                         if (i == 1) {
                                             this.updater_script += "if (file_getprop(\"/tmp/aroma/" + propFile + "\", \"selected.1" + "\")==\"" + (s + 1) + "\") then\n"
                                                     + "ui_print(\"Installing " + list.substring(list.lastIndexOf("_") + 1, list.length()) + "\");\n";
-                                            //this.updater_script += "\n\"set_progress(" + addProgressFraction() + ")\"\n";
                                             this.updater_script += "package_extract_dir(\"customize/" + getListName(list) + "/" + list + "\", \"" + location + "\");\n";
                                             this.updater_script += "endif;\n";
                                         }
@@ -838,6 +872,18 @@ public final class Operations {
         this.updater_script += "\nset_progress(0.8);\n";
         extractFilesUpdaterScript(this.notifList, "Adding Notification Tones", "notification_choices.prop", "/system/media/audio/notifications");
         this.updater_script += "\nset_progress(0.9);\n";
+        int s = 1;
+        if (!changeDpiList.isEmpty()) {
+            for (String list : changeDpiList) {
+                this.updater_script += "if (file_getprop(\"/tmp/aroma/" + "dpi_choices" + "\", \"selected.1" + "\")==\"" + (s + 1) + "\") then\n"
+                        + "ui_print(\"@" + "Changing Dpi to " + list + "\");\n";
+                this.updater_script += "package_extract_file(\"customize/" + "ChangeDpi" + "/" + list + ".sh\", \"" + "/tmp/" + list + ".sh\");\n";
+                this.updater_script += "set_perm(0, 0, 0777, \"/tmp/" + list + ".sh\");\n"
+                        + "run_program(\"/tmp/" + list + ".sh\");\n";
+                this.updater_script += "endif;\n";
+                s++;
+            }
+        }
         if (!deleteApkList.isEmpty()) {
             int j = 1;
             this.updater_script += "ui_print(\"@" + "Deleting System Apps" + "\");\n";

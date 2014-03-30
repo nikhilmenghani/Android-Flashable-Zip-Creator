@@ -239,6 +239,11 @@ public class ImportZip extends SwingWorker<Void, Void> {
                 this.writeFileFromZip(zis, outputFile);
 
                 if (filePath.startsWith("customize/")) {
+                    if(filePath.startsWith("customize/ChangeDpi") && filePath.endsWith(".sh")){
+                        String dpi = filePath.substring(filePath.lastIndexOf("/")+1,filePath.length());
+                        dpi = dpi.substring(0, 3);
+                        op.changeDpiList.add(dpi);
+                    }
                     if (filePath.equals("customize/script/hosts")) {
                         op.otherFileList.add("hosts");
                         op.isHostsFileModified = true;

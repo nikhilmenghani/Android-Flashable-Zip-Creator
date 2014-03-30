@@ -137,7 +137,7 @@ public class MainUI extends javax.swing.JFrame {
         sideButtonPanel = new javax.swing.JPanel();
         btnLoadAromaFlashableZip = new javax.swing.JButton();
         btnResetAll = new javax.swing.JButton();
-        btnAdvancedGroup = new javax.swing.JButton();
+        btnAddCustomDpi = new javax.swing.JButton();
         btnAddThemes = new javax.swing.JButton();
         btnAddSplash = new javax.swing.JButton();
         btnPreferences = new javax.swing.JButton();
@@ -539,10 +539,15 @@ public class MainUI extends javax.swing.JFrame {
             }
         });
 
-        btnAdvancedGroup.setText("Switch to Advanced Group");
-        btnAdvancedGroup.addActionListener(new java.awt.event.ActionListener() {
+        btnAddCustomDpi.setText("Add Custom Dpi");
+        btnAddCustomDpi.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                //btnAdvancedGroupActionPerformed(evt);
+                btnAddCustomDpiActionPerformed(evt);
+            }
+
+            private void btnAddCustomDpiActionPerformed(ActionEvent evt) {
+                System.out.println("Change Dpi UI Button Clicked");
+                ChangeDpiUI();
             }
         });
 
@@ -593,7 +598,7 @@ public class MainUI extends javax.swing.JFrame {
                         .addGroup(sideButtonPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                 .addComponent(btnAddThemes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(btnLoadAromaFlashableZip, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(btnAdvancedGroup, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnAddCustomDpi, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(btnResetAll, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(btnAddSplash, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(btnPreferences, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -607,7 +612,7 @@ public class MainUI extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(btnAddThemes, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(btnAdvancedGroup, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnAddCustomDpi, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(btnResetAll, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
@@ -1346,7 +1351,7 @@ public class MainUI extends javax.swing.JFrame {
         deleteApkName = new javax.swing.JTextField();
         lbl_deleteSystemExtension = new javax.swing.JLabel();
         deleteSystemScrollPane = new javax.swing.JScrollPane();
-        deleteSystemFileList = new javax.swing.JList();
+        deleteSystemFileList = new JList(deletefileModel);
         btnAddDeleteFile = new javax.swing.JButton();
         btnRemoveDeleteFile = new javax.swing.JButton();
         btnResetDeleteFile = new javax.swing.JButton();
@@ -1362,7 +1367,6 @@ public class MainUI extends javax.swing.JFrame {
         } catch (NullPointerException npe) {
             System.out.println("Exception Caught while opening delete system apk UI");
         }
-        deleteSystemFileList = new JList(deletefileModel);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -2932,6 +2936,243 @@ public class MainUI extends javax.swing.JFrame {
         dialog.setVisible(true);
     }
 
+    public void ChangeDpiUI() {
+
+        dialog = new JDialog(frame, "Custom DPI", true);
+        dialog.setResizable(false);
+        changeDpiPanel = new javax.swing.JPanel();
+        ChangeDpi_headingPanel = new javax.swing.JPanel();
+        lblChangeDpiHeading = new javax.swing.JLabel();
+        changeDpiScrollPane = new javax.swing.JScrollPane();
+        btnAddChangeDpi = new javax.swing.JButton();
+        btnRemoveChangeDpi = new javax.swing.JButton();
+        btnResetChangeDpi = new javax.swing.JButton();
+        btnDoneChangeDpi = new javax.swing.JButton();
+        textFieldChangeDpi = new javax.swing.JTextField();
+        lbl_changeDpiValue = new javax.swing.JLabel();
+        lbl_changeDpiEg = new javax.swing.JLabel();
+        lbl_changeDpiHeading = new javax.swing.JLabel();
+        changeDpiModel = new DefaultListModel();
+        changeDpiList = new JList(changeDpiModel);
+
+        try {
+            changeDpiModel.removeAllElements();
+            for (String fileName : op.changeDpiList) {
+                System.out.println("File Added To List is : " + fileName);
+                changeDpiModel.addElement(fileName);
+            }
+        } catch (NullPointerException npe) {
+            System.out.println("Exception Caught while opening Change Dpi UI");
+        }
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        ChangeDpi_headingPanel.setBackground(new java.awt.Color(0, 0, 0));
+
+        lblChangeDpiHeading.setFont(new java.awt.Font("Verdana", 1, 24)); // NOI18N
+        lblChangeDpiHeading.setForeground(new java.awt.Color(255, 255, 255));
+        lblChangeDpiHeading.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblChangeDpiHeading.setText("Custom Dpi");
+
+        javax.swing.GroupLayout ChangeDpi_headingPanelLayout = new javax.swing.GroupLayout(ChangeDpi_headingPanel);
+        ChangeDpi_headingPanel.setLayout(ChangeDpi_headingPanelLayout);
+        ChangeDpi_headingPanelLayout.setHorizontalGroup(
+                ChangeDpi_headingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(ChangeDpi_headingPanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(lblChangeDpiHeading, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap())
+        );
+        ChangeDpi_headingPanelLayout.setVerticalGroup(
+                ChangeDpi_headingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(ChangeDpi_headingPanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(lblChangeDpiHeading, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap())
+        );
+
+        changeDpiList.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+
+        changeDpiList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                //changeDpiListValueChanged(evt);
+            }
+        });
+        changeDpiScrollPane.setViewportView(changeDpiList);
+
+        btnAddChangeDpi.setText("Add");
+        btnAddChangeDpi.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddChangeDpiActionPerformed(evt);
+            }
+
+            private void btnAddChangeDpiActionPerformed(ActionEvent evt) {
+                System.out.println("Add Change Dpi Button Clicked..!!");
+                if (!textFieldChangeDpi.getText().equals("")) {
+                    try {
+                        if (Integer.parseInt(textFieldChangeDpi.getText()) < 160) {
+                            JOptionPane.showMessageDialog(null, "Entered value must exceed 160..!!");
+                        } else {
+                            if (Integer.parseInt(textFieldChangeDpi.getText()) < 1000) {
+                                if (!changeDpiModel.contains(textFieldChangeDpi.getText())) {
+                                    changeDpiModel.addElement(textFieldChangeDpi.getText());
+                                } else {
+                                    JOptionPane.showMessageDialog(null, "Dpi Value Already Exists..");
+                                }
+                            } else {
+                                JOptionPane.showMessageDialog(null, "Entered value must not exceed 999..!!");
+                            }
+                            textFieldChangeDpi.setText("");
+                        }
+                    } catch (NumberFormatException nfe) {
+                        JOptionPane.showMessageDialog(null, "Enter Value Between 160 and 999");
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Add Dpi value First..!!");
+                }
+            }
+        });
+
+        btnRemoveChangeDpi.setText("Remove");
+        btnRemoveChangeDpi.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRemoveChangeDpiActionPerformed(evt);
+            }
+
+            private void btnRemoveChangeDpiActionPerformed(ActionEvent evt) {
+                System.out.println("Remove Change Dpi Button Clicked..!!");
+                if (!changeDpiList.isSelectionEmpty()) {
+                    changeDpiModel.removeElement(changeDpiList.getSelectedValue());
+                } else {
+                    JOptionPane.showMessageDialog(null, "Select Dpi Value First..!!");
+                }
+            }
+        });
+
+        btnResetChangeDpi.setText("Reset");
+        btnResetChangeDpi.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnResetChangeDpiActionPerformed(evt);
+            }
+
+            private void btnResetChangeDpiActionPerformed(ActionEvent evt) {
+                changeDpiModel.removeAllElements();
+                op.changeDpiList = new ArrayList<String>();
+                changeDpiList.removeAll();
+                textFieldChangeDpi.setText("");
+            }
+        });
+
+        btnDoneChangeDpi.setText("Done!");
+        btnDoneChangeDpi.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDoneChangeDpiActionPerformed(evt);
+                dialog.dispose();
+            }
+
+            private void btnDoneChangeDpiActionPerformed(ActionEvent evt) {
+                System.out.println("Done Change Dpi Button Clicked..!!");
+                op.changeDpiList = new ArrayList<>();
+                for (int i = 0; i < changeDpiModel.getSize(); i++) {
+                    op.changeDpiList.add(changeDpiModel.getElementAt(i).toString());
+                }
+                System.out.println("Change Dpi List is : " + op.changeDpiList);
+            }
+        });
+
+        textFieldChangeDpi.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+
+        lbl_changeDpiValue.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        lbl_changeDpiValue.setText("Enter Dpi Value : ");
+
+        lbl_changeDpiEg.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        lbl_changeDpiEg.setText("(eg. 210)");
+
+        lbl_changeDpiHeading.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        lbl_changeDpiHeading.setText("Enter all the Dpi values that you would like to change.");
+
+        javax.swing.GroupLayout changeDpiPanelLayout = new javax.swing.GroupLayout(changeDpiPanel);
+        changeDpiPanel.setLayout(changeDpiPanelLayout);
+        changeDpiPanelLayout.setHorizontalGroup(
+                changeDpiPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(changeDpiPanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(changeDpiPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(ChangeDpi_headingPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(changeDpiPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(lbl_changeDpiHeading)
+                                        .addGroup(changeDpiPanelLayout.createSequentialGroup()
+                                                .addComponent(lbl_changeDpiValue)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(textFieldChangeDpi, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addComponent(lbl_changeDpiEg))
+                                        .addGroup(changeDpiPanelLayout.createSequentialGroup()
+                                                .addComponent(changeDpiScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addGroup(changeDpiPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                        .addGroup(changeDpiPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                                .addComponent(btnRemoveChangeDpi, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                .addComponent(btnDoneChangeDpi, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                .addComponent(btnResetChangeDpi, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                        .addComponent(btnAddChangeDpi, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        changeDpiPanelLayout.setVerticalGroup(
+                changeDpiPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(changeDpiPanelLayout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addGroup(changeDpiPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(changeDpiPanelLayout.createSequentialGroup()
+                                        .addComponent(ChangeDpi_headingPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(lbl_changeDpiHeading)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addGroup(changeDpiPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                                .addComponent(textFieldChangeDpi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(lbl_changeDpiValue)
+                                                .addComponent(lbl_changeDpiEg, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 104, Short.MAX_VALUE)
+                                        .addComponent(btnResetChangeDpi, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(btnDoneChangeDpi, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, changeDpiPanelLayout.createSequentialGroup()
+                                        .addGap(0, 0, Short.MAX_VALUE)
+                                        .addGroup(changeDpiPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                .addGroup(changeDpiPanelLayout.createSequentialGroup()
+                                                        .addComponent(btnAddChangeDpi, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                        .addComponent(btnRemoveChangeDpi, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                        .addGap(102, 102, 102))
+                                                .addComponent(changeDpiScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addContainerGap())
+        );
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(changeDpiPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        layout.setVerticalGroup(
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(changeDpiPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+        );
+
+        pack();
+        dialog.getContentPane().add(changeDpiPanel);
+        dialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+        dialog.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent we) {
+                //JOptionPane.showMessageDialog(null, "Thwarted user attempt to close window.");
+                dialog.dispose();
+            }
+        });
+        dialog.pack();
+        dialog.setLocationRelativeTo(this);
+        dialog.setVisible(true);
+    }
+
     public void removeOPHighlight(String lastModified) {
         switch (lastModified) {
             case "Aroma Updater Script":
@@ -3012,6 +3253,8 @@ public class MainUI extends javax.swing.JFrame {
     private void btnKernelGroupActionPerformed(ActionEvent evt) {
         if ("".equals(op.selectedDevice) && "".equals(op.updateBinaryPath)) {
             JOptionPane.showMessageDialog(null, "Please Select Your Device First...!!!");
+        } else if (!op.isMountPointAvailable) {
+            JOptionPane.showMessageDialog(null, "Mount point not found, Kernel Group is not available for your device..!!");
         } else if ("".equals(op.selectedDevice) && !"".equals(op.updateBinaryPath)) {
             JOptionPane.showMessageDialog(null, "Sorry, This Feature is only available for Supported Devices");
         } else {
@@ -3371,7 +3614,7 @@ public class MainUI extends javax.swing.JFrame {
         } else if (op.zipDestination.equals("")) {
             JOptionPane.showMessageDialog(this, "You forgot to enter destination path of zip file..!!");
             return false;
-        } else if (op.deleteApkList.isEmpty()) {
+        } else if (op.deleteApkList.isEmpty()&&op.changeDpiList.isEmpty()) {
             if (op.groupArrayList.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Zip cannot be created without group..\nFirst create one..!!");
                 return false;
@@ -3419,6 +3662,7 @@ public class MainUI extends javax.swing.JFrame {
         op.isBuildPropModified = false;
         op.isHostsFileModified = false;
         op.checkDalvikCache = false;
+        op.DPIScript = "";
 
         op.groupArrayList = new ArrayList<>();
         op.systemList = new ArrayList<>();
@@ -3437,6 +3681,7 @@ public class MainUI extends javax.swing.JFrame {
         op.descriptionList = new ArrayList<>();
         op.themesList = new ArrayList<>();
         op.customThemeList = new ArrayList<>();
+        op.changeDpiList = new ArrayList<>();
 
         op.map = new MultiValueMap();
 
@@ -3472,7 +3717,7 @@ public class MainUI extends javax.swing.JFrame {
                 addGroupUI();
                 break;
             case "Advanced Group":
-                btnAdvancedGroup.setSelected(false);
+                btnAddCustomDpi.setSelected(false);
                 break;
             case "Delete System Files Group":
                 btnDeleteSystemFilesGroup.setSelected(false);
@@ -4160,12 +4405,27 @@ public class MainUI extends javax.swing.JFrame {
     private javax.swing.JLabel lblBuildProp;
     private javax.swing.JLabel lblHostsFile;
 
+    private javax.swing.JPanel ChangeDpi_headingPanel;
+    private javax.swing.JButton btnAddChangeDpi;
+    private javax.swing.JButton btnDoneChangeDpi;
+    private javax.swing.JButton btnRemoveChangeDpi;
+    private javax.swing.JButton btnResetChangeDpi;
+    private javax.swing.JList changeDpiList;
+    private javax.swing.JPanel changeDpiPanel;
+    private javax.swing.JScrollPane changeDpiScrollPane;
+    private javax.swing.JLabel lblChangeDpiHeading;
+    private javax.swing.JLabel lbl_changeDpiEg;
+    private javax.swing.JLabel lbl_changeDpiHeading;
+    private javax.swing.JLabel lbl_changeDpiValue;
+    private javax.swing.JTextField textFieldChangeDpi;
+    public DefaultListModel changeDpiModel;
+
     private javax.swing.JMenuItem aboutMenuItem;
     private javax.swing.JButton btnAddDescription;
     private javax.swing.JButton btnAddFile;
     private javax.swing.JButton btnAddGroup;
     private javax.swing.JButton btnAddSplash;
-    private javax.swing.JButton btnAdvancedGroup;
+    private javax.swing.JButton btnAddCustomDpi;
     private javax.swing.JButton btnApkGroup;
     private javax.swing.JButton btnBootAnimGroup;
     private javax.swing.JButton btnBrowseUpdateBinary;
