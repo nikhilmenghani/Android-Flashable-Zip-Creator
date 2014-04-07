@@ -1351,11 +1351,11 @@ public class MainUI extends javax.swing.JFrame {
         deleteApkName = new javax.swing.JTextField();
         lbl_deleteSystemExtension = new javax.swing.JLabel();
         deleteSystemScrollPane = new javax.swing.JScrollPane();
+        deletefileModel = new DefaultListModel();
         deleteSystemFileList = new JList(deletefileModel);
         btnAddDeleteFile = new javax.swing.JButton();
         btnRemoveDeleteFile = new javax.swing.JButton();
         btnResetDeleteFile = new javax.swing.JButton();
-        deletefileModel = new DefaultListModel();
         btnDoneDeleteFile = new javax.swing.JButton();
 
         try {

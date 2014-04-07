@@ -114,7 +114,7 @@ public final class Operations {
     public void getSystemOS() {
         if (isExecutingJarFile()) {
             String path[] = this.getClass().getResource("META-INF/com/google/android/Supported Devices").getPath().split("!");
-            if (path[0].startsWith("file:/home")) {
+            if (path[0].startsWith("file:/home")||path[0].startsWith("file:/media")) {
                 this.OS = "Linux";
             } else {
                 this.OS = "Windows";
@@ -587,12 +587,12 @@ public final class Operations {
         }
         if (!customThemeList.isEmpty()) {
             for (String theme : customThemeList) {
-                themes.add(toNormalCase(new File(theme).getName()));
+                themes.add(new File(theme).getName());
             }
         }
         this.aroma_config += "selectbox(\"Themes\",\"Choose your desired theme from following\",\"@personalize\",\"theme.prop\",\n";
         for (String theme : themes) {
-            this.aroma_config += "\"" + theme + " Theme\", \"\", " + i + ",\n";
+            this.aroma_config += "\"" + toNormalCase(theme) + " Theme\", \"\", " + i + ",\n";
             if (i == 1) {
                 i--;
             }
@@ -602,7 +602,7 @@ public final class Operations {
         i = 1;
         for (String theme : themes) {
             this.aroma_config += "if prop(\"theme.prop\", \"selected.0\")==\"" + i++ + "\" then\n"
-                    + "theme(\"" + theme.toLowerCase() + "\");\n"
+                    + "theme(\"" + theme + "\");\n"
                     + "endif;\n\n";
         }
     }
@@ -875,7 +875,7 @@ public final class Operations {
         int s = 1;
         if (!changeDpiList.isEmpty()) {
             for (String list : changeDpiList) {
-                this.updater_script += "if (file_getprop(\"/tmp/aroma/" + "dpi_choices" + "\", \"selected.1" + "\")==\"" + (s + 1) + "\") then\n"
+                this.updater_script += "if (file_getprop(\"/tmp/aroma/" + "dpi_choices.prop" + "\", \"selected.1" + "\")==\"" + (s + 1) + "\") then\n"
                         + "ui_print(\"@" + "Changing Dpi to " + list + "\");\n";
                 this.updater_script += "package_extract_file(\"customize/" + "ChangeDpi" + "/" + list + ".sh\", \"" + "/tmp/" + list + ".sh\");\n";
                 this.updater_script += "set_perm(0, 0, 0777, \"/tmp/" + list + ".sh\");\n"
@@ -1068,6 +1068,7 @@ public final class Operations {
     }
 
     public String toNormalCase(String str) {
+        str = str.toLowerCase();
         char c = (char) (str.charAt(0) - 32);
         str = c + str.substring(1);
         return str;
@@ -1078,8 +1079,8 @@ public final class Operations {
         File themes = new File(path);
         for (String theme : themes.list()) {
             theme = theme.substring(theme.indexOf("themes") + 1, theme.length());
-            System.out.println("Theme : " + toNormalCase(theme));
-            tempArray.add(toNormalCase(theme));
+            System.out.println("Theme : " + theme);
+            tempArray.add(theme);
         }
         //JOptionPane.showMessageDialog(null, tempArray);
         return tempArray;
@@ -1113,7 +1114,7 @@ public final class Operations {
                                 theme = s.substring(theme.length() + 1, s.length());
                                 theme = theme.substring(0, theme.indexOf("/"));
                                 //JOptionPane.showMessageDialog(null, "String with theme name is : " + theme);
-                                this.themesList.add(toNormalCase(theme));
+                                this.themesList.add(theme);
                                 //JOptionPane.showMessageDialog(null, "Entered.. " + themesList);
                             }
                         }

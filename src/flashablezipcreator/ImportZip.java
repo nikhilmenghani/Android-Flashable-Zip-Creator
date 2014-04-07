@@ -229,7 +229,7 @@ public class ImportZip extends SwingWorker<Void, Void> {
                 if (filePath.startsWith(theme) && filePath.endsWith(".prop")) {
                     theme = filePath.substring(theme.length() + 1, filePath.length());
                     theme = theme.substring(0, theme.indexOf("/"));
-                    if (!op.themesList.contains(op.toNormalCase(theme))) {
+                    if (!op.themesList.contains(theme)) {
                         op.customThemeList.add("Temp" + File.separator + "META-INF" + File.separator + "com" + File.separator + "google" + File.separator + "android" + File.separator + "aroma" + File.separator + "themes" + File.separator + theme);
                     }
                 }
