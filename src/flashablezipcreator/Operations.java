@@ -114,7 +114,7 @@ public final class Operations {
     public void getSystemOS() {
         if (isExecutingJarFile()) {
             String path[] = this.getClass().getResource("META-INF/com/google/android/Supported Devices").getPath().split("!");
-            if (path[0].startsWith("file:/home")||path[0].startsWith("file:/media")) {
+            if (path[0].startsWith("file:/home") || path[0].startsWith("file:/media")) {
                 this.OS = "Linux";
             } else {
                 this.OS = "Windows";
@@ -724,7 +724,9 @@ public final class Operations {
 
         //this.aroma_config += "if confirm(\"Wipe cache partition\",\"Do you want to clear dalvik cache after installation?\", \"@confirm\")==\"yes\" then writetmpfile(\"dalvik_choices.prop\",\"true=yes\");\n\nendif;\n";
         //this.aroma_config += "if confirm(\"Installing\",getvar(\"installer_title\") + \"\\n\\nStart Installation?\", \"@confirm\")==\"no\" then back(1);\nendif;\n";
-        this.aroma_config += "install(\"Installing\", \"Your selected files are being installed. Please Wait...\", \"@install\");\n";
+        this.aroma_config += "\ninstall(\"Installing\", \"Your selected files are being installed. Please Wait...\", \"@install\");\n";
+        this.aroma_config += "ini_set(\"text_next\", \"Finish\");\n"
+                + "ini_set(\"icon_next\", \"@finish\");";
 
     }
 

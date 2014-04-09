@@ -13,9 +13,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 import javax.swing.JOptionPane;
@@ -125,7 +122,7 @@ public class CreateZip extends SwingWorker<Void, Void> {
                 ai.setLog("Creating Description List..!!", ai.debugTextAreaCZ);
                 this.createDescriptionConfigList();
                 in = new ByteArrayInputStream(op.descriptionConfigList.getBytes());
-                this.writeFileToZip(in, zos, "customize/File Description/desc-config");
+                this.writeFileToZip(in, zos, op.descConfigPath);
                 in.close();
                 ai.setLog("Imported Description of files...", ai.runTextAreaCZ);
             } else {
