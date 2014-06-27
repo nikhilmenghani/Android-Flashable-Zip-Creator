@@ -22,6 +22,8 @@ public class FlashableZipCreator {
      */
     public static void main(String args[]) throws ClassNotFoundException, SQLException{
         QueryDB qdb = new QueryDB("afzc");
+        sopln("qdb initialized");
+        QueryDB qdb1 = new QueryDB("afzc");
         sopln("started");
         try{
             qdb.createTable("create table package(group_name varchar(40), location varchar(60), file_name varchar(120))");

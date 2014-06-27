@@ -62,17 +62,13 @@ public class QueryDB extends CreateDB {
         String qry = "select " + columns + 
                 " from " + table +
                 " where " + condition + "";
-        ResultSet rs = con.createStatement().executeQuery(qry);
-        con.close();
-        return rs;
+        return con.createStatement().executeQuery(qry);
     }
     //this function can be used when no condition filtering is required.
     public ResultSet select(String columns, String table) throws SQLException{
         Connection con = DriverManager.getConnection(JDBC_URL);
         String qry = "select " + columns + 
                 " from " + table + "";
-        ResultSet rs = con.createStatement().executeQuery(qry);
-        con.close();
-        return rs;
+        return con.createStatement().executeQuery(qry);
     }
 }
