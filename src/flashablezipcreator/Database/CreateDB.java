@@ -16,7 +16,7 @@ import flashablezipcreator.AFZC.Protocols;
 public class CreateDB extends Protocols{
     public final String DRIVER = "org.apache.derby.jdbc.EmbeddedDriver";
     public String JDBC_URL;
-    //this constructor creates a databased
+    //this constructor creates a database
     CreateDB(String DB) throws ClassNotFoundException, SQLException{
         Class.forName(DRIVER);
         JDBC_URL = "jdbc:derby:" + DB + ";create=true";
