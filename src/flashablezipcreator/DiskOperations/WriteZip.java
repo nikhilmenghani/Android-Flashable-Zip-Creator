@@ -35,11 +35,11 @@ public final class WriteZip extends Write{
     
     //this will create a zip outputstream
     public ZipOutputStream createZOS(String filePath) throws FileNotFoundException, IOException{
-        return new ZipOutputStream(new FileOutputStream(createZipFile(filePath)));
+        return new ZipOutputStream(new FileOutputStream(createFile(filePath)));
     }
     
     //this function will create zip File.
-    public File createZipFile(String filePath) throws IOException{
+    public File createFile(String filePath) throws IOException{
         File fileDest = new File(filePath);
         if (!fileDest.exists()) {
             fileDest.createNewFile();

@@ -6,8 +6,6 @@
 package flashablezipcreator.DiskOperations;
 
 import flashablezipcreator.AFZC.Protocols;
-import flashablezipcreator.Core.FileNode;
-import flashablezipcreator.Core.ProjectItemNode;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
@@ -15,8 +13,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import static java.time.Clock.system;
-import javax.swing.tree.TreeNode;
 
 /**
  *
@@ -75,6 +71,39 @@ public class Write extends Protocols {
         if (!file.exists()) {
             file.mkdir();
             System.out.println("Folder created at : " + name);
+        }
+    }
+    
+    public void deleteDirectories(String location) {
+        File directory = new File(location);
+        if (!directory.exists()) {
+            System.out.println("Directory Doesn't Exist..!!");
+        } else {
+            this.delete(directory);
+        }
+    }
+
+    public void delete(File file) {
+        if (file.isDirectory()) {
+            if (file.list().length == 0) {
+                file.delete();
+                System.out.println("Directory Deleted.. " + file.getAbsolutePath());
+            } else {
+                String files[] = file.list();
+
+                for (String temp : files) {
+                    File fileDelete = new File(file, temp);
+                    delete(fileDelete);
+                }
+
+                if (file.list().length == 0) {
+                    file.delete();
+                    System.out.println("Directory is deleted : " + file.getAbsolutePath());
+                }
+            }
+        } else {
+            file.delete();
+            System.out.println("File is deleted : " + file.getAbsolutePath());
         }
     }
 }

@@ -5,12 +5,13 @@
  */
 package flashablezipcreator;
 
+import static flashablezipcreator.AFZC.Protocols.p;
 import flashablezipcreator.Core.FileNode;
 import flashablezipcreator.Core.GroupNode;
 import flashablezipcreator.Core.ProjectItemNode;
 import flashablezipcreator.Core.ProjectNode;
 import flashablezipcreator.Core.ProjectTreeBuilder;
-import flashablezipcreator.Core.SubGroupNode;
+import flashablezipcreator.Operations.ProjectOperations;
 import flashablezipcreator.Operations.TreeOperations;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -30,8 +31,8 @@ public class JTree extends JFrame implements TreeSelectionListener {
      * Creates new form JTreeDemo
      */
     DefaultTreeModel model;
-    TreeOperations to = new TreeOperations();
-
+    TreeOperations to; 
+    ProjectOperations po = new ProjectOperations();
     public JTree() throws IOException {
         initComponents();
     }
@@ -54,7 +55,24 @@ public class JTree extends JFrame implements TreeSelectionListener {
         model = ProjectTreeBuilder.buildModel();
         jScrollPane1 = ProjectTreeBuilder.buildScrollPane();
         tree.addTreeSelectionListener(this);
+        this.to = new TreeOperations(ProjectTreeBuilder.rootNode);
 
+        p();
+        p("new test");
+        p();
+        p("ProjectList");
+        System.out.println(to.getNodeList(ProjectItemNode.NODE_PROJECT));
+        p();
+        p("Group list");
+        System.out.println(to.getNodeList(ProjectItemNode.NODE_GROUP));
+        p();
+        p("SubGroup List");
+        System.out.println(to.getNodeList(ProjectItemNode.NODE_SUBGROUP));
+        p();
+        p("File List");
+        System.out.println(to.getNodeList(ProjectItemNode.NODE_FILE));
+        p();
+        
         //to expand all the rows
         to.expandDirectories(tree);
 
