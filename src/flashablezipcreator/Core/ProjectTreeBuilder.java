@@ -29,7 +29,7 @@ public class ProjectTreeBuilder {
         ProjectNode projectNode = new ProjectNode("Normal Aroma Zip", ProjectNode.PROJECT_AROMA, rootNode);
         
         
-        GroupNode groupNode1 = new GroupNode("Launcher", GroupNode.GROUP_SYSTEM_APK, projectNode);
+        GroupNode groupNode1 = new GroupNode("Launcher", GroupNode.GROUP_CUSTOM, projectNode);
         
         SubGroupNode subGroupNode1 = new SubGroupNode("S4 Launcher", SubGroupNode.TYPE_SYSTEM_FONTS, groupNode1);
         

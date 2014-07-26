@@ -12,7 +12,9 @@ import flashablezipcreator.Core.ProjectItemNode;
 import flashablezipcreator.Core.ProjectNode;
 import flashablezipcreator.Core.ProjectTreeBuilder;
 import flashablezipcreator.Operations.ProjectOperations;
+import flashablezipcreator.Operations.ScriptOperations;
 import flashablezipcreator.Operations.TreeOperations;
+import flashablezipcreator.Protocols.Export;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -32,6 +34,7 @@ public class JTree extends JFrame implements TreeSelectionListener {
      */
     DefaultTreeModel model;
     TreeOperations to; 
+    ScriptOperations so;
     ProjectOperations po = new ProjectOperations();
     public JTree() throws IOException {
         initComponents();
@@ -56,6 +59,10 @@ public class JTree extends JFrame implements TreeSelectionListener {
         jScrollPane1 = ProjectTreeBuilder.buildScrollPane();
         tree.addTreeSelectionListener(this);
         this.to = new TreeOperations(ProjectTreeBuilder.rootNode);
+        this.so = new ScriptOperations();
+        
+        Export e = new Export();
+        e.protocol1(to.getNodeList(ProjectItemNode.NODE_FILE));
 
         p();
         p("new test");
@@ -72,6 +79,10 @@ public class JTree extends JFrame implements TreeSelectionListener {
         p("File List");
         System.out.println(to.getNodeList(ProjectItemNode.NODE_FILE));
         p();
+        
+        for(ProjectItemNode node : to.getNodeList(ProjectItemNode.NODE_GROUP)){
+            p(so.addCheckBox((GroupNode)node));
+        }
         
         //to expand all the rows
         to.expandDirectories(tree);
