@@ -60,9 +60,6 @@ public class JTree extends JFrame implements TreeSelectionListener {
         tree.addTreeSelectionListener(this);
         this.to = new TreeOperations(ProjectTreeBuilder.rootNode);
         this.so = new ScriptOperations();
-        
-        Export e = new Export();
-        e.protocol1(to.getNodeList(ProjectItemNode.NODE_FILE));
 
         p();
         p("new test");
@@ -83,6 +80,9 @@ public class JTree extends JFrame implements TreeSelectionListener {
         for(ProjectItemNode node : to.getNodeList(ProjectItemNode.NODE_GROUP)){
             p(so.addCheckBox((GroupNode)node));
         }
+        
+        Export e = new Export();
+        e.createZip(to.getNodeList(ProjectItemNode.NODE_FILE));
         
         //to expand all the rows
         to.expandDirectories(tree);

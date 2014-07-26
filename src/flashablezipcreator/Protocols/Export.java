@@ -8,7 +8,6 @@ package flashablezipcreator.Protocols;
 import flashablezipcreator.Core.FileNode;
 import flashablezipcreator.Core.ProjectItemNode;
 import flashablezipcreator.DiskOperations.WriteZip;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -18,20 +17,13 @@ import java.util.ArrayList;
  */
 public class Export {
 
-    public void protocol1(ArrayList<ProjectItemNode> fileNode) throws IOException {
-        ArrayList<String> filePath = new ArrayList<>();
+    public void createZip(ArrayList<ProjectItemNode> fileNode) throws IOException {
         WriteZip wz = new WriteZip("demo.zip");
         for (ProjectItemNode node : fileNode) {
-            filePath.add(((FileNode)node).fileSourcePath);
-        }
-        for (String path : filePath) {
-            File F = new File(path);
-            System.out.println(F.getAbsolutePath());
-            wz.writeFileToZip(path, path);
+            //this will simply take each file from source and create the same file in zip at specified destination path.
+            wz.writeFileToZip(((FileNode)node).fileSourcePath, ((FileNode)node).getZipDestinationPath());
         }
         wz.close();
-        
-        
     }
 
     public void protocol2() {

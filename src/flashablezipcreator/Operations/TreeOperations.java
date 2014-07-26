@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreeNode;
 
 /**
  *

@@ -31,7 +31,7 @@ public class ProjectTreeBuilder {
         
         GroupNode groupNode1 = new GroupNode("Launcher", GroupNode.GROUP_CUSTOM, projectNode);
         
-        SubGroupNode subGroupNode1 = new SubGroupNode("S4 Launcher", SubGroupNode.TYPE_SYSTEM_FONTS, groupNode1);
+        SubGroupNode subGroupNode1 = new SubGroupNode("S4 Launcher", SubGroupNode.TYPE_CUSTOM, groupNode1);
         
         Vector<GroupNode> groupVec = new Vector<GroupNode>();
         
