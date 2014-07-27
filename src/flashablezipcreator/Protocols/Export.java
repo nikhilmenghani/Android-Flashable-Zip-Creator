@@ -21,7 +21,7 @@ public class Export {
         WriteZip wz = new WriteZip("demo.zip");
         for (ProjectItemNode node : fileNode) {
             //this will simply take each file from source and create the same file in zip at specified destination path.
-            wz.writeFileToZip(((FileNode)node).fileSourcePath, ((FileNode)node).getZipDestinationPath());
+            wz.writeFileToZip(((FileNode)node).fileSourcePath, ((FileNode)node).getZipPath());
         }
         wz.close();
     }

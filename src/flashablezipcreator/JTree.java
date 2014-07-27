@@ -77,9 +77,12 @@ public class JTree extends JFrame implements TreeSelectionListener {
         System.out.println(to.getNodeList(ProjectItemNode.NODE_FILE));
         p();
         
+        p(so.initiateUpdaterScript());
         for(ProjectItemNode node : to.getNodeList(ProjectItemNode.NODE_GROUP)){
-            p(so.addCheckBox((GroupNode)node));
+            //p(so.addCheckBox((GroupNode)node));
+            p(so.generateUpdaterScript((GroupNode)node));
         }
+        p(so.terminateUpdaterScript());
         
         Export e = new Export();
         e.createZip(to.getNodeList(ProjectItemNode.NODE_FILE));

@@ -51,10 +51,10 @@ public class FileNode extends ProjectItemNode {
     }
 
     //this will generate a path that will be used as destination path of file in output zip.
-    public String getZipDestinationPath() {
+    public String getZipPath() {
         String str = "";
         str = fileDestPath;
-        System.out.println("String before : " + str);
+        //System.out.println("String before : " + str);
         str = str.substring(str.indexOf(File.separator) + 1, str.length());
         str = str.substring(str.indexOf(File.separator) + 1, str.length());
         switch (parent.type) {
@@ -114,11 +114,15 @@ public class FileNode extends ProjectItemNode {
                         break;
                 }
                 break;
-
         }
         str = "customize" + File.separator + str;
-        System.out.println("String after : " + str);
+        //System.out.println("String after : " + str);
+        str = str.replaceAll("\\\\", "/");
         return str;
+    }
+    
+    public void setPermissions(int i, int j, int k, String path){
+        this.filePermission = i + ", " + j + ", " + k + ", " + path;
     }
 
 }

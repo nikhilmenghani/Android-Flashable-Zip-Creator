@@ -46,34 +46,34 @@ public class GroupNode extends ProjectItemNode {
 
         switch (type) {
             case GROUP_SYSTEM_APK:
-                this.location = "system/app";
+                this.location = "/system/app";
                 this.permissions = "rwrr";
                 this.prop = "system_app.prop";
                 break;
             case GROUP_SYSTEM_PRIV_APK:
-                this.location = "system/priv-app";
+                this.location = "/system/priv-app";
                 this.permissions = "rwrr";
                 this.prop = "system_priv.prop";
                 break;
             case GROUP_SYSTEM_LIB:
-                this.location = "system/lib";
+                this.location = "/system/lib";
                 this.permissions = "rwrr";
                 this.prop = "system_lib.prop";
                 break;
             case GROUP_CUSTOM:
-                this.location = "";
+                this.location = "/custom";
                 this.permissions = "";
                 this.prop = "custom.prop";
                 this.isSelectBox = false;
                 break;
         }
     }
-    
-    public boolean isSelectBox(){
+
+    public boolean isSelectBox() {
         return isSelectBox;
     }
-    
-    public boolean isCheckBox(){
+
+    public boolean isCheckBox() {
         return !isSelectBox;
     }
 
@@ -84,4 +84,9 @@ public class GroupNode extends ProjectItemNode {
     public String getPermissions() {
         return permissions;
     }
+
+    public void setPermissions(int i, int j, int k, String path) {
+        this.permissions = i + ", " + j + ", " + k + ", " + path;
+    }
+
 }
