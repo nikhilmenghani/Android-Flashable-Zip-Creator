@@ -52,6 +52,7 @@ public class TreeOperations {
                     case GroupNode.GROUP_SYSTEM_MEDIA_AUDIO_UI:
                     case GroupNode.GROUP_DATA_APP:
                     case GroupNode.GROUP_PRELOAD_SYMLINK_SYSTEM_APP:
+                    case GroupNode.GROUP_SYSTEM_FRAMEWORK:
                         if (childType == ProjectItemNode.NODE_FILE) {
                             node.addChild(new FileNode(childTitle, (GroupNode) node), model);
                         } else {

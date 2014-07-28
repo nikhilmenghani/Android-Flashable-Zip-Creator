@@ -93,6 +93,9 @@ public class FileNode extends ProjectItemNode {
                     case GroupNode.GROUP_PRELOAD_SYMLINK_SYSTEM_APP:
                         str = "system_preload" + File.separator + str;
                         break;
+                    case GroupNode.GROUP_SYSTEM_FRAMEWORK:
+                        str = "system_framework" + File.separator + str;
+                        break;
                     case GroupNode.GROUP_CUSTOM:
                         str = "custom" + File.separator + str;
                         break;

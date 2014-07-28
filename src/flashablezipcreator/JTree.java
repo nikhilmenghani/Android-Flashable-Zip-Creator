@@ -12,7 +12,7 @@ import flashablezipcreator.Core.ProjectItemNode;
 import flashablezipcreator.Core.ProjectNode;
 import flashablezipcreator.Core.ProjectTreeBuilder;
 import flashablezipcreator.Operations.ProjectOperations;
-import flashablezipcreator.Operations.ScriptOperations;
+import flashablezipcreator.Operations.UpdaterScriptOperations;
 import flashablezipcreator.Operations.TreeOperations;
 import flashablezipcreator.Protocols.Export;
 import java.io.IOException;
@@ -33,8 +33,8 @@ public class JTree extends JFrame implements TreeSelectionListener {
      * Creates new form JTreeDemo
      */
     DefaultTreeModel model;
-    TreeOperations to; 
-    ScriptOperations so;
+    TreeOperations to;
+    UpdaterScriptOperations uso;
     ProjectOperations po = new ProjectOperations();
     public JTree() throws IOException {
         initComponents();
@@ -59,7 +59,7 @@ public class JTree extends JFrame implements TreeSelectionListener {
         jScrollPane1 = ProjectTreeBuilder.buildScrollPane();
         tree.addTreeSelectionListener(this);
         this.to = new TreeOperations(ProjectTreeBuilder.rootNode);
-        this.so = new ScriptOperations();
+        uso = new UpdaterScriptOperations();
 
         p();
         p("new test");
@@ -77,12 +77,12 @@ public class JTree extends JFrame implements TreeSelectionListener {
         System.out.println(to.getNodeList(ProjectItemNode.NODE_FILE));
         p();
         
-        p(so.initiateUpdaterScript());
+        p(uso.initiateUpdaterScript());
         for(ProjectItemNode node : to.getNodeList(ProjectItemNode.NODE_GROUP)){
             //p(so.addCheckBox((GroupNode)node));
-            p(so.generateUpdaterScript((GroupNode)node));
+            p(uso.generateUpdaterScript((GroupNode)node));
         }
-        p(so.terminateUpdaterScript());
+        p(uso.terminateUpdaterScript());
         
         Export e = new Export();
         e.createZip(to.getNodeList(ProjectItemNode.NODE_FILE));
