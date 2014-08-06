@@ -57,7 +57,8 @@ public class ProjectTreeBuilder {
 //            projectNode.addChild(node);
 //        }
         
-        rootNode.addChild(projectNode);
+        //rootNode.addChild(projectNode);
+        
         //System.out.println(projectNode.getParent().toString() + "Nikhil");
         FileNode file1 = new FileNode("Flash" + File.separator + "Data" + File.separator + "Data Apps" + File.separator + "pl.solidexplorer-2.apk", "/system/etc", "rwrr", subGroupNode1);
         FileNode file2 = new FileNode("Flash" + File.separator + "Data" + File.separator + "Data Apps" + File.separator + "pl.solidexplorer.unlocker-1.apk", "/system/etc", "rwrr", subGroupNode1);
@@ -95,7 +96,7 @@ public class ProjectTreeBuilder {
         
         //rootNode.addChild(createNode("Normal Aroma Zip", ProjectItemNode.NODE_PROJECT));
         
-        System.out.println(rootNode.children);
+        //System.out.println(rootNode.children);
         
         TreeOperations to = new TreeOperations(rootNode);
         to.buildDirectory(rootNode);

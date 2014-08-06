@@ -37,13 +37,14 @@ public class GroupNode extends ProjectItemNode {
     public static final int GROUP_DATA_APP = 14;
     public static final int GROUP_DATA_LOCAL = 15;
     public static final int GROUP_CUSTOM = 16;
+    public static final int GROUP_OTHER = 17;
 
     public GroupNode(String title, int type, ProjectNode parent) {
         super(title, ProjectItemNode.NODE_GROUP, parent);
         this.groupType = type;
         this.groupName = title;
         super.path = parent.path + File.separator + title;
-        System.out.println("Group Path is : " + path);
+        //System.out.println("Group Path is : " + path);
 
         switch (type) {
             case GROUP_SYSTEM_APK:
@@ -125,6 +126,13 @@ public class GroupNode extends ProjectItemNode {
                 this.location = "/custom";
                 this.permissions = "";
                 this.prop = "custom.prop";
+                this.isSelectBox = false;
+                break;
+            case GROUP_OTHER:
+                this.location = "";
+                this.permissions = "";
+                //following properties not needed but added.
+                this.prop = "other.prop";
                 this.isSelectBox = false;
                 break;
         }

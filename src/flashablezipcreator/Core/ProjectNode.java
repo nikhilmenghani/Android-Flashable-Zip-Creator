@@ -27,7 +27,7 @@ public class ProjectNode extends ProjectItemNode{
         super(title, ProjectItemNode.NODE_PROJECT, parent);
         this.projectType = projectType;
         super.path = parent + File.separator + title;
-        System.out.println("Project Path is : " + path);
+        //System.out.println("Project Path is : " + path);
     }
     
 }

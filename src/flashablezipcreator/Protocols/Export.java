@@ -18,10 +18,10 @@ import java.util.ArrayList;
 public class Export {
 
     public void createZip(ArrayList<ProjectItemNode> fileNode) throws IOException {
-        WriteZip wz = new WriteZip("demo.zip");
+        WriteZip wz = new WriteZip("demo2.zip");
         for (ProjectItemNode node : fileNode) {
             //this will simply take each file from source and create the same file in zip at specified destination path.
-            wz.writeFileToZip(((FileNode)node).fileSourcePath, ((FileNode)node).getZipPath());
+            wz.writeFileToZip(((FileNode)node).fileSourcePath, ((FileNode)node).fileZipPath);
         }
         wz.close();
     }

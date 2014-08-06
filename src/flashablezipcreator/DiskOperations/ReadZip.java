@@ -6,7 +6,6 @@
 
 package flashablezipcreator.DiskOperations;
 
-import static flashablezipcreator.AFZC.Protocols.p;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -45,6 +44,10 @@ public final class ReadZip {
             System.out.println("Exception Caught while reading file in zip..!!");
         }
         return str;
+    }
+    
+    public void writeFileFromZip(ZipInputStream zis, String outputPath) throws IOException{
+        writeFileFromZip(zis, new File(outputPath));
     }
     
     public void writeFileFromZip(ZipInputStream zis, File outFile) throws FileNotFoundException, IOException {

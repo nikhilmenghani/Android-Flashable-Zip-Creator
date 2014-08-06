@@ -59,9 +59,10 @@ public class FlashableZipCreator {
 //        p(results.getString(1));
 //        p("record successfully updated");
         
-        Read r = new Read();
-        String str = r.getFileString("src" + File.separator + "flashablezipcreator" + File.separator + "Supported Devices");
-        System.out.println(str);
+//        Read r = new Read();
+//        String str = r.getFileString("src" + File.separator + "flashablezipcreator" + File.separator + "Supported Devices");
+//        System.out.println(str);
+        
         //Write w = new Write();
         //w.writeStringToFile(r.getFileString("src\\flashablezipcreator\\Supported Devices"), "S D");
         

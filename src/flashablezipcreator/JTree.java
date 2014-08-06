@@ -15,6 +15,7 @@ import flashablezipcreator.Operations.ProjectOperations;
 import flashablezipcreator.Operations.UpdaterScriptOperations;
 import flashablezipcreator.Operations.TreeOperations;
 import flashablezipcreator.Protocols.Export;
+import flashablezipcreator.Protocols.Import;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -36,6 +37,7 @@ public class JTree extends JFrame implements TreeSelectionListener {
     TreeOperations to;
     UpdaterScriptOperations uso;
     ProjectOperations po = new ProjectOperations();
+    ProjectItemNode rootNode;
     public JTree() throws IOException {
         initComponents();
     }
@@ -58,37 +60,45 @@ public class JTree extends JFrame implements TreeSelectionListener {
         model = ProjectTreeBuilder.buildModel();
         jScrollPane1 = ProjectTreeBuilder.buildScrollPane();
         tree.addTreeSelectionListener(this);
-        this.to = new TreeOperations(ProjectTreeBuilder.rootNode);
+        rootNode = ProjectTreeBuilder.rootNode;
+        this.to = new TreeOperations(rootNode);
         uso = new UpdaterScriptOperations();
 
-        p();
-        p("new test");
-        p();
-        p("ProjectList");
-        System.out.println(to.getNodeList(ProjectItemNode.NODE_PROJECT));
-        p();
-        p("Group list");
-        System.out.println(to.getNodeList(ProjectItemNode.NODE_GROUP));
-        p();
-        p("SubGroup List");
-        System.out.println(to.getNodeList(ProjectItemNode.NODE_SUBGROUP));
-        p();
-        p("File List");
-        System.out.println(to.getNodeList(ProjectItemNode.NODE_FILE));
-        p();
+//        p();
+//        p("new test");
+//        p();
+//        p("ProjectList");
+//        System.out.println(to.getNodeList(ProjectItemNode.NODE_PROJECT));
+//        p();
+//        p("Group list");
+//        System.out.println(to.getNodeList(ProjectItemNode.NODE_GROUP));
+//        p();
+//        p("SubGroup List");
+//        System.out.println(to.getNodeList(ProjectItemNode.NODE_SUBGROUP));
+//        p();
+//        p("File List");
+//        System.out.println(to.getNodeList(ProjectItemNode.NODE_FILE));
+//        p();
         
-        p(uso.initiateUpdaterScript());
-        for(ProjectItemNode node : to.getNodeList(ProjectItemNode.NODE_GROUP)){
-            //p(so.addCheckBox((GroupNode)node));
-            p(uso.generateUpdaterScript((GroupNode)node));
-        }
-        p(uso.terminateUpdaterScript());
+//        p(uso.initiateUpdaterScript());
+//        for(ProjectItemNode node : to.getNodeList(ProjectItemNode.NODE_GROUP)){
+//            //p(so.addCheckBox((GroupNode)node));
+//            p(uso.generateUpdaterScript((GroupNode)node));
+//        }
+//        p(uso.terminateUpdaterScript());
         
-        Export e = new Export();
-        e.createZip(to.getNodeList(ProjectItemNode.NODE_FILE));
+//        Export e = new Export();
+//        e.createZip(to.getNodeList(ProjectItemNode.NODE_FILE));
         
+        //Import.createTree("demo.zip", rootNode, ProjectNode.PROJECT_AROMA, model);
+        Import.createTree("nameless-4.4.4-20140715-i9103-HOMEMADE.zip", rootNode, ProjectNode.PROJECT_ROM, model);
+        //Import.createTree("pa_gapps-modular-full-4.4.3-20140603-signed.zip", rootNode, ProjectNode.PROJECT_GAPPS, model);
+        //Import.createTree("demo1.zip", rootNode, ProjectNode.PROJECT_ADVANCED, model);
+        
+//        Export e = new Export();
+//        e.createZip(to.getNodeList(ProjectItemNode.NODE_FILE));
         //to expand all the rows
-        to.expandDirectories(tree);
+        //to.expandDirectories(tree);
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -163,13 +173,13 @@ public class JTree extends JFrame implements TreeSelectionListener {
 //        this.jScrollPane1 = ProjectTreeBuilder.buildScrollPane();
 //        model.reload();
         //model.reload(node);
-        to.expandDirectories(tree);
+        //to.expandDirectories(tree);
     }
 
     private void removeButtonActionPerformed(java.awt.event.ActionEvent evt) {
         ProjectItemNode node = (ProjectItemNode) tree.getLastSelectedPathComponent();
         node.removeChild(node, model);
-        to.expandDirectories(tree);
+        //to.expandDirectories(tree);
     }
 
     private javax.swing.JButton addButton;

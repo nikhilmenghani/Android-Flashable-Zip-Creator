@@ -20,14 +20,15 @@ public class FileNode extends ProjectItemNode {
     public String belongsToGroup;
     public String filePermission;
     public String fileDescription;
+    public String fileZipPath = "";
 
     public FileNode(String fileSourcePath, GroupNode parent) {
         super((new File(fileSourcePath)).getName(), ProjectItemNode.NODE_FILE, parent);
         this.installLocation = parent.getLocation();
         this.filePermission = parent.getPermissions();
         this.fileSourcePath = fileSourcePath;
-        //System.out.println(parent.getPath());
         this.fileDestPath = parent.path + File.separator + (new File(fileSourcePath)).getName();
+        fileZipPath = getZipPath();
     }
 
     public FileNode(String fileSourcePath, SubGroupNode parent) {
@@ -35,8 +36,8 @@ public class FileNode extends ProjectItemNode {
         this.installLocation = parent.getLocation();
         this.filePermission = parent.getPermissions();
         this.fileSourcePath = fileSourcePath;
-        //System.out.println(parent.getPath());
         this.fileDestPath = parent.path + File.separator + (new File(fileSourcePath)).getName();
+        fileZipPath = getZipPath();
     }
 
     public FileNode(String fileSourcePath, String installLocation, String permission, ProjectItemNode parent) {
@@ -44,14 +45,14 @@ public class FileNode extends ProjectItemNode {
         this.installLocation = installLocation;
         fileName = title;
         this.fileSourcePath = fileSourcePath;
-        //System.out.println(parent.getPath());
         this.fileDestPath = parent.path + File.separator + (new File(fileSourcePath)).getName();
         this.filePermission = permission;
         belongsToGroup = (parent.type == SubGroupNode.TYPE_CUSTOM) ? parent.parent.toString() : parent.toString();
+        fileZipPath = getZipPath();
     }
 
     //this will generate a path that will be used as destination path of file in output zip.
-    public String getZipPath() {
+    public final String getZipPath() {
         String str = "";
         str = fileDestPath;
         //System.out.println("String before : " + str);
@@ -99,6 +100,7 @@ public class FileNode extends ProjectItemNode {
                     case GroupNode.GROUP_CUSTOM:
                         str = "custom" + File.separator + str;
                         break;
+                        //case GroupNode.GROUP_OTHER not needed.
                 }
                 break;
             case ProjectItemNode.NODE_SUBGROUP:
@@ -123,8 +125,8 @@ public class FileNode extends ProjectItemNode {
         str = str.replaceAll("\\\\", "/");
         return str;
     }
-    
-    public void setPermissions(int i, int j, int k, String path){
+
+    public void setPermissions(int i, int j, int k, String path) {
         this.filePermission = i + ", " + j + ", " + k + ", " + path;
     }
 

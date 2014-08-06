@@ -30,7 +30,7 @@ public class SubGroupNode extends ProjectItemNode{
         super.path = parent.path + File.separator + title;
         subGroupName = title;
         this.subGroupType = type;
-        System.out.println("SubGroup Path is : " + path);
+        //System.out.println("SubGroup Path is : " + path);
         switch(type){
             case TYPE_SYSTEM_FONTS:
                 this.location = "system/fonts";

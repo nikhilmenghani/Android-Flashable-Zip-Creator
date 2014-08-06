@@ -24,12 +24,17 @@ public class TreeOperations {
 
     Write w = new Write();
     ArrayList<ProjectItemNode> list = new ArrayList<>();
+    ArrayList<ProjectItemNode> projectList = new ArrayList<>();
+    ArrayList<ProjectItemNode> groupList = new ArrayList<>();
+    ArrayList<ProjectItemNode> subGroupList = new ArrayList<>();
+    ArrayList<ProjectItemNode> fileList = new ArrayList<>();
+
     ProjectItemNode rootNode;
 
-    public TreeOperations(ProjectItemNode rootNode){
+    public TreeOperations(ProjectItemNode rootNode) {
         this.rootNode = rootNode;
     }
-    
+
     public void addChildTo(ProjectItemNode node, String childTitle, int childType, DefaultTreeModel model) {
         switch (node.type) {
             case ProjectItemNode.NODE_ROOT:
@@ -70,7 +75,7 @@ public class TreeOperations {
                                 node.addChild(new SubGroupNode(childTitle, childType, (GroupNode) node), model);
                                 break;
                             case ProjectItemNode.NODE_FILE:
-                                System.out.println("You cannot add files for this type..!!\n add a subgroup and then files to it..!!");
+                                System.out.println("You cannot add files for this type..!!\nadd a subgroup and then files to it..!!");
                                 break;
                         }
                         break;
@@ -79,10 +84,18 @@ public class TreeOperations {
                         if (childType == SubGroupNode.TYPE_CUSTOM) {
                             node.addChild(new SubGroupNode(childTitle, childType, (GroupNode) node), model);
                         }
+                        break;
+                    case GroupNode.GROUP_OTHER:
+                        //we need a way of preventing other group from displaying in tree. 
+                        node.addChild(new FileNode(childTitle, (GroupNode) node), model);
+                        break;
                     //here File Node can also act as child but due to different requirements of parameters,
                     //explicit call to another addChildTo function is required.
                 }
+                break;
             case ProjectItemNode.NODE_SUBGROUP:
+                System.out.println(node.title);
+                System.out.println(node.type);
                 switch (((SubGroupNode) node).subGroupType) {
                     case SubGroupNode.TYPE_SYSTEM_FONTS:
                     case SubGroupNode.TYPE_SYSTEM_MEDIA:
@@ -90,13 +103,16 @@ public class TreeOperations {
                         node.addChild(new FileNode(childTitle, (SubGroupNode) node), model);
                         break;
                 }
+            default:
+                System.out.println("Entered Default.");
         }
     }
 
     public void addChildTo(ProjectItemNode node, String childTitle, String installLocation, String permission, DefaultTreeModel model) {
-        if ((node.type == ProjectItemNode.NODE_GROUP && ((GroupNode) node).groupType == GroupNode.GROUP_CUSTOM)
-                || (node.type == ProjectItemNode.NODE_SUBGROUP && ((SubGroupNode) node).subGroupType == SubGroupNode.TYPE_CUSTOM)) {
+        if ((node.type == ProjectItemNode.NODE_GROUP && ((GroupNode) node).groupType == GroupNode.GROUP_CUSTOM)) {
             node.addChild(new FileNode(childTitle, installLocation, permission, (GroupNode) node), model);
+        } else if ((node.type == ProjectItemNode.NODE_SUBGROUP && ((SubGroupNode) node).subGroupType == SubGroupNode.TYPE_CUSTOM)) {
+            node.addChild(new FileNode(childTitle, installLocation, permission, (SubGroupNode) node), model);
         }
     }
 
@@ -104,10 +120,10 @@ public class TreeOperations {
         node.removeChild(node, model);
     }
 
-    public void buildDirectory() throws IOException{
+    public void buildDirectory() throws IOException {
         buildDirectory(this.rootNode);
     }
-    
+
     public void buildDirectory(ProjectItemNode node) throws IOException {
         if (!node.isLeaf()) {
             w.createFolder(((ProjectItemNode) node).path);
@@ -127,60 +143,105 @@ public class TreeOperations {
     }
 
     //this will iterate from given node to leaf node i.e. File Node and return list of FileNodes.
-    public ArrayList<ProjectItemNode> parseNode(ProjectItemNode node) {
-        if (!node.isLeaf()) {
-            for (int i = 0; i < node.getChildCount(); i++) {
-                parseNode((ProjectItemNode) node.getChildAt(i));
+//    public ArrayList<ProjectItemNode> parseNode(ProjectItemNode node) {
+//        if (!node.isLeaf()) {
+//            for (int i = 0; i < node.getChildCount(); i++) {
+//                parseNode((ProjectItemNode) node.getChildAt(i));
+//            }
+//        } else {
+//            try {
+//                list.add((FileNode) node);
+//            } catch (ClassCastException cce) {
+//                System.out.println("The node is of type " + node.type);
+//            }
+//        }
+//        return list;
+//    }
+
+    public ArrayList<ProjectItemNode> parseNode(ProjectItemNode node, int type) {
+        for (int i = 0; i < node.getChildCount(); i++) {
+            if (((ProjectItemNode) node.getChildAt(i)).type == type) {
+                switch (((ProjectItemNode) node.getChildAt(i)).type) {
+                    case ProjectItemNode.NODE_PROJECT:
+                        if (!list.contains((ProjectItemNode) node.getChildAt(i))) {
+                            list.add((ProjectItemNode) node.getChildAt(i));
+                        }
+                        break;
+                    case ProjectItemNode.NODE_GROUP:
+                        if (!list.contains((ProjectItemNode) node.getChildAt(i))) {
+                            list.add((ProjectItemNode) node.getChildAt(i));
+                        }
+                        break;
+                    case ProjectItemNode.NODE_SUBGROUP:
+                        if (!list.contains((ProjectItemNode) node.getChildAt(i))) {
+                            list.add((ProjectItemNode) node.getChildAt(i));
+                        }
+                        break;
+                    case ProjectItemNode.NODE_FILE:
+                        if (!list.contains((ProjectItemNode) node.getChildAt(i))) {
+                            list.add((ProjectItemNode) node.getChildAt(i));
+                        }
+                        break;
+                }
             }
-        } else {
-            list.add((FileNode) node);
+            parseNode((ProjectItemNode) node.getChildAt(i), type);
         }
         return list;
     }
 
-    public ArrayList<ProjectItemNode> getNodeList(int nodeType){
-        return getNodeList(this.rootNode, nodeType);
-    }
-    
-    public ArrayList<ProjectItemNode> getNodeList(ProjectItemNode rootNode, int nodeType) {
+    public ArrayList<ProjectItemNode> getNodeList(int nodeType) {
         list = new ArrayList<>();
-        ArrayList<ProjectItemNode> projectList = new ArrayList<>();
-        ArrayList<ProjectItemNode> groupList = new ArrayList<>();
-        ArrayList<ProjectItemNode> subGroupList = new ArrayList<>();
-        ArrayList<ProjectItemNode> fileList = parseNode(rootNode);
-        for (ProjectItemNode fileNode : fileList) {
-            switch (fileNode.parent.type) {
-                case ProjectItemNode.NODE_GROUP:
-                    if (!groupList.contains(fileNode.parent)) {
-                        groupList.add(fileNode.parent);
-                    }
-                    if (!projectList.contains(fileNode.parent.parent)) {
-                        projectList.add(fileNode.parent.parent);
-                    }
-                    break;
-                case ProjectItemNode.NODE_SUBGROUP:
-                    if (!subGroupList.contains(fileNode.parent)) {
-                        subGroupList.add(fileNode.parent);
-                    }
-                    if (!groupList.contains(fileNode.parent.parent)) {
-                        groupList.add(fileNode.parent.parent);
-                    }
-                    if (!projectList.contains(fileNode.parent.parent.parent)) {
-                        projectList.add(fileNode.parent.parent.parent);
-                    }
-                    break;
+        return parseNode(this.rootNode, nodeType);
+    }
+
+    public ProjectNode getProjectNode(String name, int projectType) {
+        for (ProjectItemNode node : getNodeList(ProjectItemNode.NODE_PROJECT)) {
+            if (node.title.equals(name) && ((ProjectNode) node).projectType == projectType) {
+                return (ProjectNode) node;
             }
         }
-        switch (nodeType) {
-            case ProjectItemNode.NODE_PROJECT:
-                return projectList;
-            case ProjectItemNode.NODE_GROUP:
-                return groupList;
-            case ProjectItemNode.NODE_SUBGROUP:
-                return subGroupList;
-            case ProjectItemNode.NODE_FILE:
-                return fileList;
+        System.out.println("Returning null in search for " + name);
+        return null;
+    }
+
+    public GroupNode getGroupNode(String name, int groupType, String projectName) {
+        for (ProjectItemNode node : getNodeList(ProjectItemNode.NODE_GROUP)) {
+            //System.out.println(projectName + ".. " + node.parent + " .. " + node.parent.title.equals(projectName));
+            if (node.title.equals(name) && ((GroupNode) node).groupType == groupType && node.parent.title.equals(projectName)) {
+                return (GroupNode) node;
+            }
         }
+        System.out.println("Returning null in search for " + name);
+        return null;
+    }
+
+    public SubGroupNode getSubGroupNode(String name, int subGroupType, String groupName, String projectName) {
+        for (ProjectItemNode node : getNodeList(ProjectItemNode.NODE_SUBGROUP)) {
+            if (node.title.equals(name) && ((SubGroupNode) node).subGroupType == subGroupType && node.parent.title.equals(groupName) && node.parent.parent.title.equals(projectName)) {
+                return (SubGroupNode) node;
+            }
+        }
+        System.out.println("Returning null in search for " + name);
+        return null;
+    }
+
+    public FileNode getFileNode(String name, String groupName, String projectName) {
+        for (ProjectItemNode node : getNodeList(ProjectItemNode.NODE_FILE)) {
+            if (node.title.equals(name) && node.parent.title.equals(groupName) && node.parent.parent.title.equals(projectName)) {
+                return (FileNode) node;
+            }
+        }
+        System.out.println("Returning null in search for " + name);
+        return null;
+    }
+
+    public FileNode getFileNode(String name, String subGroupName, String groupName, String projectName) {
+        for (ProjectItemNode node : getNodeList(ProjectItemNode.NODE_FILE)) {
+            if (node.title.equals(name) && node.parent.title.equals(subGroupName) && node.parent.parent.title.equals(groupName) && node.parent.parent.parent.title.equals(projectName)) {
+                return (FileNode) node;
+            }
+        }
+        System.out.println("Returning null in search for " + name);
         return null;
     }
 
