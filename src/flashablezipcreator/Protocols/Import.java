@@ -25,34 +25,29 @@ public class Import {
     static ReadZip rz;
     static TreeOperations to;
 
-    public static void createTree(String path, ProjectItemNode rootNode, int type, DefaultTreeModel model) throws IOException {
+    public static void from(String path, ProjectItemNode rootNode, int type, DefaultTreeModel model) throws IOException {
         rz = new ReadZip(path);
-        String projectName = (new File(path)).getName();
-        int projectType = type;
-        projectName = projectName.substring(0, projectName.lastIndexOf("."));
-
         to = new TreeOperations(rootNode);
-
+        String projectName = (new File(path)).getName();
+        projectName = projectName.substring(0, projectName.lastIndexOf("."));
+        int projectType = type;
         //following is to check if project already exists.
         //If yes, we will add current files of zip to that node to support multiple zip imports. If no, we will create a new project node.
         if (to.getProjectNode(projectName, projectType) == null) {
             to.addChildTo(rootNode, projectName, projectType, model);
         }
-
         while (rz.ze != null) {
             System.out.println();
             p("current file " + rz.ze.getName());
-            //adding file to tree.
+            System.out.println();
             String filePath = rz.ze.getName();
             String groupName = getGroupName(filePath);
             int groupType = getGroupType(filePath);
             boolean hasSubGroup = hasSubGroup(filePath);
-            String subGroupName = getSubGroupName(filePath);
+            String subGroupName = getSubGroupName(groupName, filePath);
             int subGroupType = groupType; //Groups that have subGroups have same type.
             String fileName = (new File(filePath)).getName();
             FileNode file = null;
-            System.out.println();
-            //file added to tree.
             if (hasSubGroup) {
                 addFileToTree(fileName, subGroupName, subGroupType, groupName, groupType, projectName, projectType, model);
                 file = to.getFileNode(fileName, subGroupName, groupName, projectName);
@@ -95,50 +90,6 @@ public class Import {
         }
     }
 
-    public static void addFileToTree(String projectName, int projectType, DefaultTreeModel model) {
-        String filePath = rz.ze.getName();
-        String groupName = getGroupName(filePath);
-        int groupType = getGroupType(filePath);
-        boolean hasSubGroup = hasSubGroup(filePath);
-        String subGroupName = getSubGroupName(filePath);
-        int subGroupType = groupType; //Groups that have subGroups have same type.
-        String fileName = (new File(filePath)).getName();
-        FileNode file = null;
-        System.out.println();
-        if (to.getGroupNode(groupName, groupType, projectName) == null) {
-            to.addChildTo(to.getProjectNode(projectName, projectType), groupName, groupType, model);
-            if (hasSubGroup) {
-                to.addChildTo(to.getGroupNode(groupName, groupType, projectName), subGroupName, subGroupType, model);
-                if (subGroupType == SubGroupNode.TYPE_CUSTOM) {
-                    to.addChildTo(to.getSubGroupNode(subGroupName, subGroupType, groupName, projectName), filePath, "", "", model);
-                } else {
-                    to.addChildTo(to.getSubGroupNode(subGroupName, subGroupType, groupName, projectName), filePath, ProjectItemNode.NODE_FILE, model);
-                }
-            } else {
-                if (groupType == GroupNode.GROUP_CUSTOM) {
-                    to.addChildTo(to.getGroupNode(groupName, groupType, projectName), filePath, "", "", model);
-                } else {
-                    to.addChildTo(to.getGroupNode(groupName, groupType, projectName), filePath, ProjectItemNode.NODE_FILE, model);
-                }
-            }
-        } else if (hasSubGroup) {
-            if (to.getSubGroupNode(subGroupName, groupType, groupName, projectName) == null) {
-                to.addChildTo(to.getGroupNode(groupName, groupType, projectName), subGroupName, subGroupType, model);
-            }
-            if (subGroupType == SubGroupNode.TYPE_CUSTOM) {
-                to.addChildTo(to.getSubGroupNode(subGroupName, subGroupType, groupName, projectName), filePath, "", "", model);
-            } else {
-                to.addChildTo(to.getSubGroupNode(subGroupName, subGroupType, groupName, projectName), filePath, ProjectItemNode.NODE_FILE, model);
-            }
-        } else if (to.getFileNode(fileName, groupName, projectName) == null) {
-            if (groupType == GroupNode.GROUP_CUSTOM) {
-                to.addChildTo(to.getGroupNode(groupName, groupType, projectName), filePath, "", "", model);
-            } else {
-                to.addChildTo(to.getGroupNode(groupName, groupType, projectName), filePath, ProjectItemNode.NODE_FILE, model);
-            }
-        }
-    }
-
     public static boolean hasSubGroup(String path) {
         switch (getGroupType(path)) {
             case GroupNode.GROUP_SYSTEM_FONTS:
@@ -147,9 +98,7 @@ public class Import {
                 return true;
             case GroupNode.GROUP_CUSTOM:
                 if (path.startsWith("customize")) {
-                    path = path.substring(path.indexOf("/") + 1, path.length());
-                    path = path.substring(path.indexOf("/") + 1, path.length());
-                    path = path.substring(path.indexOf("/") + 1, path.length());
+                    path = path.substring(path.indexOf("/", path.indexOf("/", path.indexOf("/") + 1) + 1) + 1, path.length());
                     if (path.contains("/")) {
                         return true;
                     } else {
@@ -160,25 +109,23 @@ public class Import {
         return false;
     }
 
-    public static String getSubGroupName(String path) {
+    public static String getSubGroupName(String groupName, String path) {
         if (path.startsWith("customize")) {
-            path = path.substring(path.indexOf("/") + 1, path.length());
-            path = path.substring(path.indexOf("/") + 1, path.length());
-            path = path.substring(path.indexOf("/") + 1, path.length());
+            path = path.substring(path.indexOf("/", path.indexOf("/", path.indexOf("/") + 1) + 1) + 1, path.length());
             try {
                 path = path.substring(0, path.indexOf("/"));
             } catch (StringIndexOutOfBoundsException er) {
                 System.out.println("Group with custom file found..!! " + path);
             }
-        } else if (path.startsWith("system")) {
-            switch (getGroupName(path)) {
-                case "Boot Animations":
-                    path = "Default";
-                    break;
-                case "Fonts":
-                    path = "System";
-                    break;
-            }
+//        } else if (path.startsWith("system")) {
+//            switch (groupName) {
+//                case "Boot Animations":
+//                    path = "Default";
+//                    break;
+//                case "Fonts":
+//                    path = "System";
+//                    break;
+//            }
         }
         return path;
     }
@@ -186,19 +133,16 @@ public class Import {
     public static String getGroupName(String path) {
         String fullPath = path;
         if (path.startsWith("customize")) {
-            path = path.substring(path.indexOf("/") + 1, path.length());
-            path = path.substring(path.indexOf("/") + 1, path.length());
-            path = path.substring(0, path.indexOf("/"));
+            path = path.substring(path.indexOf("/", path.indexOf("/") + 1) + 1, path.indexOf("/", path.indexOf("/", path.indexOf("/") + 1) + 1));
             return path;
         } else if (path.startsWith("system") || path.startsWith("data")) {
             path = path.substring(path.indexOf("/") + 1, path.length());
             if (path.contains("/")) {
                 path = path.substring(0, path.indexOf("/"));
             }
-            String tempPath = fullPath.substring(fullPath.indexOf(path), fullPath.length());
-            tempPath = tempPath.substring(tempPath.indexOf("/") + 1, tempPath.length());
-            if (tempPath.contains("/")) {
-                path = tempPath;
+            //this will check if folder has subdirectories. -> system/etc/xyz/
+            if ((fullPath.substring(fullPath.indexOf("/", fullPath.indexOf(path) + 1) + 1, fullPath.length())).contains("/")) {
+                path = (fullPath.substring(fullPath.indexOf("/", fullPath.indexOf(path) + 1) + 1, fullPath.length()));
             }
         }
         switch (path) {
@@ -210,32 +154,32 @@ public class Import {
                 }
             case "priv-app":
                 return "Private Apps";
-            case "csc":
-                return "System Csc";
-            case "etc":
-                return "System Etc";
-            case "lib":
-                return "Libraries";
+//            case "csc":
+//                return "System Csc";
+//            case "etc":
+//                return "System Etc";
+//            case "lib":
+//                return "Libraries";
             case "local":
                 if (fullPath.startsWith("data/local")) {
                     return "Boot Animations";
                 } else {
                     break;
                 }
-            case "preload":
-                //return;
-                break;
-            case "framework":
-                return "Frameworks";
-            case "fonts":
-                return "Fonts";
+//            case "preload":
+//                //return;
+//                break;
+//            case "framework":
+//                return "Frameworks";
+//            case "fonts":
+//                return "Fonts";
             case "custom":
                 return "custom";
             default:
                 if (fullPath.startsWith("system/media")) {
-                    if (fullPath.equals("system/media/bootanimation.zip")) {
-                        return "Boot Animations";
-                    }
+//                    if (fullPath.equals("system/media/bootanimation.zip")) {
+//                        return "Boot Animations";
+//                    }
                     fullPath = fullPath.substring(0, fullPath.lastIndexOf("/"));
                     switch (fullPath) {
                         case "system/media/audio/notifications":
@@ -259,17 +203,15 @@ public class Import {
     public static int getGroupType(String path) {
         String fullPath = path;
         if (path.startsWith("customize")) {
-            path = path.substring(path.indexOf("/") + 1, path.length());
-            path = path.substring(0, path.indexOf("/"));
+            path = path.substring(path.indexOf("/", path.indexOf("/") + 1) + 1, path.length());
         } else if (path.startsWith("system") || path.startsWith("data")) {
             path = path.substring(path.indexOf("/") + 1, path.length());
             if (path.contains("/")) {
                 path = path.substring(0, path.indexOf("/"));
             }
-            String tempPath = fullPath.substring(fullPath.indexOf(path), fullPath.length());
-            tempPath = tempPath.substring(tempPath.indexOf("/") + 1, tempPath.length());
-            if (tempPath.contains("/")) {
-                path = tempPath;
+            //this will check if folder has subdirectories. -> system/etc/xyz/
+            if ((fullPath.substring(fullPath.indexOf("/", fullPath.indexOf(path) + 1) + 1, fullPath.length())).contains("/")) {
+                path = (fullPath.substring(fullPath.indexOf("/", fullPath.indexOf(path) + 1) + 1, fullPath.length()));
             }
         }
         switch (path) {
@@ -284,13 +226,13 @@ public class Import {
             case "priv-app":
                 return GroupNode.GROUP_SYSTEM_PRIV_APK;
             case "system_csc":
-            case "csc":
+                //case "csc":
                 return GroupNode.GROUP_SYSTEM_CSC;
             case "system_etc":
-            case "etc":
+                //case "etc":
                 return GroupNode.GROUP_SYSTEM_ETC;
             case "system_lib":
-            case "lib":
+                //case "lib":
                 return GroupNode.GROUP_SYSTEM_LIB;
             case "system_media_alarms":
                 return GroupNode.GROUP_SYSTEM_MEDIA_AUDIO_ALARMS;
@@ -305,10 +247,10 @@ public class Import {
             case "system_preload":
                 return GroupNode.GROUP_PRELOAD_SYMLINK_SYSTEM_APP;
             case "system_framework":
-            case "framework":
+                //case "framework":
                 return GroupNode.GROUP_SYSTEM_FRAMEWORK;
             case "system_fonts":
-            case "fonts":
+                //case "fonts":
                 return GroupNode.GROUP_SYSTEM_FONTS;
             case "system_media":
                 return GroupNode.GROUP_SYSTEM_MEDIA;
@@ -320,9 +262,9 @@ public class Import {
                 return GroupNode.GROUP_OTHER;
             default:
                 if (fullPath.startsWith("system/media")) {
-                    if (fullPath.equals("system/media/bootanimation.zip")) {
-                        return GroupNode.GROUP_SYSTEM_MEDIA;
-                    }
+//                    if (fullPath.equals("system/media/bootanimation.zip")) {
+//                        return GroupNode.GROUP_SYSTEM_MEDIA;
+//                    }
                     fullPath = fullPath.substring(0, fullPath.lastIndexOf("/"));
                     switch (fullPath) {
                         case "system/media":

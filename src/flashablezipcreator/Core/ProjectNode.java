@@ -15,6 +15,7 @@ import java.io.File;
 public class ProjectNode extends ProjectItemNode{
 
     public int projectType;
+    public boolean createZip = true; //when multiple projects will be loaded, this will help in choosing which one to create zip of.
     //public String path;
     
     public static final int PROJECT_NORMAL = 1;

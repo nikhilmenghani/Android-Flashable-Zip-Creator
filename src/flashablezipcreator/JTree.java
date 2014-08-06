@@ -90,10 +90,10 @@ public class JTree extends JFrame implements TreeSelectionListener {
 //        Export e = new Export();
 //        e.createZip(to.getNodeList(ProjectItemNode.NODE_FILE));
         
-        //Import.createTree("demo.zip", rootNode, ProjectNode.PROJECT_AROMA, model);
-        Import.createTree("nameless-4.4.4-20140715-i9103-HOMEMADE.zip", rootNode, ProjectNode.PROJECT_ROM, model);
-        //Import.createTree("pa_gapps-modular-full-4.4.3-20140603-signed.zip", rootNode, ProjectNode.PROJECT_GAPPS, model);
-        //Import.createTree("demo1.zip", rootNode, ProjectNode.PROJECT_ADVANCED, model);
+        //Import.from("demo.zip", rootNode, ProjectNode.PROJECT_AROMA, model);
+        //Import.from("nameless-4.4.4-20140715-i9103-HOMEMADE.zip", rootNode, ProjectNode.PROJECT_ROM, model);
+        Import.from("pa_gapps-modular-full-4.4.3-20140603-signed.zip", rootNode, ProjectNode.PROJECT_GAPPS, model);
+        //Import.from("demo1.zip", rootNode, ProjectNode.PROJECT_ADVANCED, model);
         
 //        Export e = new Export();
 //        e.createZip(to.getNodeList(ProjectItemNode.NODE_FILE));
