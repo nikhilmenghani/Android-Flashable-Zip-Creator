@@ -11,15 +11,18 @@ import flashablezipcreator.Core.GroupNode;
 import flashablezipcreator.Core.ProjectItemNode;
 import flashablezipcreator.Core.ProjectNode;
 import flashablezipcreator.Core.ProjectTreeBuilder;
+import flashablezipcreator.Operations.JarOperations;
 import flashablezipcreator.Operations.ProjectOperations;
-import flashablezipcreator.Operations.UpdaterScriptOperations;
 import flashablezipcreator.Operations.TreeOperations;
+import flashablezipcreator.Operations.UpdaterScriptOperations;
 import flashablezipcreator.Protocols.Export;
 import flashablezipcreator.Protocols.Import;
+import flashablezipcreator.Protocols.Jar;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultTreeModel;
@@ -38,6 +41,7 @@ public class JTree extends JFrame implements TreeSelectionListener {
     UpdaterScriptOperations uso;
     ProjectOperations po = new ProjectOperations();
     ProjectItemNode rootNode;
+
     public JTree() throws IOException {
         initComponents();
     }
@@ -79,27 +83,28 @@ public class JTree extends JFrame implements TreeSelectionListener {
 //        p("File List");
 //        System.out.println(to.getNodeList(ProjectItemNode.NODE_FILE));
 //        p();
-        
 //        p(uso.initiateUpdaterScript());
 //        for(ProjectItemNode node : to.getNodeList(ProjectItemNode.NODE_GROUP)){
 //            //p(so.addCheckBox((GroupNode)node));
 //            p(uso.generateUpdaterScript((GroupNode)node));
 //        }
 //        p(uso.terminateUpdaterScript());
-        
 //        Export e = new Export();
 //        e.createZip(to.getNodeList(ProjectItemNode.NODE_FILE));
-        
-        //Import.from("demo.zip", rootNode, ProjectNode.PROJECT_AROMA, model);
-        //Import.from("nameless-4.4.4-20140715-i9103-HOMEMADE.zip", rootNode, ProjectNode.PROJECT_ROM, model);
+        //p("" + JarOperations.jarFileList());
+        Jar.addThemesToTree(rootNode, model);
+        //JOptionPane.showMessageDialog(null,  JarOperations.setJarFileList());
+        Import.from("demo.zip", rootNode, ProjectNode.PROJECT_AROMA, model);
+        Import.from("nameless-4.4.4-20140715-i9103-HOMEMADE.zip", rootNode, ProjectNode.PROJECT_ROM, model);
         Import.from("pa_gapps-modular-full-4.4.3-20140603-signed.zip", rootNode, ProjectNode.PROJECT_GAPPS, model);
+        //p(AromaConfig.build(rootNode));
+        //p(UpdaterScript.build(rootNode));
         //Import.from("demo1.zip", rootNode, ProjectNode.PROJECT_ADVANCED, model);
-        
+
 //        Export e = new Export();
 //        e.createZip(to.getNodeList(ProjectItemNode.NODE_FILE));
         //to expand all the rows
         //to.expandDirectories(tree);
-
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
@@ -117,7 +122,11 @@ public class JTree extends JFrame implements TreeSelectionListener {
         removeButton.setText("<");
         removeButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                removeButtonActionPerformed(evt);
+                try {
+                    removeButtonActionPerformed(evt);
+                } catch (IOException ex) {
+                    Logger.getLogger(JTree.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
 
@@ -150,7 +159,6 @@ public class JTree extends JFrame implements TreeSelectionListener {
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap())
         );
-
         pack();
     }// </editor-fold>                        
 
@@ -176,10 +184,15 @@ public class JTree extends JFrame implements TreeSelectionListener {
         //to.expandDirectories(tree);
     }
 
-    private void removeButtonActionPerformed(java.awt.event.ActionEvent evt) {
+    private void removeButtonActionPerformed(java.awt.event.ActionEvent evt) throws IOException {
         ProjectItemNode node = (ProjectItemNode) tree.getLastSelectedPathComponent();
-        node.removeChild(node, model);
+        //node.removeChild(node, model);
         //to.expandDirectories(tree);
+        //JOptionPane.showMessageDialog(null, JarOperations.getJarFileName());
+//        Export e = new Export();
+//        e.zip(rootNode);
+        Export.zip(rootNode);
+        //e.createZip(to.getNodeList(ProjectItemNode.NODE_FILE));
     }
 
     private javax.swing.JButton addButton;
@@ -195,7 +208,7 @@ public class JTree extends JFrame implements TreeSelectionListener {
             return;
         }
         if (node instanceof FileNode) {
-            System.out.println(((FileNode) node).parent);
+            System.out.println(((FileNode) node).fileSourcePath);
         }
         if (node instanceof GroupNode) {
             System.out.println(((GroupNode) node).location);

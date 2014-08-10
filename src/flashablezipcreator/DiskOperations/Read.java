@@ -6,10 +6,12 @@
 package flashablezipcreator.DiskOperations;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 
 /**
@@ -34,4 +36,36 @@ public class Read {
         }
         return "";
     }
+    
+    public byte[] getFileBytes(String path) throws IOException {
+        FileInputStream fis = new FileInputStream(new File(path));
+        int len;
+        byte[] buffer = new byte[1024];
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        while ((len = fis.read(buffer)) > 0) {
+            baos.write(buffer, 0, len);
+        }
+        return baos.toByteArray();
+    }
+    
+    public byte[] getBytesFromFile(InputStream is) throws IOException {
+        int len;
+        byte[] buffer = new byte[1024];
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        while ((len = is.read(buffer)) > 0) {
+            baos.write(buffer, 0, len);
+        }
+        return baos.toByteArray();
+    }
+    
+    public String getStringFromFile(InputStream is) throws IOException {
+        int len;
+        byte[] buffer = new byte[1024];
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        while ((len = is.read(buffer)) > 0) {
+            baos.write(buffer, 0, len);
+        }
+        return baos.toString();
+    }
+    
 }

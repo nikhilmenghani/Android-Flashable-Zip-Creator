@@ -36,9 +36,7 @@ public class UpdaterScriptOperations {
 
     public String initiateUpdaterScript() {
         return addPrintString("@Starting the install process")
-                + addPrintString("Setting up required tools...")
-                + addPrintString("Mounting Partitions...")
-                + getMountMethod(1);
+                + addPrintString("Setting up required tools...");
     }
 
     public String terminateUpdaterScript() {
@@ -203,5 +201,4 @@ public class UpdaterScriptOperations {
         }
         return "";
     }
-
 }

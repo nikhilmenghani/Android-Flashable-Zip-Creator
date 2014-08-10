@@ -26,8 +26,13 @@ public class FileNode extends ProjectItemNode {
         super((new File(fileSourcePath)).getName(), ProjectItemNode.NODE_FILE, parent);
         this.installLocation = parent.getLocation();
         this.filePermission = parent.getPermissions();
-        this.fileSourcePath = fileSourcePath;
-        this.fileDestPath = parent.path + File.separator + (new File(fileSourcePath)).getName();
+        if (parent.groupType == GroupNode.GROUP_AROMA_THEMES) {
+            this.fileDestPath = parent.path + File.separator + (new File(fileSourcePath)).getName();
+            this.fileSourcePath = this.fileDestPath;
+        } else {
+            this.fileSourcePath = fileSourcePath;
+            this.fileDestPath = parent.path + File.separator + (new File(fileSourcePath)).getName();
+        }
         fileZipPath = getZipPath();
     }
 
@@ -100,7 +105,10 @@ public class FileNode extends ProjectItemNode {
                     case GroupNode.GROUP_CUSTOM:
                         str = "custom" + File.separator + str;
                         break;
-                        //case GroupNode.GROUP_OTHER not needed.
+                    case GroupNode.GROUP_AROMA_THEMES:
+                        return this.fileDestPath.replaceAll("\\\\", "/");
+                    //case GroupNode.GROUP_OTHER not needed and
+                    //case GroupNode.GROUP_META_INF not needed.
                 }
                 break;
             case ProjectItemNode.NODE_SUBGROUP:

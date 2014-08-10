@@ -5,6 +5,7 @@
  */
 package flashablezipcreator.Operations;
 
+import static flashablezipcreator.AFZC.Protocols.p;
 import flashablezipcreator.Core.FileNode;
 import flashablezipcreator.Core.GroupNode;
 import flashablezipcreator.Core.ProjectItemNode;
@@ -58,6 +59,8 @@ public class TreeOperations {
                     case GroupNode.GROUP_DATA_APP:
                     case GroupNode.GROUP_PRELOAD_SYMLINK_SYSTEM_APP:
                     case GroupNode.GROUP_SYSTEM_FRAMEWORK:
+                    case GroupNode.GROUP_OTHER:
+                    case GroupNode.GROUP_AROMA_THEMES:
                         if (childType == ProjectItemNode.NODE_FILE) {
                             node.addChild(new FileNode(childTitle, (GroupNode) node), model);
                         } else {
@@ -84,10 +87,6 @@ public class TreeOperations {
                         if (childType == SubGroupNode.TYPE_CUSTOM) {
                             node.addChild(new SubGroupNode(childTitle, childType, (GroupNode) node), model);
                         }
-                        break;
-                    case GroupNode.GROUP_OTHER:
-                        //we need a way of preventing other group from displaying in tree. 
-                        node.addChild(new FileNode(childTitle, (GroupNode) node), model);
                         break;
                     //here File Node can also act as child but due to different requirements of parameters,
                     //explicit call to another addChildTo function is required.
@@ -157,7 +156,6 @@ public class TreeOperations {
 //        }
 //        return list;
 //    }
-
     public ArrayList<ProjectItemNode> parseNode(ProjectItemNode node, int type) {
         for (int i = 0; i < node.getChildCount(); i++) {
             if (((ProjectItemNode) node.getChildAt(i)).type == type) {
@@ -192,6 +190,56 @@ public class TreeOperations {
     public ArrayList<ProjectItemNode> getNodeList(int nodeType) {
         list = new ArrayList<>();
         return parseNode(this.rootNode, nodeType);
+    }
+
+    public ArrayList<ProjectItemNode> getProjectsSorted(ProjectItemNode rootNode) {
+        ArrayList<ProjectItemNode> projects = new ArrayList<>();
+        ArrayList<ProjectItemNode> projectRom = new ArrayList<>();
+        ArrayList<ProjectItemNode> projectGapps = new ArrayList<>();
+        ArrayList<ProjectItemNode> projectAroma = new ArrayList<>();
+        ArrayList<ProjectItemNode> projectNormal = new ArrayList<>();
+        ArrayList<ProjectItemNode> projectThemes = new ArrayList<>();
+
+        for (ProjectItemNode project : getNodeList(ProjectItemNode.NODE_PROJECT)) {
+            switch (((ProjectNode) project).projectType) {
+                case ProjectNode.PROJECT_ROM:
+                    projectRom.add(project);
+                    break;
+                case ProjectNode.PROJECT_GAPPS:
+                    projectGapps.add(project);
+                    break;
+                case ProjectNode.PROJECT_AROMA:
+                    projectAroma.add(project);
+                    break;
+                case ProjectNode.PROJECT_NORMAL:
+                    projectNormal.add(project);
+                    break;
+                case ProjectNode.PROJECT_THEMES:
+                    projectThemes.add(project);
+                    break;
+            }
+        }
+
+        projectRom.stream().forEach((node) -> {
+            projects.add(node);
+        });
+        projectGapps.stream().forEach((node) -> {
+            projects.add(node);
+        });
+
+        projectAroma.stream().forEach((node) -> {
+            projects.add(node);
+        });
+
+        projectNormal.stream().forEach((node) -> {
+            projects.add(node);
+        });
+        
+        projectThemes.stream().forEach((node) -> {
+            projects.add(node);
+        });
+
+        return projects;
     }
 
     public ProjectNode getProjectNode(String name, int projectType) {

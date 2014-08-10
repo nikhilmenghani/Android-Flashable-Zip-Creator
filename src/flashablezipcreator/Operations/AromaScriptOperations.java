@@ -6,6 +6,8 @@
 package flashablezipcreator.Operations;
 
 import flashablezipcreator.Core.GroupNode;
+import flashablezipcreator.Core.ProjectItemNode;
+import flashablezipcreator.Core.ProjectNode;
 
 /**
  *
@@ -20,12 +22,38 @@ public class AromaScriptOperations {
         return "anisplash(\n"
                 + "2,\n"
                 + "\"" + splashPath + "\", 1200\n"
-                + ");";
+                + ");\n";
     }
 
     public String addFontsString() {
         return "fontresload(\"0\", \"" + fontsPath + "\", \"12\");\n"
-                + "fontresload(\"1\", \"" + fontsPath + "\", \"14\");";
+                + "fontresload(\"1\", \"" + fontsPath + "\", \"14\");\n";
+    }
+
+    public String addThemesString(ProjectItemNode rootNode) {
+        String str = "selectbox(\"Themes\",\"Choose your desired theme from following\",\"@personalize\",\"theme.prop\",\n";
+        int i = 1;
+        for (ProjectItemNode projectNode : rootNode.children) {
+            if (((ProjectNode) projectNode).projectType == ProjectNode.PROJECT_THEMES) {
+                for (ProjectItemNode theme : ((ProjectNode) projectNode).children) {
+                    str += "\"" + theme.title + "\", \"\", " + i + ",\n";
+                    i = 0;
+                }
+            }
+        }
+        str += ");\n\n";
+        i = 1;
+        for (ProjectItemNode projectNode : rootNode.children) {
+            if (((ProjectNode) projectNode).projectType == ProjectNode.PROJECT_THEMES) {
+                for (ProjectItemNode theme : ((ProjectNode) projectNode).children) {
+                    str += "if prop(\"theme.prop\", \"selected.0\")==\"" + i++ + "\" then\n"
+                            + "theme(\"" + theme.title + "\");\n"
+                            + "endif;\n"
+                            + "\n";
+                }
+            }
+        }
+        return str;
     }
 
     public String addAgreeBox() {
@@ -34,7 +62,7 @@ public class AromaScriptOperations {
                 + " \"@alert\","
                 + "resread(\"Terms and Conditions.txt\"),"
                 + " \"I agree with these Terms of Use...\","
-                + " \"You need to agree with the Terms of Use...\");";
+                + " \"You need to agree with the Terms of Use...\");\n";
     }
 
     public String addSelectBox(GroupNode node) {
@@ -56,6 +84,29 @@ public class AromaScriptOperations {
                 }
                 str += ");\n";
                 str += "writetmpfile(\"" + node.prop + "\",readtmpfile(\"" + node.prop + "\"));\n";
+                break;
+        }
+        return str;
+    }
+
+    public String addChoiceBox(ProjectNode project) {
+        String str = "";
+        switch (project.projectType) {
+            case ProjectNode.PROJECT_GAPPS:
+                str += "selectbox(\"" + "Menu" + " List\",\"Select from " + "following" + "\",\"@personalize\",\"" + project.title + ".prop" + "\",\n"
+                        + "\"Select one from the list\", \"\", 2";
+                str += ",\n\"" + "Install Gapps" + "\", \"\", 0";
+                str += ",\n\"" + "Do Not Install Gapps" + "\", \"\", 0";
+                str += ");\n";
+                str += "writetmpfile(\"" + project.title + ".prop" + "\",readtmpfile(\"" + project.title + ".prop" + "\"));\n";
+                break;
+            case ProjectNode.PROJECT_ROM:
+                str += "selectbox(\"" + "Menu" + " List\",\"Select from " + "following" + "\",\"@personalize\",\"" + project.title + ".prop" + "\",\n"
+                        + "\"Select one from the list\", \"\", 2";
+                str += ",\n\"" + "Install Rom" + "\", \"\", 0";
+                str += ",\n\"" + "Do Not Install Rom" + "\", \"\", 0";
+                str += ");\n";
+                str += "writetmpfile(\"" + project.title + ".prop" + "\",readtmpfile(\"" + project.title + ".prop" + "\"));\n";
                 break;
         }
         return str;

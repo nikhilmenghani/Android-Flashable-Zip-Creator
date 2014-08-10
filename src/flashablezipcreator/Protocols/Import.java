@@ -14,6 +14,7 @@ import flashablezipcreator.DiskOperations.ReadZip;
 import flashablezipcreator.Operations.TreeOperations;
 import java.io.File;
 import java.io.IOException;
+import javax.swing.JOptionPane;
 import javax.swing.tree.DefaultTreeModel;
 
 /**
@@ -24,8 +25,10 @@ public class Import {
 
     static ReadZip rz;
     static TreeOperations to;
+    static String exisingUpdaterScript = "";
 
     public static void from(String path, ProjectItemNode rootNode, int type, DefaultTreeModel model) throws IOException {
+
         rz = new ReadZip(path);
         to = new TreeOperations(rootNode);
         String projectName = (new File(path)).getName();
@@ -49,11 +52,25 @@ public class Import {
             String fileName = (new File(filePath)).getName();
             FileNode file = null;
             if (hasSubGroup) {
-                addFileToTree(fileName, subGroupName, subGroupType, groupName, groupType, projectName, projectType, model);
-                file = to.getFileNode(fileName, subGroupName, groupName, projectName);
+                file = addFileToTree(fileName, subGroupName, subGroupType, groupName, groupType, projectName, projectType, model);
             } else {
-                addFileToTree(fileName, groupName, groupType, projectName, projectType, model);
-                file = to.getFileNode(fileName, groupName, projectName);
+                if (filePath.contains("META-INF/com/google/android/update-binary")) {
+                    to.getProjectNode(projectName, projectType).update_binary = rz.getBytesFromFile(rz.zis);
+                    rz.ze = rz.zis.getNextEntry();
+                    continue;
+                } else if (filePath.contains("META-INF/com/google/android/updater-binary-installer")) {
+                    to.getProjectNode(projectName, projectType).update_binary_installer = rz.getBytesFromFile(rz.zis);
+                    rz.ze = rz.zis.getNextEntry();
+                    continue;
+                } else if (filePath.contains("META-INF/com/google/android/updater-script")) {
+                    to.getProjectNode(projectName, projectType).updater_script += rz.getStringFromFile(rz.zis);
+                    rz.ze = rz.zis.getNextEntry();
+                    continue;
+                } else if (filePath.contains("META-INF/com/google/android/aroma")) {
+                    rz.ze = rz.zis.getNextEntry();
+                    continue;
+                }
+                file = addFileToTree(fileName, groupName, groupType, projectName, projectType, model);
                 if (groupType == GroupNode.GROUP_OTHER) {
                     file.fileZipPath = filePath;
                 }
@@ -65,7 +82,7 @@ public class Import {
         rz.close();
     }
 
-    public static void addFileToTree(String fileName, String subGroupName, int subGroupType, String groupName, int groupType, String projectName, int projectType, DefaultTreeModel model) {
+    public static FileNode addFileToTree(String fileName, String subGroupName, int subGroupType, String groupName, int groupType, String projectName, int projectType, DefaultTreeModel model) {
         if (to.getGroupNode(groupName, groupType, projectName) == null) {
             to.addChildTo(to.getProjectNode(projectName, projectType), groupName, groupType, model);
         }
@@ -77,20 +94,26 @@ public class Import {
         } else {
             to.addChildTo(to.getSubGroupNode(subGroupName, subGroupType, groupName, projectName), fileName, ProjectItemNode.NODE_FILE, model);
         }
+        return to.getFileNode(fileName, subGroupName, groupName, projectName);
     }
 
-    public static void addFileToTree(String fileName, String groupName, int groupType, String projectName, int projectType, DefaultTreeModel model) {
+    public static FileNode addFileToTree(String fileName, String groupName, int groupType, String projectName, int projectType, DefaultTreeModel model) {
         if (to.getGroupNode(groupName, groupType, projectName) == null) {
             to.addChildTo(to.getProjectNode(projectName, projectType), groupName, groupType, model);
+        }
+        if (to.getFileNode(fileName, groupName, projectName) != null) {
+            fileName += "_1";
         }
         if (groupType == GroupNode.GROUP_CUSTOM) {
             to.addChildTo(to.getGroupNode(groupName, groupType, projectName), fileName, "", "", model);
         } else {
             to.addChildTo(to.getGroupNode(groupName, groupType, projectName), fileName, ProjectItemNode.NODE_FILE, model);
         }
+        return to.getFileNode(fileName, groupName, projectName);
     }
 
     public static boolean hasSubGroup(String path) {
+        //System.out.println("Has SubGroup");
         switch (getGroupType(path)) {
             case GroupNode.GROUP_SYSTEM_FONTS:
             case GroupNode.GROUP_SYSTEM_MEDIA:
@@ -98,10 +121,13 @@ public class Import {
                 return true;
             case GroupNode.GROUP_CUSTOM:
                 if (path.startsWith("customize")) {
+                    System.out.println("path before " + path);
                     path = path.substring(path.indexOf("/", path.indexOf("/", path.indexOf("/") + 1) + 1) + 1, path.length());
                     if (path.contains("/")) {
+                        System.out.println("Returning true for " + path);
                         return true;
                     } else {
+                        System.out.println("Returning false for " + path);
                         return false;
                     }
                 }
@@ -117,15 +143,6 @@ public class Import {
             } catch (StringIndexOutOfBoundsException er) {
                 System.out.println("Group with custom file found..!! " + path);
             }
-//        } else if (path.startsWith("system")) {
-//            switch (groupName) {
-//                case "Boot Animations":
-//                    path = "Default";
-//                    break;
-//                case "Fonts":
-//                    path = "System";
-//                    break;
-//            }
         }
         return path;
     }
@@ -154,32 +171,16 @@ public class Import {
                 }
             case "priv-app":
                 return "Private Apps";
-//            case "csc":
-//                return "System Csc";
-//            case "etc":
-//                return "System Etc";
-//            case "lib":
-//                return "Libraries";
             case "local":
                 if (fullPath.startsWith("data/local")) {
                     return "Boot Animations";
                 } else {
                     break;
                 }
-//            case "preload":
-//                //return;
-//                break;
-//            case "framework":
-//                return "Frameworks";
-//            case "fonts":
-//                return "Fonts";
             case "custom":
                 return "custom";
             default:
                 if (fullPath.startsWith("system/media")) {
-//                    if (fullPath.equals("system/media/bootanimation.zip")) {
-//                        return "Boot Animations";
-//                    }
                     fullPath = fullPath.substring(0, fullPath.lastIndexOf("/"));
                     switch (fullPath) {
                         case "system/media/audio/notifications":
@@ -203,7 +204,7 @@ public class Import {
     public static int getGroupType(String path) {
         String fullPath = path;
         if (path.startsWith("customize")) {
-            path = path.substring(path.indexOf("/", path.indexOf("/") + 1) + 1, path.length());
+            path = path.substring(path.indexOf("/") + 1, path.indexOf("/", path.indexOf("/") + 1));
         } else if (path.startsWith("system") || path.startsWith("data")) {
             path = path.substring(path.indexOf("/") + 1, path.length());
             if (path.contains("/")) {
@@ -214,6 +215,7 @@ public class Import {
                 path = (fullPath.substring(fullPath.indexOf("/", fullPath.indexOf(path) + 1) + 1, fullPath.length()));
             }
         }
+
         switch (path) {
             case "system_app":
             case "app":
@@ -226,13 +228,10 @@ public class Import {
             case "priv-app":
                 return GroupNode.GROUP_SYSTEM_PRIV_APK;
             case "system_csc":
-                //case "csc":
                 return GroupNode.GROUP_SYSTEM_CSC;
             case "system_etc":
-                //case "etc":
                 return GroupNode.GROUP_SYSTEM_ETC;
             case "system_lib":
-                //case "lib":
                 return GroupNode.GROUP_SYSTEM_LIB;
             case "system_media_alarms":
                 return GroupNode.GROUP_SYSTEM_MEDIA_AUDIO_ALARMS;
@@ -247,10 +246,8 @@ public class Import {
             case "system_preload":
                 return GroupNode.GROUP_PRELOAD_SYMLINK_SYSTEM_APP;
             case "system_framework":
-                //case "framework":
                 return GroupNode.GROUP_SYSTEM_FRAMEWORK;
             case "system_fonts":
-                //case "fonts":
                 return GroupNode.GROUP_SYSTEM_FONTS;
             case "system_media":
                 return GroupNode.GROUP_SYSTEM_MEDIA;
@@ -262,9 +259,6 @@ public class Import {
                 return GroupNode.GROUP_OTHER;
             default:
                 if (fullPath.startsWith("system/media")) {
-//                    if (fullPath.equals("system/media/bootanimation.zip")) {
-//                        return GroupNode.GROUP_SYSTEM_MEDIA;
-//                    }
                     fullPath = fullPath.substring(0, fullPath.lastIndexOf("/"));
                     switch (fullPath) {
                         case "system/media":
@@ -284,6 +278,5 @@ public class Import {
                     return GroupNode.GROUP_OTHER;
                 }
         }
-        //return -1;
     }
 }

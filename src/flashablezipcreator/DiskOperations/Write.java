@@ -45,6 +45,22 @@ public class Write extends Protocols {
         }
     }
 
+    public void writeByteToFile(byte buffer[], String filePath) throws IOException {
+        File file = new File(filePath);
+        System.out.println(file.getAbsolutePath());
+        if(filePath.contains(File.separator)){
+            String str = filePath.substring(0, filePath.lastIndexOf(File.separator));
+            System.out.println(str);
+            (new File(filePath.substring(0, filePath.lastIndexOf(File.separator)))).mkdirs();
+        }
+        if(!file.exists()){ 
+            file.createNewFile();
+        }
+        try (FileOutputStream fos = new FileOutputStream(filePath)) {
+            fos.write(buffer);
+        }
+    }
+
     public void writeFile(String sourcePath, String destPath) throws FileNotFoundException, IOException {
         File sourceFile = new File(sourcePath);
         File destFile = new File(destPath);
@@ -73,7 +89,7 @@ public class Write extends Protocols {
             System.out.println("Folder created at : " + name);
         }
     }
-    
+
     public void deleteDirectories(String location) {
         File directory = new File(location);
         if (!directory.exists()) {

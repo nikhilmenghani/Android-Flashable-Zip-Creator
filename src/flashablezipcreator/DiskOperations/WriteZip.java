@@ -16,6 +16,7 @@ import java.io.InputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipOutputStream;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -60,6 +61,11 @@ public final class WriteZip extends Write {
         writeFileToZip(new ByteArrayInputStream(strToWrite.getBytes()), WriteAt);
     }
 
+    //this will be used to write binaries to zip.
+    public void writeByteToFile(byte buffer[], String filePath) throws IOException {
+        writeFileToZip(new ByteArrayInputStream(buffer), filePath);
+    }
+    
     //this function is simple to use, source and destination path will do the work.
     public void writeFileToZip(String filePath, String writeAt) throws IOException {
         writeFileToZip(new FileInputStream(new File(filePath)), writeAt);
@@ -68,6 +74,7 @@ public final class WriteZip extends Write {
     //this function is used to write file to zip for any zos.
     public void writeFileToZip(InputStream in, ZipOutputStream zos, String writeAt) throws IOException {
         p("File Writing at " + writeAt);
+        //JOptionPane.showMessageDialog(null, "writing at " + writeAt);
         byte[] buffer = new byte[1024];
         ZipEntry ze = new ZipEntry(writeAt);
         try {
