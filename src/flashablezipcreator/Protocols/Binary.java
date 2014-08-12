@@ -8,6 +8,7 @@ package flashablezipcreator.Protocols;
 import flashablezipcreator.Core.ProjectItemNode;
 import flashablezipcreator.Core.ProjectNode;
 import flashablezipcreator.Operations.JarOperations;
+import java.io.IOException;
 import javax.swing.JOptionPane;
 
 /**
@@ -19,21 +20,22 @@ public class Binary {
     public static String updateBinaryInstallerPath = "META-INF/com/google/android/update-binary-installer";
     public static String updateBinaryPath = "META-INF/com/google/android/update-binary";
 
-    public static byte[] getUpdateBinary(ProjectItemNode rootNode) {
+    public static byte[] getUpdateBinary(ProjectItemNode rootNode) throws IOException {
         switch (Project.returnMainProject(rootNode)) {
             case ProjectNode.PROJECT_ROM:
             case ProjectNode.PROJECT_GAPPS:
             case ProjectNode.PROJECT_AROMA:
-                //neon-nonneon will be based on device
-                return JarOperations.non_neon_binary;
+                if(!Device.isNeonCompatible()){
+                    return JarOperations.non_neon_binary;
+                }
+                return JarOperations.neon_binary;
             case ProjectNode.PROJECT_NORMAL:
-                //device binary
-                break;
+                return Device.getBinary();
         }
         return null;
     }
 
-    public static byte[] getInstallerBinary(ProjectItemNode rootNode) {
+    public static byte[] getInstallerBinary(ProjectItemNode rootNode) throws IOException {
         switch (Project.returnMainProject(rootNode)) {
             case ProjectNode.PROJECT_ROM:
                 for (ProjectItemNode project : rootNode.children) {
@@ -58,8 +60,8 @@ public class Binary {
                     }
                 }
             case ProjectNode.PROJECT_AROMA:
-                //device specific
-                break;
+                //JOptionPane.showMessageDialog(null, "returning Installer Binary");
+                return Device.getBinary();
         }
         return null;
     }

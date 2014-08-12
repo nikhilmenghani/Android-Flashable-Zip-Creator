@@ -27,7 +27,7 @@ public class Export {
     static TreeOperations to;
 
     public static void createZip(ArrayList<ProjectItemNode> fileNode) throws IOException {
-        wz = new WriteZip("demo3.zip");
+        wz = new WriteZip(Project.outputPath);
         for (ProjectItemNode node : fileNode) {
             //this will simply take each file from source and create the same file in zip at specified destination path.
             wz.writeFileToZip(((FileNode) node).fileSourcePath, ((FileNode) node).fileZipPath);
@@ -37,7 +37,7 @@ public class Export {
     }
 
     public static void zip(ProjectItemNode rootNode) throws IOException {
-        wz = new WriteZip("demo3.zip");
+        wz = new WriteZip(Project.outputPath);
         to = new TreeOperations(rootNode);
         for (ProjectItemNode project : to.getProjectsSorted(rootNode)) {
             if (((ProjectNode) project).projectType != ProjectNode.PROJECT_THEMES) {

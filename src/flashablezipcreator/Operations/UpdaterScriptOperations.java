@@ -40,15 +40,27 @@ public class UpdaterScriptOperations {
     }
 
     public String terminateUpdaterScript() {
-        return "unmount(\"/data\");\n"
-                + "unmount(\"/system\");\n"
-                + addPrintString("@Finished Install");
+        return addPrintString("Unmounting Partitions...")
+                + "unmount(\"/data\");\n"
+                + "unmount(\"/system\");\n";
+    }
+
+    public String addWipeDalvikCacheString() {
+        String str = "";
+        str += "run_program(\"/sbin/busybox\",\"mount\", \"/data\");\n";
+        str += "if(file_getprop(\"/tmp/aroma/dalvik_choices.prop\", \"true\")==\"yes\") then\n"
+                + "ui_print(\"@Wiping dalvik-cache\");\n"
+                + "delete_recursive(\"/data/dalvik-cache\");\n"
+                + "endif;\n";
+        str += "unmount(\"/data\");\n";
+        return str;
     }
 
     public String getMountMethod(int type) {
         switch (type) {
             case 1:
-                return "run_program(\"/sbin/busybox\",\"mount\", \"/system\");\n"
+                return addPrintString("Mounting Partitions...")
+                        + "run_program(\"/sbin/busybox\",\"mount\", \"/system\");\n"
                         + "run_program(\"/sbin/busybox\",\"mount\", \"/data\");\n";
             case 2:
                 //future aspect

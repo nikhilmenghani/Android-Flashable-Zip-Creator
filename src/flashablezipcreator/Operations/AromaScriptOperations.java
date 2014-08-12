@@ -41,6 +41,7 @@ public class AromaScriptOperations {
                 }
             }
         }
+        str = str.substring(0, str.length() - 2);
         str += ");\n\n";
         i = 1;
         for (ProjectItemNode projectNode : rootNode.children) {
@@ -89,22 +90,21 @@ public class AromaScriptOperations {
         return str;
     }
 
-    public String addChoiceBox(ProjectNode project) {
+    public String addMenuBox(ProjectNode project) {
         String str = "";
         switch (project.projectType) {
             case ProjectNode.PROJECT_GAPPS:
-                str += "selectbox(\"" + "Menu" + " List\",\"Select from " + "following" + "\",\"@personalize\",\"" + project.title + ".prop" + "\",\n"
-                        + "\"Select one from the list\", \"\", 2";
-                str += ",\n\"" + "Install Gapps" + "\", \"\", 0";
-                str += ",\n\"" + "Do Not Install Gapps" + "\", \"\", 0";
+                str += "menubox(\"" + "Menu" + " List\",\"Select from " + "following" + "\",\"@personalize\",\"" + project.title + ".prop" + "\",\n"
+                        + "\"Install\", \"Install Gapps\", \"@install\"";
+                str += ",\n\"" + "Skip" + "\", \"Do Not Install Gapps\", \"@apps\"";
                 str += ");\n";
                 str += "writetmpfile(\"" + project.title + ".prop" + "\",readtmpfile(\"" + project.title + ".prop" + "\"));\n";
+                //str += "writetmpfile(\"" + project.title + ".prop" + "\",\"true=yes\");\n";
                 break;
             case ProjectNode.PROJECT_ROM:
-                str += "selectbox(\"" + "Menu" + " List\",\"Select from " + "following" + "\",\"@personalize\",\"" + project.title + ".prop" + "\",\n"
-                        + "\"Select one from the list\", \"\", 2";
-                str += ",\n\"" + "Install Rom" + "\", \"\", 0";
-                str += ",\n\"" + "Do Not Install Rom" + "\", \"\", 0";
+                str += "menubox(\"" + "Menu" + " List\",\"Select from " + "following" + "\",\"@personalize\",\"" + project.title + ".prop" + "\",\n"
+                        + "\"Install\", \"Install Rom\", \"@install\"";
+                str += ",\n\"" + "Skip" + "\", \"Do Not Install Rom\", \"@apps\"";
                 str += ");\n";
                 str += "writetmpfile(\"" + project.title + ".prop" + "\",readtmpfile(\"" + project.title + ".prop" + "\"));\n";
                 break;

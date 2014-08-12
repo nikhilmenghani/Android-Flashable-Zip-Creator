@@ -40,6 +40,10 @@ public class Import {
             to.addChildTo(rootNode, projectName, projectType, model);
         }
         while (rz.ze != null) {
+            if (rz.ze.getName().endsWith("/")) {
+                rz.ze = rz.zis.getNextEntry();
+                continue;
+            }
             System.out.println();
             p("current file " + rz.ze.getName());
             System.out.println();

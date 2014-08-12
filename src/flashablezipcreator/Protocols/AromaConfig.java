@@ -23,6 +23,7 @@ public class AromaConfig {
     public static String aromaConfigPath = "META-INF/com/google/android/aroma-config";
 
     public static String build(ProjectItemNode rootNode) {
+        aromaConfig = "";
         to = new TreeOperations(rootNode);
         aromaConfig += op.addSplashString();
         aromaConfig += op.addFontsString();
@@ -68,11 +69,11 @@ public class AromaConfig {
         String str = "";
         switch (project.projectType) {
             case ProjectNode.PROJECT_ROM:
-                str += op.addChoiceBox(project);
+                str += op.addMenuBox(project);
                 str += "if prop(\"" + project.title + ".prop\",\"selected\")==\"1\" then\n";
                 break;
             case ProjectNode.PROJECT_GAPPS:
-                str += op.addChoiceBox(project);
+                str += op.addMenuBox(project);
                 str += "if prop(\"" + project.title + ".prop\",\"selected\")==\"1\" then\n";
                 break;
         }

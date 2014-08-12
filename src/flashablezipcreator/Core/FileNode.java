@@ -25,7 +25,7 @@ public class FileNode extends ProjectItemNode {
     public FileNode(String fileSourcePath, GroupNode parent) {
         super((new File(fileSourcePath)).getName(), ProjectItemNode.NODE_FILE, parent);
         this.installLocation = parent.getLocation();
-        this.filePermission = parent.getPermissions();
+        setPermissions(parent);
         if (parent.groupType == GroupNode.GROUP_AROMA_THEMES) {
             this.fileDestPath = parent.path + File.separator + (new File(fileSourcePath)).getName();
             this.fileSourcePath = this.fileDestPath;
@@ -39,7 +39,7 @@ public class FileNode extends ProjectItemNode {
     public FileNode(String fileSourcePath, SubGroupNode parent) {
         super((new File(fileSourcePath)).getName(), ProjectItemNode.NODE_FILE, parent);
         this.installLocation = parent.getLocation();
-        this.filePermission = parent.getPermissions();
+        setPermissions(parent);
         this.fileSourcePath = fileSourcePath;
         this.fileDestPath = parent.path + File.separator + (new File(fileSourcePath)).getName();
         fileZipPath = getZipPath();
@@ -54,6 +54,39 @@ public class FileNode extends ProjectItemNode {
         this.filePermission = permission;
         belongsToGroup = (parent.type == SubGroupNode.TYPE_CUSTOM) ? parent.parent.toString() : parent.toString();
         fileZipPath = getZipPath();
+    }
+
+    public void setPermissions(GroupNode parent) {
+        switch (parent.groupType) {
+            case GroupNode.GROUP_SYSTEM_APK:
+            case GroupNode.GROUP_SYSTEM_CSC:
+            case GroupNode.GROUP_SYSTEM_ETC:
+            case GroupNode.GROUP_SYSTEM_FRAMEWORK:
+            case GroupNode.GROUP_SYSTEM_LIB:
+            case GroupNode.GROUP_SYSTEM_PRIV_APK:
+                setPermissions("0", "0", "0644", parent.location + "/" + title);
+                break;
+            case GroupNode.GROUP_SYSTEM_MEDIA_AUDIO_ALARMS:
+            case GroupNode.GROUP_SYSTEM_MEDIA_AUDIO_NOTIFICATIONS:
+            case GroupNode.GROUP_SYSTEM_MEDIA_AUDIO_RINGTONES:
+            case GroupNode.GROUP_SYSTEM_MEDIA_AUDIO_UI:
+            case GroupNode.GROUP_DATA_APP:
+                setPermissions("1000", "1000", "0644", parent.location + "/" + title);
+                break;
+
+        }
+    }
+
+    public void setPermissions(SubGroupNode parent) {
+        switch (parent.subGroupType) {
+            case GroupNode.GROUP_SYSTEM_FONTS:
+            case GroupNode.GROUP_SYSTEM_MEDIA:
+                setPermissions("1000", "1000", "0644", parent.location + "/" + title);
+                break;
+            case GroupNode.GROUP_DATA_LOCAL:
+                setPermissions("1000", "1000", "0664", parent.location + "/" + title);
+                break;
+        }
     }
 
     //this will generate a path that will be used as destination path of file in output zip.
@@ -134,8 +167,8 @@ public class FileNode extends ProjectItemNode {
         return str;
     }
 
-    public void setPermissions(int i, int j, int k, String path) {
-        this.filePermission = i + ", " + j + ", " + k + ", " + path;
+    public void setPermissions(String i, String j, String k, String path) {
+        this.filePermission = i + ", " + j + ", " + k + ", \"" + path + "\"";
     }
 
 }

@@ -5,19 +5,19 @@
  */
 package flashablezipcreator;
 
-import static flashablezipcreator.AFZC.Protocols.p;
 import flashablezipcreator.Core.FileNode;
 import flashablezipcreator.Core.GroupNode;
 import flashablezipcreator.Core.ProjectItemNode;
 import flashablezipcreator.Core.ProjectNode;
 import flashablezipcreator.Core.ProjectTreeBuilder;
-import flashablezipcreator.Operations.JarOperations;
 import flashablezipcreator.Operations.ProjectOperations;
 import flashablezipcreator.Operations.TreeOperations;
 import flashablezipcreator.Operations.UpdaterScriptOperations;
+import flashablezipcreator.Protocols.Device;
 import flashablezipcreator.Protocols.Export;
 import flashablezipcreator.Protocols.Import;
 import flashablezipcreator.Protocols.Jar;
+import flashablezipcreator.Protocols.Project;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -94,9 +94,10 @@ public class JTree extends JFrame implements TreeSelectionListener {
         //p("" + JarOperations.jarFileList());
         Jar.addThemesToTree(rootNode, model);
         //JOptionPane.showMessageDialog(null,  JarOperations.setJarFileList());
-        Import.from("demo.zip", rootNode, ProjectNode.PROJECT_AROMA, model);
-        Import.from("nameless-4.4.4-20140715-i9103-HOMEMADE.zip", rootNode, ProjectNode.PROJECT_ROM, model);
-        Import.from("pa_gapps-modular-full-4.4.3-20140603-signed.zip", rootNode, ProjectNode.PROJECT_GAPPS, model);
+        Device.loadDeviceList();
+        //Import.from("../demo.zip", rootNode, ProjectNode.PROJECT_AROMA, model);
+        Import.from("../CARBON-KK-UNOFFICIAL-20140802-2011-i9103.zip", rootNode, ProjectNode.PROJECT_ROM, model);
+        Import.from("../Inspire_OS_gapps.zip", rootNode, ProjectNode.PROJECT_GAPPS, model);
         //p(AromaConfig.build(rootNode));
         //p(UpdaterScript.build(rootNode));
         //Import.from("demo1.zip", rootNode, ProjectNode.PROJECT_ADVANCED, model);
@@ -165,6 +166,9 @@ public class JTree extends JFrame implements TreeSelectionListener {
     private void addButtonActionPerformed(java.awt.event.ActionEvent evt) throws IOException {
         ProjectItemNode node = (ProjectItemNode) tree.getLastSelectedPathComponent();
         System.out.println();
+        Device.selected = "Samsung Galaxy R (i9103)";
+        Project.outputPath = "NonNeon.zip";
+        Export.zip(rootNode);
 //        switch (node.type) {
 //            case ProjectItemNode.NODE_GROUP:
 //                //to add Group Node
@@ -175,7 +179,7 @@ public class JTree extends JFrame implements TreeSelectionListener {
 //                to.addChildTo(node, textField.getText(), SubGroupNode.TYPE_SYSTEM_MEDIA, model);
 //        }
         //to add File Node
-        to.addChildTo(node, textField.getText(), ProjectNode.PROJECT_AROMA, model);
+        //to.addChildTo(node, textField.getText(), ProjectNode.PROJECT_AROMA, model);
 //        this.tree = ProjectTreeBuilder.buildTree();
 //        this.model = ProjectTreeBuilder.buildModel();
 //        this.jScrollPane1 = ProjectTreeBuilder.buildScrollPane();
@@ -191,6 +195,8 @@ public class JTree extends JFrame implements TreeSelectionListener {
         //JOptionPane.showMessageDialog(null, JarOperations.getJarFileName());
 //        Export e = new Export();
 //        e.zip(rootNode);
+        Device.selected = "LG Optimus L5 (e610)";
+        Project.outputPath = "Neon.zip";
         Export.zip(rootNode);
         //e.createZip(to.getNodeList(ProjectItemNode.NODE_FILE));
     }

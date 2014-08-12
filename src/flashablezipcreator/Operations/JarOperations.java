@@ -28,6 +28,7 @@ public class JarOperations {
     public static ArrayList<String> themesList = new ArrayList<>();
     public static ArrayList<String> themesFileList = new ArrayList<>();
     public static ArrayList<String> otherList = new ArrayList<>();
+    public static ArrayList<String> binaryList = new ArrayList<>();
     public static byte[] neon_binary = null;
     public static byte[] non_neon_binary = null;
     public static String supported_devices = null;
@@ -63,6 +64,8 @@ public class JarOperations {
                                 non_neon_binary = r.getBytesFromFile(getInputStream(s));
                             } else if (s.endsWith("Supported Devices")) {
                                 supported_devices = r.getStringFromFile(getInputStream(s));
+                            } else if (s.startsWith("META-INF/com/google/android/binary-files/")){
+                                binaryList.add(s);
                             }
                         }
                     }

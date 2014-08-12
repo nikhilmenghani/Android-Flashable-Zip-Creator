@@ -49,77 +49,62 @@ public class GroupNode extends ProjectItemNode {
         switch (type) {
             case GROUP_SYSTEM_APK:
                 this.location = "/system/app";
-                this.permissions = "rwrr";
                 this.prop = getProp("system_app");
                 break;
             case GROUP_SYSTEM_PRIV_APK:
                 this.location = "/system/priv-app";
-                this.permissions = "rwrr";
                 this.prop = getProp("system_priv");
                 break;
             case GROUP_SYSTEM_LIB:
                 this.location = "/system/lib";
-                this.permissions = "rwrr";
                 this.prop = getProp("system_lib");
                 break;
             case GROUP_PRELOAD_SYMLINK_SYSTEM_APP:
                 this.location = "/preload/symlink/system/app";
-                this.permissions = "rwrr";
                 this.prop = getProp("system_preload");
                 break;
             case GROUP_SYSTEM_ETC:
                 this.location = "/system/etc";
-                this.permissions = "rwrr";
                 this.prop = getProp("system_etc");
                 break;
             case GROUP_SYSTEM_CSC:
                 this.location = "/system/csc";
-                this.permissions = "rwrr";
                 this.prop = getProp("system_csc");
                 break;
             case GROUP_SYSTEM_MEDIA_AUDIO_ALARMS:
                 this.location = "/system/media/audio/alarms";
-                this.permissions = "rwrr";
                 this.prop = getProp("system_media_alarms");
                 break;
             case GROUP_SYSTEM_MEDIA_AUDIO_NOTIFICATIONS:
                 this.location = "/system/media/audio/notifications";
-                this.permissions = "rwrr";
                 this.prop = getProp("system_media_notifications");
                 break;
             case GROUP_SYSTEM_MEDIA_AUDIO_RINGTONES:
                 this.location = "/system/media/audio/ringtones";
-                this.permissions = "rwrr";
                 this.prop = getProp("system_media_ringtones");
                 break;
             case GROUP_SYSTEM_MEDIA_AUDIO_UI:
                 this.location = "/system/media/audio/ui";
-                this.permissions = "rwrr";
                 this.prop = getProp("system_media_ui");
                 break;
             case GROUP_SYSTEM_MEDIA:
                 this.location = "/system/media";
-                this.permissions = "rwrr";
                 this.prop = getProp("system_media");
                 break;
             case GROUP_SYSTEM_FONTS:
                 this.location = "/system/fonts";
-                this.permissions = "rwrr";
                 this.prop = getProp("system_fonts");
                 break;
             case GROUP_SYSTEM_FRAMEWORK:
                 this.location = "/system/framework";
-                this.permissions = "rwrr";
                 this.prop = getProp("system_framework");
                 break;
             case GROUP_DATA_APP:
                 this.location = "/data/app";
-                this.permissions = "rwrr";
                 this.prop = getProp("data_app");
                 break;
             case GROUP_DATA_LOCAL:
                 this.location = "/data/local";
-                this.permissions = "rwrr";
                 this.prop = getProp("data_local");
                 break;
             case GROUP_CUSTOM:
@@ -155,17 +140,17 @@ public class GroupNode extends ProjectItemNode {
     public String getLocation() {
         return location;
     }
-
-    public String getPermissions() {
-        return permissions;
-    }
+//
+//    public String getPermissions() {
+//        return permissions;
+//    }
 
     public String getProp(String str) {
         return str + "_" + groupName.replaceAll(" ", "_") + "_" + parent.title.replaceAll(" ", "_") + ".prop";
     }
-
-    public void setPermissions(int i, int j, int k, String path) {
-        this.permissions = i + ", " + j + ", " + k + ", " + path;
-    }
+//
+//    public void setPermissions(int i, int j, int k, String path) {
+//        this.permissions = i + ", " + j + ", " + k + ", " + path;
+//    }
 
 }

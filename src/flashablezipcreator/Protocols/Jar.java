@@ -41,12 +41,8 @@ public class Jar {
         }
     }
     
-    public static ArrayList<String> getSupportedDeviceList(){
-        ArrayList<String> temp = new ArrayList<>();
-        for(String list : JarOperations.supported_devices.split("\n")){
-            temp.add(list);
-        }
-        return temp;
+    public static ArrayList<String> getBinaryList(){
+        return JarOperations.binaryList;
     }
     
     public static ArrayList<String> getOtherFileList(){

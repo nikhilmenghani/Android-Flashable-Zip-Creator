@@ -23,6 +23,7 @@ public class UpdaterScript {
     public static String updaterScriptPath = "META-INF/com/google/android/updater-script";
 
     public static String build(ProjectItemNode rootNode) {
+        updaterScript = "";
         to = new TreeOperations(rootNode);
         updaterScript += op.initiateUpdaterScript();
         for (ProjectItemNode project : to.getProjectsSorted(rootNode)) {
@@ -47,7 +48,8 @@ public class UpdaterScript {
                 }
             }
         }
-        updaterScript += op.terminateUpdaterScript();
+        updaterScript += op.addWipeDalvikCacheString();
+        updaterScript += op.addPrintString("@Finished Install");
         return updaterScript;
     }
 
@@ -59,12 +61,15 @@ public class UpdaterScript {
     public static String buildAromaScript(ProjectNode project) {
         String str = "";
         str += op.getMountMethod(1);
+        str += "set_progress(0);\n";
         for (ProjectItemNode group : to.getNodeList(ProjectItemNode.NODE_GROUP)) {
             if (((ProjectNode) group.parent).projectType == project.projectType
                     && ((ProjectNode) group.parent).title.equals(project.title)) {
                 str += op.generateUpdaterScript((GroupNode) group);
             }
         }
+        str += "set_progress(1);\n";
+        str += op.terminateUpdaterScript();
         return str;
     }
 
@@ -72,22 +77,26 @@ public class UpdaterScript {
         String str = "";
         switch (project.projectType) {
             case ProjectNode.PROJECT_ROM:
-                str += "if (file_getprop(\"/tmp/aroma/" + project.title + ".prop\", \"selected.1\")==\"1\") then\n";
+                str += "if (file_getprop(\"/tmp/aroma/" + project.title + ".prop\", \"selected\")==\"1\") then\n";
                 str += project.updater_script;
                 str += "endif;\n";
                 break;
             case ProjectNode.PROJECT_GAPPS:
-                str += "if (file_getprop(\"/tmp/aroma/" + project.title + ".prop\", \"selected.1\")==\"1\") then\n";
+                str += "if (file_getprop(\"/tmp/aroma/" + project.title + ".prop\", \"selected\")==\"1\") then\n";
                 str += project.updater_script;
                 str += "endif;\n";
                 break;
         }
+        str += op.getMountMethod(1);
+        str += "set_progress(0);\n";
         for (ProjectItemNode group : to.getNodeList(ProjectItemNode.NODE_GROUP)) {
             if (((ProjectNode) group.parent).projectType == project.projectType
                     && ((ProjectNode) group.parent).title.equals(project.title)) {
                 str += op.generateUpdaterScript((GroupNode) group);
             }
         }
+        str += "set_progress(1);\n";
+        str += op.terminateUpdaterScript();
         return str;
     }
 }

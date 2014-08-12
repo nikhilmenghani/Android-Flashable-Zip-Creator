@@ -19,6 +19,7 @@ public class Project {
     public static int gappsCount = 0;
     public static int aromaCount = 0;
     public static int normalCount = 0;
+    public static String outputPath = "demo2.zip";
 
     static TreeOperations to;
 
