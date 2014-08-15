@@ -84,6 +84,17 @@ public class AromaConfig {
                 str += op.addSelectBox((GroupNode) group);
             }
         }
-        return str + "endif;\n";
+        str += "endif;\n";
+        switch (project.projectType) {
+            case ProjectNode.PROJECT_ROM:
+                str += "if prop(\"" + project.title + ".prop\",\"selected\")==\"2\" then\n";
+                break;
+            case ProjectNode.PROJECT_GAPPS:
+                str += "if prop(\"" + project.title + ".prop\",\"selected\")==\"2\" then\n";
+                break;
+        }
+        str += "writetmpfile(\"" + project.title + ".prop\",\"init=no\\n\");\n";
+        str += "endif;\n";
+        return str;
     }
 }

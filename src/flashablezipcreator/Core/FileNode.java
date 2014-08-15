@@ -26,13 +26,13 @@ public class FileNode extends ProjectItemNode {
         super((new File(fileSourcePath)).getName(), ProjectItemNode.NODE_FILE, parent);
         this.installLocation = parent.getLocation();
         setPermissions(parent);
-        if (parent.groupType == GroupNode.GROUP_AROMA_THEMES) {
+//        if (parent.groupType == GroupNode.GROUP_AROMA_THEMES) {
             this.fileDestPath = parent.path + File.separator + (new File(fileSourcePath)).getName();
             this.fileSourcePath = this.fileDestPath;
-        } else {
-            this.fileSourcePath = fileSourcePath;
-            this.fileDestPath = parent.path + File.separator + (new File(fileSourcePath)).getName();
-        }
+//        } else {
+//            this.fileSourcePath = fileSourcePath;
+//            this.fileDestPath = parent.path + File.separator + (new File(fileSourcePath)).getName();
+//        }
         fileZipPath = getZipPath();
     }
 
@@ -79,11 +79,11 @@ public class FileNode extends ProjectItemNode {
 
     public void setPermissions(SubGroupNode parent) {
         switch (parent.subGroupType) {
-            case GroupNode.GROUP_SYSTEM_FONTS:
-            case GroupNode.GROUP_SYSTEM_MEDIA:
+            case SubGroupNode.TYPE_SYSTEM_FONTS:
+            case SubGroupNode.TYPE_SYSTEM_MEDIA:
                 setPermissions("1000", "1000", "0644", parent.location + "/" + title);
                 break;
-            case GroupNode.GROUP_DATA_LOCAL:
+            case SubGroupNode.TYPE_DATA_LOCAL:
                 setPermissions("1000", "1000", "0664", parent.location + "/" + title);
                 break;
         }

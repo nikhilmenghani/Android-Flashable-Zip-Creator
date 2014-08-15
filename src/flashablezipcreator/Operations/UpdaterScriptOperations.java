@@ -9,6 +9,7 @@ import flashablezipcreator.Core.FileNode;
 import flashablezipcreator.Core.GroupNode;
 import flashablezipcreator.Core.ProjectItemNode;
 import flashablezipcreator.Core.SubGroupNode;
+import flashablezipcreator.Protocols.Project;
 
 /**
  *
@@ -89,6 +90,14 @@ public class UpdaterScriptOperations {
             }
         } else {
             System.out.println("This Group doesn't support selectBox");
+        }
+        return str;
+    }
+
+    public String deleteTempFiles() {
+        String str = "";
+        for (String path : Project.getTempFilesList()) {
+            str += "delete(\"/" + path + "\");\n";
         }
         return str;
     }

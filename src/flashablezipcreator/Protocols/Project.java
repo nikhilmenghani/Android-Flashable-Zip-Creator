@@ -8,6 +8,7 @@ package flashablezipcreator.Protocols;
 import flashablezipcreator.Core.ProjectItemNode;
 import flashablezipcreator.Core.ProjectNode;
 import flashablezipcreator.Operations.TreeOperations;
+import java.util.ArrayList;
 
 /**
  *
@@ -23,6 +24,18 @@ public class Project {
 
     static TreeOperations to;
 
+    public static ArrayList<String> getTempFilesList(){
+        ArrayList<String> tempArray = new ArrayList<>();
+        tempArray.add("system/app/afzc_temp");
+        tempArray.add("system/priv-app/afzc_temp");
+        tempArray.add("system/media/audio/ui/afzc_temp");
+        tempArray.add("system/media/audio/notifications/afzc_temp");
+        tempArray.add("system/media/audio/alarms/afzc_temp");
+        tempArray.add("system/media/audio/ringtones/afzc_temp");
+        tempArray.add("data/local/afzc_temp");
+        return tempArray;
+    }
+    
     public static void countProjects(ProjectItemNode rootNode) {
         romCount = 0;
         gappsCount = 0;

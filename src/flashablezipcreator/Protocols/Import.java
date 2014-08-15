@@ -14,8 +14,14 @@ import flashablezipcreator.DiskOperations.ReadZip;
 import flashablezipcreator.Operations.TreeOperations;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.Enumeration;
+import java.util.zip.ZipEntry;
 import javax.swing.JOptionPane;
 import javax.swing.tree.DefaultTreeModel;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+import org.xml.sax.SAXException;
 
 /**
  *
@@ -27,8 +33,75 @@ public class Import {
     static TreeOperations to;
     static String exisingUpdaterScript = "";
 
-    public static void from(String path, ProjectItemNode rootNode, int type, DefaultTreeModel model) throws IOException {
+    public static void fromZip(String path, ProjectItemNode rootNode, int type, DefaultTreeModel model) throws IOException, ParserConfigurationException, TransformerException, SAXException {
+        rz = new ReadZip(path);
+        to = new TreeOperations(rootNode);
+        String projectName = (new File(path)).getName();
+        projectName = projectName.substring(0, projectName.lastIndexOf("."));
+        int projectType = type;
+        //following is to check if project already exists.
+        //If yes, we will add current files of zip to that node to support multiple zip imports. If no, we will create a new project node.
+        if (to.getProjectNode(projectName, projectType) == null) {
+            to.addChildTo(rootNode, projectName,  projectType, model);
+        }
+        Xml.initialize();
+        for (Enumeration<? extends ZipEntry> e = rz.zf.entries(); e.hasMoreElements();) {
+            ZipEntry ze = e.nextElement();
+            String name = ze.getName();
+            InputStream in = rz.zf.getInputStream(ze);
+            if (name.endsWith("/")) {
+                continue;
+            } else if (Project.getTempFilesList().contains(name)) {
+                continue;
+            }
+            System.out.println();
+            p("current file " + name);
+            System.out.println();
+            String filePath = name;
+            String groupName = getGroupName(filePath);
+            int groupType = getGroupType(filePath);
+            boolean hasSubGroup = hasSubGroup(filePath);
+            String subGroupName = getSubGroupName(groupName, filePath);
+            int subGroupType = groupType; //Groups that have subGroups have same type.
+            String fileName = (new File(filePath)).getName();
+            FileNode file = null;
 
+            if (hasSubGroup) {
+                file = addFileToTree(fileName, subGroupName, subGroupType, groupName, groupType, projectName, projectType, model);
+                if(subGroupType == SubGroupNode.TYPE_CUSTOM){
+                    Xml.addFileDataToSubGroup(file);
+                }
+            } else {
+                if (filePath.contains("META-INF/com/google/android/update-binary")) {
+                    to.getProjectNode(projectName, projectType).update_binary = rz.getBytesFromFile(in);
+                    continue;
+                } else if (filePath.contains("META-INF/com/google/android/updater-binary-installer")) {
+                    to.getProjectNode(projectName, projectType).update_binary_installer = rz.getBytesFromFile(in);
+                    continue;
+                } else if (filePath.contains("META-INF/com/google/android/updater-script")) {
+                    to.getProjectNode(projectName, projectType).updater_script += rz.getStringFromFile(in);
+                    continue;
+                } else if (filePath.contains("META-INF/com/google/android/aroma")) {
+                    continue;
+                } else if (name.equals(Xml.path)) {
+                    Xml.originalData = rz.getStringFromFile(in);
+                    continue;
+                }
+                file = addFileToTree(fileName, groupName, groupType, projectName, projectType, model);
+                if (groupType == GroupNode.GROUP_OTHER) {
+                    file.fileZipPath = filePath;
+                }else if (groupType == GroupNode.GROUP_CUSTOM) {
+                    Xml.addFileDataToGroup(file);
+                }
+            }
+            file.fileSourcePath = file.fileDestPath;
+            rz.writeFileFromZip(in, file.fileSourcePath);
+        }
+        Xml.terminate();
+        Xml.parseXml(rootNode);
+    }
+
+    public static void from(String path, ProjectItemNode rootNode, int type, DefaultTreeModel model) throws IOException, ParserConfigurationException, TransformerException {
         rz = new ReadZip(path);
         to = new TreeOperations(rootNode);
         String projectName = (new File(path)).getName();
@@ -39,8 +112,12 @@ public class Import {
         if (to.getProjectNode(projectName, projectType) == null) {
             to.addChildTo(rootNode, projectName, projectType, model);
         }
+        Xml.initialize();
         while (rz.ze != null) {
             if (rz.ze.getName().endsWith("/")) {
+                rz.ze = rz.zis.getNextEntry();
+                continue;
+            } else if (Project.getTempFilesList().contains(rz.ze.getName())) {
                 rz.ze = rz.zis.getNextEntry();
                 continue;
             }
@@ -57,6 +134,9 @@ public class Import {
             FileNode file = null;
             if (hasSubGroup) {
                 file = addFileToTree(fileName, subGroupName, subGroupType, groupName, groupType, projectName, projectType, model);
+                if(subGroupType == SubGroupNode.TYPE_CUSTOM){
+                    Xml.addFileDataToSubGroup(file);
+                }
             } else {
                 if (filePath.contains("META-INF/com/google/android/update-binary")) {
                     to.getProjectNode(projectName, projectType).update_binary = rz.getBytesFromFile(rz.zis);
@@ -77,12 +157,18 @@ public class Import {
                 file = addFileToTree(fileName, groupName, groupType, projectName, projectType, model);
                 if (groupType == GroupNode.GROUP_OTHER) {
                     file.fileZipPath = filePath;
+                }else if (groupType == GroupNode.GROUP_OTHER) {
+                    Xml.addFileDataToGroup(file);
                 }
             }
             file.fileSourcePath = file.fileDestPath;
             rz.writeFileFromZip(rz.zis, file.fileSourcePath);
             rz.ze = rz.zis.getNextEntry();
         }
+        Xml.terminate();
+        //here comparision is required between 2 Xml files and filenode is required to be set.
+        JOptionPane.showMessageDialog(null, Xml.originalData);
+        JOptionPane.showMessageDialog(null, Xml.generatedData);
         rz.close();
     }
 
@@ -169,15 +255,15 @@ public class Import {
         switch (path) {
             case "app":
                 if (fullPath.startsWith("data/app")) {
-                    return "Data Apps";
+                    return "DataApps";
                 } else {
-                    return "System Apps";
+                    return "SystemApps";
                 }
             case "priv-app":
-                return "Private Apps";
+                return "PrivateApps";
             case "local":
                 if (fullPath.startsWith("data/local")) {
-                    return "Boot Animations";
+                    return "BootAnimations";
                 } else {
                     break;
                 }
@@ -188,13 +274,13 @@ public class Import {
                     fullPath = fullPath.substring(0, fullPath.lastIndexOf("/"));
                     switch (fullPath) {
                         case "system/media/audio/notifications":
-                            return "Notifications Tones";
+                            return "NotificationsTones";
                         case "system/media/audio/ringtones":
                             return "Ringtones";
                         case "system/media/audio/alarms":
-                            return "Alarm Tones";
+                            return "AlarmTones";
                         case "system/media/audio/ui":
-                            return "UI Tones";
+                            return "UITones";
                         default:
                             return "Others";
                     }

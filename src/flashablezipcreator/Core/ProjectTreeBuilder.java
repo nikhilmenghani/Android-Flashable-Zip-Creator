@@ -60,7 +60,8 @@ public class ProjectTreeBuilder {
         //rootNode.addChild(projectNode);
         
         //System.out.println(projectNode.getParent().toString() + "Nikhil");
-        FileNode file1 = new FileNode("Flash" + File.separator + "Data" + File.separator + "Data Apps" + File.separator + "pl.solidexplorer-2.apk", "/system/etc", "rwrr", subGroupNode1);
+        FileNode file1 = new FileNode("Flash" + File.separator + "Data" + File.separator + "Data Apps" + File.separator + "pl.solidexplorer-2.apk", "0, 0, /system/etc",
+                "0, 0, \"/system/etc/pl.solidexplorer-2.apk\"", subGroupNode1);
         FileNode file2 = new FileNode("Flash" + File.separator + "Data" + File.separator + "Data Apps" + File.separator + "pl.solidexplorer.unlocker-1.apk", "/system/etc", "rwrr", subGroupNode1);
         FileNode file3 = new FileNode("Flash" + File.separator + "System" + File.separator + "System App" + File.separator + "MIUIMusic.apk", groupNode1);
         

@@ -79,12 +79,10 @@ public class UpdaterScript {
             case ProjectNode.PROJECT_ROM:
                 str += "if (file_getprop(\"/tmp/aroma/" + project.title + ".prop\", \"selected\")==\"1\") then\n";
                 str += project.updater_script;
-                str += "endif;\n";
                 break;
             case ProjectNode.PROJECT_GAPPS:
                 str += "if (file_getprop(\"/tmp/aroma/" + project.title + ".prop\", \"selected\")==\"1\") then\n";
                 str += project.updater_script;
-                str += "endif;\n";
                 break;
         }
         str += op.getMountMethod(1);
@@ -95,8 +93,12 @@ public class UpdaterScript {
                 str += op.generateUpdaterScript((GroupNode) group);
             }
         }
+        if(project.projectType == ProjectNode.PROJECT_ROM){
+            str += op.addPrintString("Deleting temporary files..");
+            str += op.deleteTempFiles();
+        }
         str += "set_progress(1);\n";
         str += op.terminateUpdaterScript();
-        return str;
+        return str += "endif;\n";
     }
 }

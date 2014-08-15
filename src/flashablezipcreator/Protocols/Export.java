@@ -16,6 +16,8 @@ import flashablezipcreator.Operations.TreeOperations;
 import java.io.IOException;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 
 /**
  *
@@ -36,9 +38,10 @@ public class Export {
         wz.close();
     }
 
-    public static void zip(ProjectItemNode rootNode) throws IOException {
+    public static void zip(ProjectItemNode rootNode) throws IOException, ParserConfigurationException, TransformerException {
         wz = new WriteZip(Project.outputPath);
         to = new TreeOperations(rootNode);
+        boolean isCustomGroupPresent = false;
         for (ProjectItemNode project : to.getProjectsSorted(rootNode)) {
             if (((ProjectNode) project).projectType != ProjectNode.PROJECT_THEMES) {
                 for (ProjectItemNode groupNode : ((ProjectNode) project).children) {
@@ -51,8 +54,11 @@ public class Export {
                             wz.writeFileToZip(((FileNode) node).fileSourcePath, ((FileNode) node).fileZipPath);
                         }
                     }
+                    if (((GroupNode) groupNode).groupType == GroupNode.GROUP_CUSTOM) {
+                        isCustomGroupPresent = true;
+                    }
                 }
-            }else{
+            } else {
                 for (ProjectItemNode groupNode : ((ProjectNode) project).children) {
                     for (ProjectItemNode node : ((GroupNode) groupNode).children) {
                         wz.writeFileToZip(JarOperations.getInputStream(((FileNode) node).fileSourcePath), ((FileNode) node).fileZipPath);
@@ -60,14 +66,25 @@ public class Export {
                 }
             }
         }
+        if (isCustomGroupPresent) {
+            wz.writeStringToZip(Xml.getString(rootNode), Xml.path);
+        }
         wz.writeStringToZip(AromaConfig.build(rootNode), AromaConfig.aromaConfigPath);
         wz.writeStringToZip(UpdaterScript.build(rootNode), UpdaterScript.updaterScriptPath);
         wz.writeByteToFile(Binary.getInstallerBinary(rootNode), Binary.updateBinaryInstallerPath);
         wz.writeByteToFile(Binary.getUpdateBinary(rootNode), Binary.updateBinaryPath);
-        for(String file : Jar.getOtherFileList()){
+        writeTempFiles();
+        for (String file : Jar.getOtherFileList()) {
             wz.writeFileToZip(JarOperations.getInputStream(file), file);
         }
         wz.close();
         JOptionPane.showMessageDialog(null, "Zip Created Successfully..!!");
+    }
+
+    //this is required to fix status 7 error while installing Rom
+    public static void writeTempFiles() throws IOException {
+        for (String path : Project.getTempFilesList()) {
+            wz.writeStringToZip("delete this file", path);
+        }
     }
 }

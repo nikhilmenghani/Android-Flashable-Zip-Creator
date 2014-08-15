@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package flashablezipcreator;
 
 import static flashablezipcreator.AFZC.Protocols.p;
@@ -11,13 +10,24 @@ import flashablezipcreator.DiskOperations.Read;
 import flashablezipcreator.DiskOperations.ReadZip;
 import flashablezipcreator.DiskOperations.Write;
 import flashablezipcreator.DiskOperations.WriteZip;
+import flashablezipcreator.Operations.XmlOperations;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.SQLException;
+import java.util.Enumeration;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 import javax.swing.JOptionPane;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 
 /**
  *
@@ -28,7 +38,7 @@ public class FlashableZipCreator {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) throws ClassNotFoundException, SQLException, FileNotFoundException, IOException{
+    public static void main(String args[]) throws ClassNotFoundException, SQLException, FileNotFoundException, IOException, ParserConfigurationException, SAXException {
 //        QueryDB qdb = new QueryDB("afzc");
 //        p("qdb initialized");
 ////        QueryDB qdb1 = new QueryDB("afzc");
@@ -59,39 +69,70 @@ public class FlashableZipCreator {
 //        while(results.next())
 //        p(results.getString(1));
 //        p("record successfully updated");
-        
+
 //        Read r = new Read();
 //        String str = r.getFileString("src" + File.separator + "flashablezipcreator" + File.separator + "Supported Devices");
 //        System.out.println(str);
-        
         //Write w = new Write();
         //w.writeStringToFile(r.getFileString("src\\flashablezipcreator\\Supported Devices"), "S D");
-        
+//        File fXmlFile = new File("test.xml");
+//        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+//	DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+//        
+//	Document doc = dBuilder.parse(fXmlFile);
+//        doc.getDocumentElement().normalize();
+//        JOptionPane.showMessageDialog(null, doc.getDocumentElement().getNodeName());
+//        ZipFile zf;
+//        XmlOperations xo = new XmlOperations();
+//        try {
+//            zf = new ZipFile("test.zip");
+//            for (Enumeration<? extends ZipEntry> e = zf.entries();
+//                    e.hasMoreElements();) {
+//                ZipEntry ze = e.nextElement();
+//                String name = ze.getName();
+//                if (name.endsWith(".xml")) {
+//                    InputStream in = zf.getInputStream(ze);
+//                    xo.readXMLFromZip(in);
+//                }
+//            }
+//        } catch (IOException e1) {
+//            System.out.println("Sorry we couldn't find the file");
+//            e1.printStackTrace();
+//        }
+        //ReadZip rz = new ReadZip("test.zip");
+        //XmlOperations xo = new XmlOperations();
+
+//        while(rz.ze!=null){
+//            p(rz.ze.getName());
+//            
+//            if(rz.ze.getName().endsWith(".xml")){
+//                InputStream in = rz.zis;
+//                xo.readXMLFromZip(in);
+//            }
+//            rz.ze = rz.zis.getNextEntry();
+//        }
+//        rz.close();
 //        WriteZip wz = new WriteZip("test.zip");
 //        wz.writeStringToZip("Nikhil \nMenghani", "customize");
 //        wz.writeFileToZip("src\\flashablezipcreator\\Supported Devices", "src/flashablezipcreator/Supported Devices");
 //        wz.close();
-        
 //        ReadZip rz = new ReadZip("test.zip");
 //        while(rz.ze != null){
 //            p(rz.ze.getName());
-            //File file = new File(rz.ze.getName());
-            //if(!file.isDirectory()){
-                //p(rz.getStringFromFile(rz.zis));
-            //}
+        //File file = new File(rz.ze.getName());
+        //if(!file.isDirectory()){
+        //p(rz.getStringFromFile(rz.zis));
+        //}
 //                File outputFile = new File("Temp" + File.separator + rz.ze.getName());
 //                
 //                rz.writeFileFromZip(rz.zis, outputFile);
 //                rz.ze = rz.zis.getNextEntry();
 //        }
 //        rz.close();
-        
 //        Write w = new Write();
 //        w.writeFile("src/flashablezipcreator/AFZC.png", "AFZC1.png");
-        
 //        JTree jt = new JTree();
 //        jt.setVisible(true);
-        
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -116,6 +157,12 @@ public class FlashableZipCreator {
                 try {
                     new JTree().setVisible(true);
                 } catch (IOException ex) {
+                    Logger.getLogger(FlashableZipCreator.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (ParserConfigurationException ex) {
+                    Logger.getLogger(FlashableZipCreator.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (TransformerException ex) {
+                    Logger.getLogger(FlashableZipCreator.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (SAXException ex) {
                     Logger.getLogger(FlashableZipCreator.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }

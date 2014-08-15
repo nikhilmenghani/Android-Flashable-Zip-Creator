@@ -10,6 +10,7 @@ import flashablezipcreator.Core.GroupNode;
 import flashablezipcreator.Core.ProjectItemNode;
 import flashablezipcreator.Core.ProjectNode;
 import flashablezipcreator.Core.ProjectTreeBuilder;
+import flashablezipcreator.DiskOperations.WriteZip;
 import flashablezipcreator.Operations.ProjectOperations;
 import flashablezipcreator.Operations.TreeOperations;
 import flashablezipcreator.Operations.UpdaterScriptOperations;
@@ -26,6 +27,9 @@ import javax.swing.JOptionPane;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultTreeModel;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+import org.xml.sax.SAXException;
 
 /**
  *
@@ -42,7 +46,7 @@ public class JTree extends JFrame implements TreeSelectionListener {
     ProjectOperations po = new ProjectOperations();
     ProjectItemNode rootNode;
 
-    public JTree() throws IOException {
+    public JTree() throws IOException, ParserConfigurationException, TransformerException, SAXException {
         initComponents();
     }
 
@@ -53,7 +57,7 @@ public class JTree extends JFrame implements TreeSelectionListener {
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
-    private void initComponents() throws IOException {
+    private void initComponents() throws IOException, ParserConfigurationException, TransformerException, SAXException {
 
         textField = new javax.swing.JTextField();
         addButton = new javax.swing.JButton();
@@ -92,12 +96,17 @@ public class JTree extends JFrame implements TreeSelectionListener {
 //        Export e = new Export();
 //        e.createZip(to.getNodeList(ProjectItemNode.NODE_FILE));
         //p("" + JarOperations.jarFileList());
+        
         Jar.addThemesToTree(rootNode, model);
-        //JOptionPane.showMessageDialog(null,  JarOperations.setJarFileList());
         Device.loadDeviceList();
-        //Import.from("../demo.zip", rootNode, ProjectNode.PROJECT_AROMA, model);
-        Import.from("../CARBON-KK-UNOFFICIAL-20140802-2011-i9103.zip", rootNode, ProjectNode.PROJECT_ROM, model);
-        Import.from("../Inspire_OS_gapps.zip", rootNode, ProjectNode.PROJECT_GAPPS, model);
+        
+        //Import.from("test.zip", rootNode, ProjectNode.PROJECT_AROMA, model);
+        //Import.fromZip("../demo1.zip", rootNode, ProjectNode.PROJECT_AROMA, model);
+        //Import.fromZip("demo2.zip", rootNode, ProjectNode.PROJECT_AROMA, model);
+        Import.fromZip("../cm-9.1.0d-umts_sholes.zip", rootNode, ProjectNode.PROJECT_ROM, model);
+        //Import.fromZip("gapps-jb-20130813-signed.zip", rootNode, ProjectNode.PROJECT_GAPPS, model);
+        //Import.fromZip("Inspire_OS_gapps.zip", rootNode, ProjectNode.PROJECT_GAPPS, model);
+        //Import.from("EffortLess+ROM-REV7.1.zip", rootNode, ProjectNode.PROJECT_ROM, model);
         //p(AromaConfig.build(rootNode));
         //p(UpdaterScript.build(rootNode));
         //Import.from("demo1.zip", rootNode, ProjectNode.PROJECT_ADVANCED, model);
@@ -109,23 +118,31 @@ public class JTree extends JFrame implements TreeSelectionListener {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        addButton.setText(">");
+        addButton.setText("Non Neon");
         addButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 try {
                     addButtonActionPerformed(evt);
                 } catch (IOException ex) {
                     Logger.getLogger(JTree.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (ParserConfigurationException ex) {
+                    Logger.getLogger(JTree.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (TransformerException ex) {
+                    Logger.getLogger(JTree.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         });
 
-        removeButton.setText("<");
+        removeButton.setText("Neon");
         removeButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 try {
                     removeButtonActionPerformed(evt);
                 } catch (IOException ex) {
+                    Logger.getLogger(JTree.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (ParserConfigurationException ex) {
+                    Logger.getLogger(JTree.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (TransformerException ex) {
                     Logger.getLogger(JTree.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
@@ -163,7 +180,7 @@ public class JTree extends JFrame implements TreeSelectionListener {
         pack();
     }// </editor-fold>                        
 
-    private void addButtonActionPerformed(java.awt.event.ActionEvent evt) throws IOException {
+    private void addButtonActionPerformed(java.awt.event.ActionEvent evt) throws IOException, ParserConfigurationException, TransformerException {
         ProjectItemNode node = (ProjectItemNode) tree.getLastSelectedPathComponent();
         System.out.println();
         Device.selected = "Samsung Galaxy R (i9103)";
@@ -188,7 +205,7 @@ public class JTree extends JFrame implements TreeSelectionListener {
         //to.expandDirectories(tree);
     }
 
-    private void removeButtonActionPerformed(java.awt.event.ActionEvent evt) throws IOException {
+    private void removeButtonActionPerformed(java.awt.event.ActionEvent evt) throws IOException, ParserConfigurationException, TransformerException {
         ProjectItemNode node = (ProjectItemNode) tree.getLastSelectedPathComponent();
         //node.removeChild(node, model);
         //to.expandDirectories(tree);
@@ -214,7 +231,7 @@ public class JTree extends JFrame implements TreeSelectionListener {
             return;
         }
         if (node instanceof FileNode) {
-            System.out.println(((FileNode) node).fileSourcePath);
+            System.out.println(((FileNode) node).installLocation);
         }
         if (node instanceof GroupNode) {
             System.out.println(((GroupNode) node).location);

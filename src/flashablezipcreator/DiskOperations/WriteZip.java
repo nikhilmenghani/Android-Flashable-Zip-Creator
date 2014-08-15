@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
+import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 import javax.swing.JOptionPane;
 
@@ -68,6 +69,7 @@ public final class WriteZip extends Write {
     
     //this function is simple to use, source and destination path will do the work.
     public void writeFileToZip(String filePath, String writeAt) throws IOException {
+        System.out.println("Looking for file path " + filePath);
         writeFileToZip(new FileInputStream(new File(filePath)), writeAt);
     }
 
@@ -88,6 +90,11 @@ public final class WriteZip extends Write {
             System.out.println("Skipping Duplicate Entry : " + ze.getName());
         }
         in.close();
+    }
+    
+    public void createFolderInZip(String path) throws IOException{
+        ZipEntry ze = new ZipEntry(path);
+        this.zos.putNextEntry(ze);
     }
 
     //this function is used to write file to zip for default zos.

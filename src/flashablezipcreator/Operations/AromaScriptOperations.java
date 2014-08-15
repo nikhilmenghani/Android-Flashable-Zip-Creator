@@ -155,6 +155,7 @@ public class AromaScriptOperations {
                 + "\"<b>Clear Dalvik Cache</b> After Installation.\",\n"
                 + "\"0\",\n"
                 + "\"clear_it\");\n"
+                + "writetmpfile(\"dalvik_choices.prop\",\"init=no\\n\");\n"
                 + "if\n"
                 + "  getvar(\"clear_it\")==\"1\"\n"
                 + "then\n"
