@@ -60,14 +60,6 @@ public class AromaScriptOperations {
         return str;
     }
 
-    public String addFontsViewBoxString(String font) {
-        String str = "";
-        str = "viewbox(" + font + "\"Preview\",\n"
-                + "\"Preview:\\n\\n\"+\"AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz.,1234567890\\n\\n\"+\"Are you sure you want to continue installing this font?\",\n"
-                + "\"@alert\");\n";
-        return str;
-    }
-
     public String addFontsViewBoxString() {
         String str = "";
         str = "viewbox(\"Preview\",\n"

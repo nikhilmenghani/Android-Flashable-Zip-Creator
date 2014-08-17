@@ -15,6 +15,7 @@ import flashablezipcreator.Operations.TreeOperations;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import javax.swing.JOptionPane;
@@ -32,8 +33,10 @@ public class Import {
     static ReadZip rz;
     static TreeOperations to;
     static String exisingUpdaterScript = "";
+    static ArrayList<String> repeatList = null;
 
     public static void fromZip(String path, ProjectItemNode rootNode, int type, DefaultTreeModel model) throws IOException, ParserConfigurationException, TransformerException, SAXException {
+        repeatList = new ArrayList<>();
         rz = new ReadZip(path);
         to = new TreeOperations(rootNode);
         String projectName = (new File(path)).getName();
@@ -42,7 +45,7 @@ public class Import {
         //following is to check if project already exists.
         //If yes, we will add current files of zip to that node to support multiple zip imports. If no, we will create a new project node.
         if (to.getProjectNode(projectName, projectType) == null) {
-            to.addChildTo(rootNode, projectName,  projectType, model);
+            to.addChildTo(rootNode, projectName, projectType, model);
         }
         Xml.initialize();
         for (Enumeration<? extends ZipEntry> e = rz.zf.entries(); e.hasMoreElements();) {
@@ -68,7 +71,7 @@ public class Import {
 
             if (hasSubGroup) {
                 file = addFileToTree(fileName, subGroupName, subGroupType, groupName, groupType, projectName, projectType, model);
-                if(subGroupType == SubGroupNode.TYPE_CUSTOM){
+                if (subGroupType == SubGroupNode.TYPE_CUSTOM) {
                     Xml.addFileDataToSubGroup(file);
                 }
             } else {
@@ -90,7 +93,7 @@ public class Import {
                 file = addFileToTree(fileName, groupName, groupType, projectName, projectType, model);
                 if (groupType == GroupNode.GROUP_OTHER) {
                     file.fileZipPath = filePath;
-                }else if (groupType == GroupNode.GROUP_CUSTOM) {
+                } else if (groupType == GroupNode.GROUP_CUSTOM) {
                     Xml.addFileDataToGroup(file);
                 }
             }
@@ -99,82 +102,13 @@ public class Import {
         }
         Xml.terminate();
         Xml.parseXml(rootNode);
-    }
 
-    public static void from(String path, ProjectItemNode rootNode, int type, DefaultTreeModel model) throws IOException, ParserConfigurationException, TransformerException {
-        rz = new ReadZip(path);
-        to = new TreeOperations(rootNode);
-        String projectName = (new File(path)).getName();
-        projectName = projectName.substring(0, projectName.lastIndexOf("."));
-        int projectType = type;
-        //following is to check if project already exists.
-        //If yes, we will add current files of zip to that node to support multiple zip imports. If no, we will create a new project node.
-        if (to.getProjectNode(projectName, projectType) == null) {
-            to.addChildTo(rootNode, projectName, projectType, model);
-        }
-        Xml.initialize();
-        while (rz.ze != null) {
-            if (rz.ze.getName().endsWith("/")) {
-                rz.ze = rz.zis.getNextEntry();
-                continue;
-            } else if (Project.getTempFilesList().contains(rz.ze.getName())) {
-                rz.ze = rz.zis.getNextEntry();
-                continue;
-            }
-            System.out.println();
-            p("current file " + rz.ze.getName());
-            System.out.println();
-            String filePath = rz.ze.getName();
-            String groupName = getGroupName(filePath);
-            int groupType = getGroupType(filePath);
-            boolean hasSubGroup = hasSubGroup(filePath);
-            String subGroupName = getSubGroupName(groupName, filePath);
-            int subGroupType = groupType; //Groups that have subGroups have same type.
-            String fileName = (new File(filePath)).getName();
-            FileNode file = null;
-            if (hasSubGroup) {
-                file = addFileToTree(fileName, subGroupName, subGroupType, groupName, groupType, projectName, projectType, model);
-                if(subGroupType == SubGroupNode.TYPE_CUSTOM){
-                    Xml.addFileDataToSubGroup(file);
-                }
-            } else {
-                if (filePath.contains("META-INF/com/google/android/update-binary")) {
-                    to.getProjectNode(projectName, projectType).update_binary = rz.getBytesFromFile(rz.zis);
-                    rz.ze = rz.zis.getNextEntry();
-                    continue;
-                } else if (filePath.contains("META-INF/com/google/android/updater-binary-installer")) {
-                    to.getProjectNode(projectName, projectType).update_binary_installer = rz.getBytesFromFile(rz.zis);
-                    rz.ze = rz.zis.getNextEntry();
-                    continue;
-                } else if (filePath.contains("META-INF/com/google/android/updater-script")) {
-                    to.getProjectNode(projectName, projectType).updater_script += rz.getStringFromFile(rz.zis);
-                    rz.ze = rz.zis.getNextEntry();
-                    continue;
-                } else if (filePath.contains("META-INF/com/google/android/aroma")) {
-                    rz.ze = rz.zis.getNextEntry();
-                    continue;
-                }
-                file = addFileToTree(fileName, groupName, groupType, projectName, projectType, model);
-                if (groupType == GroupNode.GROUP_OTHER) {
-                    file.fileZipPath = filePath;
-                }else if (groupType == GroupNode.GROUP_OTHER) {
-                    Xml.addFileDataToGroup(file);
-                }
-            }
-            file.fileSourcePath = file.fileDestPath;
-            rz.writeFileFromZip(rz.zis, file.fileSourcePath);
-            rz.ze = rz.zis.getNextEntry();
-        }
-        Xml.terminate();
-        //here comparision is required between 2 Xml files and filenode is required to be set.
-        JOptionPane.showMessageDialog(null, Xml.originalData);
-        JOptionPane.showMessageDialog(null, Xml.generatedData);
-        rz.close();
     }
 
     public static FileNode addFileToTree(String fileName, String subGroupName, int subGroupType, String groupName, int groupType, String projectName, int projectType, DefaultTreeModel model) {
         if (to.getGroupNode(groupName, groupType, projectName) == null) {
             to.addChildTo(to.getProjectNode(projectName, projectType), groupName, groupType, model);
+            JOptionPane.showMessageDialog(null, groupName + " imported");
         }
         if (to.getSubGroupNode(subGroupName, groupType, groupName, projectName) == null) {
             to.addChildTo(to.getGroupNode(groupName, groupType, projectName), subGroupName, subGroupType, model);
@@ -190,9 +124,13 @@ public class Import {
     public static FileNode addFileToTree(String fileName, String groupName, int groupType, String projectName, int projectType, DefaultTreeModel model) {
         if (to.getGroupNode(groupName, groupType, projectName) == null) {
             to.addChildTo(to.getProjectNode(projectName, projectType), groupName, groupType, model);
+            JOptionPane.showMessageDialog(null, groupName + " imported");
         }
         if (to.getFileNode(fileName, groupName, projectName) != null) {
-            fileName += "_1";
+            if (groupType == GroupNode.GROUP_OTHER) {
+                fileName += "_1";
+                fileName = getUniqueName(fileName);
+            }
         }
         if (groupType == GroupNode.GROUP_CUSTOM) {
             to.addChildTo(to.getGroupNode(groupName, groupType, projectName), fileName, "", "", model);
@@ -200,6 +138,18 @@ public class Import {
             to.addChildTo(to.getGroupNode(groupName, groupType, projectName), fileName, ProjectItemNode.NODE_FILE, model);
         }
         return to.getFileNode(fileName, groupName, projectName);
+    }
+
+    /*files with same name and located at multiple places are unique inspite of having same name.
+     this is to prevent them from skipping.*/
+    public static String getUniqueName(String fileName) {
+        if (repeatList.contains(fileName)) {
+            fileName += "_1";
+            return getUniqueName(fileName);
+        } else {
+            repeatList.add(fileName);
+            return fileName;
+        }
     }
 
     public static boolean hasSubGroup(String path) {

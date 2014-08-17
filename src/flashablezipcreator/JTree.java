@@ -10,7 +10,6 @@ import flashablezipcreator.Core.GroupNode;
 import flashablezipcreator.Core.ProjectItemNode;
 import flashablezipcreator.Core.ProjectNode;
 import flashablezipcreator.Core.ProjectTreeBuilder;
-import flashablezipcreator.DiskOperations.WriteZip;
 import flashablezipcreator.Operations.ProjectOperations;
 import flashablezipcreator.Operations.TreeOperations;
 import flashablezipcreator.Operations.UpdaterScriptOperations;
@@ -19,6 +18,7 @@ import flashablezipcreator.Protocols.Export;
 import flashablezipcreator.Protocols.Import;
 import flashablezipcreator.Protocols.Jar;
 import flashablezipcreator.Protocols.Project;
+import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -59,9 +59,14 @@ public class JTree extends JFrame implements TreeSelectionListener {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
     private void initComponents() throws IOException, ParserConfigurationException, TransformerException, SAXException {
 
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tree = new javax.swing.JTree();
         textField = new javax.swing.JTextField();
         addButton = new javax.swing.JButton();
         removeButton = new javax.swing.JButton();
+        labelName = new javax.swing.JLabel();
+        labelCreateZip = new javax.swing.JLabel();
+        importButton = new javax.swing.JButton();
 
         //tree configurations
         tree = ProjectTreeBuilder.buildTree();
@@ -72,53 +77,14 @@ public class JTree extends JFrame implements TreeSelectionListener {
         this.to = new TreeOperations(rootNode);
         uso = new UpdaterScriptOperations();
 
-//        p();
-//        p("new test");
-//        p();
-//        p("ProjectList");
-//        System.out.println(to.getNodeList(ProjectItemNode.NODE_PROJECT));
-//        p();
-//        p("Group list");
-//        System.out.println(to.getNodeList(ProjectItemNode.NODE_GROUP));
-//        p();
-//        p("SubGroup List");
-//        System.out.println(to.getNodeList(ProjectItemNode.NODE_SUBGROUP));
-//        p();
-//        p("File List");
-//        System.out.println(to.getNodeList(ProjectItemNode.NODE_FILE));
-//        p();
-//        p(uso.initiateUpdaterScript());
-//        for(ProjectItemNode node : to.getNodeList(ProjectItemNode.NODE_GROUP)){
-//            //p(so.addCheckBox((GroupNode)node));
-//            p(uso.generateUpdaterScript((GroupNode)node));
-//        }
-//        p(uso.terminateUpdaterScript());
-//        Export e = new Export();
-//        e.createZip(to.getNodeList(ProjectItemNode.NODE_FILE));
-        //p("" + JarOperations.jarFileList());
-        
+        //comment following lines if running from netbeans.
         Jar.addThemesToTree(rootNode, model);
         Device.loadDeviceList();
-        
-        //Import.from("test.zip", rootNode, ProjectNode.PROJECT_AROMA, model);
-        //Import.fromZip("../demo1.zip", rootNode, ProjectNode.PROJECT_AROMA, model);
-        //Import.fromZip("demo2.zip", rootNode, ProjectNode.PROJECT_AROMA, model);
-        Import.fromZip("../Fonts.zip", rootNode, ProjectNode.PROJECT_AROMA, model);
-        //Import.fromZip("gapps-jb-20130813-signed.zip", rootNode, ProjectNode.PROJECT_GAPPS, model);
-        //Import.fromZip("Inspire_OS_gapps.zip", rootNode, ProjectNode.PROJECT_GAPPS, model);
-        //Import.from("EffortLess+ROM-REV7.1.zip", rootNode, ProjectNode.PROJECT_ROM, model);
-        //p(AromaConfig.build(rootNode));
-        //p(UpdaterScript.build(rootNode));
-        //Import.from("demo1.zip", rootNode, ProjectNode.PROJECT_ADVANCED, model);
 
-//        Export e = new Export();
-//        e.createZip(to.getNodeList(ProjectItemNode.NODE_FILE));
-        //to expand all the rows
-        //to.expandDirectories(tree);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        addButton.setText("Non Neon");
+        addButton.setText("For Non Neon Device");
         addButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 try {
@@ -133,7 +99,7 @@ public class JTree extends JFrame implements TreeSelectionListener {
             }
         });
 
-        removeButton.setText("Neon");
+        removeButton.setText("For Neon Device");
         removeButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 try {
@@ -148,44 +114,106 @@ public class JTree extends JFrame implements TreeSelectionListener {
             }
         });
 
+        labelName.setText("Enter the name of Rom to import:");
+
+        labelCreateZip.setText("Create Zip File");
+
+        importButton.setText("Import");
+        importButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                try {
+                    importButtonActionPerformed(evt);
+                } catch (IOException ex) {
+                    Logger.getLogger(JTree.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (ParserConfigurationException ex) {
+                    Logger.getLogger(JTree.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (TransformerException ex) {
+                    Logger.getLogger(JTree.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (SAXException ex) {
+                    Logger.getLogger(JTree.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
                 layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(29, 29, 29)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(textField)
-                                .addComponent(addButton, javax.swing.GroupLayout.DEFAULT_SIZE, 84, Short.MAX_VALUE)
-                                .addComponent(removeButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(36, 36, 36)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 352, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(101, Short.MAX_VALUE))
+                .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(layout.createSequentialGroup()
+                                        .addGap(0, 0, Short.MAX_VALUE)
+                                        .addComponent(labelCreateZip, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(removeButton, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(22, 22, 22)
+                                        .addComponent(addButton))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                                .addComponent(labelName)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addComponent(textField, javax.swing.GroupLayout.PREFERRED_SIZE, 222, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addComponent(importButton))))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
                 layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
-                        .addGap(28, 28, 28)
-                        .addComponent(textField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(21, 21, 21)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(labelName, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(textField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(importButton))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 303, Short.MAX_VALUE)
                         .addGap(18, 18, 18)
-                        .addComponent(addButton)
-                        .addGap(18, 18, 18)
-                        .addComponent(removeButton)
-                        .addContainerGap(170, Short.MAX_VALUE))
-                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap())
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(addButton)
+                                .addComponent(removeButton)
+                                .addComponent(labelCreateZip))
+                        .addGap(23, 23, 23))
         );
         pack();
     }// </editor-fold>                        
+
+    private void importButtonActionPerformed(java.awt.event.ActionEvent evt) throws IOException, ParserConfigurationException, TransformerException, SAXException {
+        String fileName = textField.getText().toString();
+        if (!fileName.equals("")) {
+            if (!fileName.endsWith(".zip")) {
+                fileName += ".zip";
+            }
+            Import.fromZip(fileName, rootNode, ProjectNode.PROJECT_ROM, model);
+            JOptionPane.showMessageDialog(this, "Successfully Imported");
+            //tree.expandRow(1);
+        }else{
+            JOptionPane.showMessageDialog(this, "Enter name first");
+        }
+    }
 
     private void addButtonActionPerformed(java.awt.event.ActionEvent evt) throws IOException, ParserConfigurationException, TransformerException {
         ProjectItemNode node = (ProjectItemNode) tree.getLastSelectedPathComponent();
         System.out.println();
         Device.selected = "Samsung Galaxy R (i9103)";
-        Project.outputPath = "NonNeon.zip";
-        Export.zip(rootNode);
+        String fileName = textField.getText().toString();
+        if (!fileName.equals("")) {
+            if (!fileName.endsWith(".zip")) {
+                fileName += ".zip";
+            }
+            Project.outputPath = (new File(textField.getText().toString())).getName() + "_NonNeon_AROMA.zip";
+        }else {
+            Project.outputPath = "NonNeon.zip";
+        }
+        
+        File f = new File(fileName);
+        if (f.exists()) {
+            Export.zip(rootNode);
+        } else {
+            JOptionPane.showMessageDialog(this, "File Doesn't Exist");
+        }
+
 //        switch (node.type) {
 //            case ProjectItemNode.NODE_GROUP:
 //                //to add Group Node
@@ -213,13 +241,29 @@ public class JTree extends JFrame implements TreeSelectionListener {
 //        Export e = new Export();
 //        e.zip(rootNode);
         Device.selected = "LG Optimus L5 (e610)";
-        Project.outputPath = "Neon.zip";
-        Export.zip(rootNode);
+        String fileName = textField.getText().toString();
+        if (!fileName.equals("")) {
+            if (!fileName.endsWith(".zip")) {
+                fileName += ".zip";
+            }
+            Project.outputPath = (new File(textField.getText().toString())).getName() + "_Neon_AROMA.zip";
+        }else {
+            Project.outputPath = "Neon.zip";
+        }
+        File f = new File(fileName);
+        if (f.exists()) {
+            Export.zip(rootNode);
+        } else {
+            JOptionPane.showMessageDialog(this, "File Doesn't Exist");
+        }
         //e.createZip(to.getNodeList(ProjectItemNode.NODE_FILE));
     }
 
     private javax.swing.JButton addButton;
+    private javax.swing.JButton importButton;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel labelCreateZip;
+    private javax.swing.JLabel labelName;
     private javax.swing.JButton removeButton;
     private javax.swing.JTextField textField;
     private javax.swing.JTree tree;
