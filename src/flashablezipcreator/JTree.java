@@ -103,7 +103,7 @@ public class JTree extends JFrame implements TreeSelectionListener {
         //Import.from("test.zip", rootNode, ProjectNode.PROJECT_AROMA, model);
         //Import.fromZip("../demo1.zip", rootNode, ProjectNode.PROJECT_AROMA, model);
         //Import.fromZip("demo2.zip", rootNode, ProjectNode.PROJECT_AROMA, model);
-        Import.fromZip("../cm-9.1.0d-umts_sholes.zip", rootNode, ProjectNode.PROJECT_ROM, model);
+        Import.fromZip("../Fonts.zip", rootNode, ProjectNode.PROJECT_AROMA, model);
         //Import.fromZip("gapps-jb-20130813-signed.zip", rootNode, ProjectNode.PROJECT_GAPPS, model);
         //Import.fromZip("Inspire_OS_gapps.zip", rootNode, ProjectNode.PROJECT_GAPPS, model);
         //Import.from("EffortLess+ROM-REV7.1.zip", rootNode, ProjectNode.PROJECT_ROM, model);

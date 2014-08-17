@@ -5,9 +5,12 @@
  */
 package flashablezipcreator.Operations;
 
+import flashablezipcreator.Core.FileNode;
 import flashablezipcreator.Core.GroupNode;
 import flashablezipcreator.Core.ProjectItemNode;
 import flashablezipcreator.Core.ProjectNode;
+import flashablezipcreator.Core.SubGroupNode;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -16,7 +19,7 @@ import flashablezipcreator.Core.ProjectNode;
 public class AromaScriptOperations {
 
     String splashPath = "splash/AFZC";
-    String fontsPath = "ttf/Roboto-Regular.ttf;ttf/DroidSansFallback.ttf;";
+    String fontsPath = "ttf/Roboto-Regular.ttf;";
 
     public String addSplashString() {
         return "anisplash(\n"
@@ -57,6 +60,23 @@ public class AromaScriptOperations {
         return str;
     }
 
+    public String addFontsViewBoxString(String font) {
+        String str = "";
+        str = "viewbox(" + font + "\"Preview\",\n"
+                + "\"Preview:\\n\\n\"+\"AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz.,1234567890\\n\\n\"+\"Are you sure you want to continue installing this font?\",\n"
+                + "\"@alert\");\n";
+        return str;
+    }
+
+    public String addFontsViewBoxString() {
+        String str = "";
+        str = "viewbox(\"Preview\",\n"
+                + "\"The font \"+getvar(\"fontname\")+\"... looks like this\\n\\n\"+"
+                + "\"Preview:\\n\\n\"+\"AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz.,1234567890\\n\\n\"+\"Are you sure you want to continue installing this font?\",\n"
+                + "\"@alert\");\n";
+        return str;
+    }
+
     public String addAgreeBox() {
         return "agreebox(\"Important notes!\","
                 + " \"Terms & Conditions\","
@@ -71,7 +91,7 @@ public class AromaScriptOperations {
         switch (node.groupType) {
             case GroupNode.GROUP_DATA_LOCAL:
             case GroupNode.GROUP_SYSTEM_MEDIA:
-            case GroupNode.GROUP_SYSTEM_FONTS:
+
             case GroupNode.GROUP_CUSTOM:
                 //following condition is for custom group
                 if (!node.isSelectBox()) {
@@ -85,6 +105,41 @@ public class AromaScriptOperations {
                 }
                 str += ");\n";
                 str += "writetmpfile(\"" + node.prop + "\",readtmpfile(\"" + node.prop + "\"));\n";
+                break;
+            case GroupNode.GROUP_SYSTEM_FONTS:
+                if (!node.isSelectBox()) {
+                    break;
+                }
+                str += "selectbox(\"" + node.title + " List\",\"Select from " + node.title + " List For Preview\",\"@personalize\",\"" + node.prop + "\"";
+                for (int i = 0; i < node.getChildCount(); i++) {
+                    str += ",\n\"" + node.getChildAt(i).toString() + "\", \"\", 0";
+                }
+                str += ");\n";
+                if (node.groupType == GroupNode.GROUP_SYSTEM_FONTS) {
+                    for (int i = 0; i < node.getChildCount(); i++) {
+                        SubGroupNode sgnode = (SubGroupNode) node.getChildAt(i);
+                        str += "if prop(\"" + node.prop + "\", \"selected.0\")==\"" + (i + 1) + "\" then\n";
+                        for (int j = 0; j < sgnode.getChildCount(); j++) {
+                            FileNode fnode = (FileNode) sgnode.getChildAt(j);
+                            if (((FileNode) fnode).title.equals("DroidSans.ttf")) {
+                                str += "fontresload(\"0\", \"ttf/" + sgnode.toString() + ".ttf;\", \"12\");\n";
+                            }
+                        }
+                        str += "setvar(\"fontname\",\"" + sgnode.toString() + "\");\n";
+                        str += "endif;\n";
+                    }
+                    str += addFontsViewBoxString();
+                    str += addFontsString();
+                    str += "selectbox(\"" + node.title + " List\",\"Select from " + node.title + "\",\"@personalize\",\"" + node.prop + "\",\n"
+                            + "\"Select one from the list\", \"\", 2,\n"
+                            + "\"Select None\",\"Skip this Group.\", 1";
+                    for (int i = 0; i < node.getChildCount(); i++) {
+                        str += ",\n\"" + node.getChildAt(i).toString() + "\", \"\", 0";
+                    }
+                    str += ");\n";
+                    str += "writetmpfile(\"" + node.prop + "\",readtmpfile(\"" + node.prop + "\"));\n";
+                    str += addFontsString();
+                }
                 break;
         }
         return str;

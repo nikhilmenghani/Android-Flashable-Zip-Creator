@@ -90,10 +90,12 @@ public class GroupNode extends ProjectItemNode {
             case GROUP_SYSTEM_MEDIA:
                 this.location = "/system/media";
                 this.prop = getProp("system_media");
+                this.isSelectBox = true;
                 break;
             case GROUP_SYSTEM_FONTS:
                 this.location = "/system/fonts";
                 this.prop = getProp("system_fonts");
+                this.isSelectBox = true;
                 break;
             case GROUP_SYSTEM_FRAMEWORK:
                 this.location = "/system/framework";
@@ -106,6 +108,7 @@ public class GroupNode extends ProjectItemNode {
             case GROUP_DATA_LOCAL:
                 this.location = "/data/local";
                 this.prop = getProp("data_local");
+                this.isSelectBox = true;
                 break;
             case GROUP_CUSTOM:
                 this.location = "/custom";

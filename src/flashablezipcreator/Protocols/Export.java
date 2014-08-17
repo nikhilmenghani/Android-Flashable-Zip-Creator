@@ -48,6 +48,9 @@ public class Export {
                     for (ProjectItemNode node : ((GroupNode) groupNode).children) {
                         if (node.type == ProjectItemNode.NODE_SUBGROUP) {
                             for (ProjectItemNode fileNode : ((SubGroupNode) node).children) {
+                                if(((FileNode) fileNode).title.equals("DroidSans.ttf")){
+                                    wz.writeFileToZip(((FileNode) fileNode).fileSourcePath, "META-INF/com/google/android/aroma/ttf/" + ((SubGroupNode) node).title + ".ttf");
+                                }
                                 wz.writeFileToZip(((FileNode) fileNode).fileSourcePath, ((FileNode) fileNode).fileZipPath);
                             }
                         } else if (node.type == ProjectItemNode.NODE_FILE) {
