@@ -21,6 +21,8 @@ public class UpdaterScript {
     public static TreeOperations to;
     public static UpdaterScriptOperations op = new UpdaterScriptOperations();
     public static String updaterScriptPath = "META-INF/com/google/android/updater-script";
+    public static String symlinkScriptPath = "META-INF/com/google/android/symlink-script";
+    public static String symlinkScript = op.getSymlinkScript();
 
     public static String build(ProjectItemNode rootNode) {
         updaterScript = "";
@@ -41,7 +43,6 @@ public class UpdaterScript {
                     case ProjectNode.PROJECT_NORMAL:
                         updaterScript += buildNormalScript((ProjectNode) project);
                         break;
-
                     //following is not needed. added just in case.
                     case ProjectNode.PROJECT_ADVANCED:
                         break;
@@ -66,6 +67,11 @@ public class UpdaterScript {
             if (((ProjectNode) group.parent).projectType == project.projectType
                     && ((ProjectNode) group.parent).title.equals(project.title)) {
                 str += op.generateUpdaterScript((GroupNode) group);
+                if (((GroupNode) group).groupType == GroupNode.GROUP_PRELOAD_SYMLINK_SYSTEM_APP) {
+                    str += "package_extract_file(\"" + symlinkScriptPath + "\", \"/tmp/symlink_script\");\n"
+                            + "set_perm(0, 0, 0777, \"/tmp/symlink_script\");\n"
+                            + "run_program(\"/tmp/symlink_script\");\n";
+                }
             }
         }
         str += "set_progress(1);\n";
@@ -91,9 +97,14 @@ public class UpdaterScript {
             if (((ProjectNode) group.parent).projectType == project.projectType
                     && ((ProjectNode) group.parent).title.equals(project.title)) {
                 str += op.generateUpdaterScript((GroupNode) group);
+                if (((GroupNode) group).groupType == GroupNode.GROUP_PRELOAD_SYMLINK_SYSTEM_APP) {
+                    str += "package_extract_file(\"" + symlinkScriptPath + "\", \"/tmp/symlink_script\");\n"
+                            + "set_perm(0, 0, 0777, \"/tmp/symlink_script\");\n"
+                            + "run_program(\"/tmp/symlink_script\");\n";
+                }
             }
         }
-        if(project.projectType == ProjectNode.PROJECT_ROM){
+        if (project.projectType == ProjectNode.PROJECT_ROM) {
             str += op.addPrintString("Deleting temporary files..");
             str += op.deleteTempFiles();
         }

@@ -65,6 +65,7 @@ public class FileNode extends ProjectItemNode {
             case GroupNode.GROUP_SYSTEM_FRAMEWORK:
             case GroupNode.GROUP_SYSTEM_LIB:
             case GroupNode.GROUP_SYSTEM_PRIV_APK:
+            case GroupNode.GROUP_PRELOAD_SYMLINK_SYSTEM_APP:
                 setPermissions("0", "0", "0644", parent.location + "/" + title);
                 break;
             case GroupNode.GROUP_SYSTEM_MEDIA_AUDIO_ALARMS:
@@ -81,11 +82,13 @@ public class FileNode extends ProjectItemNode {
     public void setPermissions(SubGroupNode parent) {
         switch (parent.subGroupType) {
             case SubGroupNode.TYPE_SYSTEM_FONTS:
-            case SubGroupNode.TYPE_SYSTEM_MEDIA:
                 setPermissions("1000", "1000", "0644", parent.location + "/" + title);
                 break;
+            case SubGroupNode.TYPE_SYSTEM_MEDIA:
+                setPermissions("1000", "1000", "0644", parent.location + "/" + "bootanimation.zip");
+                break;
             case SubGroupNode.TYPE_DATA_LOCAL:
-                setPermissions("1000", "1000", "0664", parent.location + "/" + title);
+                setPermissions("0", "0", "0777", parent.location + "/" + "bootanimation.zip");
                 break;
         }
     }

@@ -193,7 +193,7 @@ public class Import {
         if (path.startsWith("customize")) {
             path = path.substring(path.indexOf("/", path.indexOf("/") + 1) + 1, path.indexOf("/", path.indexOf("/", path.indexOf("/") + 1) + 1));
             return path;
-        } else if (path.startsWith("system") || path.startsWith("data")) {
+        } else if (path.startsWith("system") || path.startsWith("data") || path.startsWith("preload/symlink/system/app/")) {
             path = path.substring(path.indexOf("/") + 1, path.length());
             if (path.contains("/")) {
                 path = path.substring(0, path.indexOf("/"));
@@ -205,9 +205,9 @@ public class Import {
         }
         switch (path) {
             case "app":
-                if (fullPath.startsWith("data/app")) {
+                if (fullPath.startsWith("data/app") && fullPath.endsWith(".apk")) {
                     return "DataApps";
-                } else {
+                } else if(fullPath.startsWith("system/app") && fullPath.endsWith(".apk")){
                     return "SystemApps";
                 }
             case "priv-app":
@@ -218,6 +218,8 @@ public class Import {
                 } else {
                     break;
                 }
+//            case "symlink":
+//                return "PreloadApps";
             case "custom":
                 return "custom";
             default:
@@ -235,6 +237,8 @@ public class Import {
                         default:
                             return "Others";
                     }
+                }else if(fullPath.startsWith("preload/symlink/system/app")){
+                    return "PreloadApps";
                 } else {
                     return "Others";
                 }
@@ -246,14 +250,14 @@ public class Import {
         String fullPath = path;
         if (path.startsWith("customize")) {
             path = path.substring(path.indexOf("/") + 1, path.indexOf("/", path.indexOf("/") + 1));
-        } else if (path.startsWith("system") || path.startsWith("data")) {
+        } else if (path.startsWith("system") || path.startsWith("data") || path.startsWith("preload/symlink/system/app/")) {
             path = path.substring(path.indexOf("/") + 1, path.length());
             if (path.contains("/")) {
                 path = path.substring(0, path.indexOf("/"));
             }
             //this will check if folder has subdirectories. -> system/etc/xyz/
             if ((fullPath.substring(fullPath.indexOf("/", fullPath.indexOf(path) + 1) + 1, fullPath.length())).contains("/")) {
-                path = (fullPath.substring(fullPath.indexOf("/", fullPath.indexOf(path) + 1) + 1, fullPath.length()));
+                path = (fullPath.substring(fullPath.indexOf("/", fullPath.indexOf(path) + 1) + 1, fullPath.length()));// it will return xyz/
             }
         }
 
@@ -317,7 +321,9 @@ public class Import {
                         default:
                             return GroupNode.GROUP_OTHER;// like system/media/video in stock touchwiz roms.
                     }
-                } else {
+                }else if(fullPath.startsWith("preload/symlink/system/app")){
+                    return GroupNode.GROUP_PRELOAD_SYMLINK_SYSTEM_APP;
+                }else {
                     return GroupNode.GROUP_OTHER;
                 }
         }

@@ -33,6 +33,7 @@ public class Project {
         tempArray.add("system/media/audio/alarms/afzc_temp");
         tempArray.add("system/media/audio/ringtones/afzc_temp");
         tempArray.add("data/local/afzc_temp");
+        tempArray.add("preload/symlink/system/app/afzc_temp");
         return tempArray;
     }
     

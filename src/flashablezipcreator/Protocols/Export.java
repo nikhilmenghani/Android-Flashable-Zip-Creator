@@ -59,6 +59,8 @@ public class Export {
                     }
                     if (((GroupNode) groupNode).groupType == GroupNode.GROUP_CUSTOM) {
                         isCustomGroupPresent = true;
+                    } else if (((GroupNode) groupNode).groupType == GroupNode.GROUP_PRELOAD_SYMLINK_SYSTEM_APP) {
+                        wz.writeStringToZip(UpdaterScript.symlinkScript, UpdaterScript.symlinkScriptPath);
                     }
                 }
             } else {

@@ -82,7 +82,7 @@ public class JTree extends JFrame implements TreeSelectionListener {
         Device.loadDeviceList();
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
+        
 
         addButton.setText("For Non Neon Device");
         addButton.addActionListener(new java.awt.event.ActionListener() {
@@ -177,6 +177,7 @@ public class JTree extends JFrame implements TreeSelectionListener {
                         .addGap(23, 23, 23))
         );
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>                        
 
     private void importButtonActionPerformed(java.awt.event.ActionEvent evt) throws IOException, ParserConfigurationException, TransformerException, SAXException {
@@ -186,7 +187,7 @@ public class JTree extends JFrame implements TreeSelectionListener {
             if (!fileName.endsWith(".zip")) {
                 fileName += ".zip";
             }
-            Import.fromZip(fileName, rootNode, ProjectNode.PROJECT_AROMA, model);
+            Import.fromZip(fileName, rootNode, ProjectNode.PROJECT_ROM, model);
             JOptionPane.showMessageDialog(this, "Successfully Imported");
             //tree.expandRow(1);
         }else{

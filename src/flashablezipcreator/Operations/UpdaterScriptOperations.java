@@ -17,11 +17,11 @@ import flashablezipcreator.Protocols.Project;
  * @author Nikhil
  */
 public class UpdaterScriptOperations {
-    
+
     public static final int installString = 1;
     public static final int deleteString = 2;
     public static final int normalString = 3;
-    
+
     public String addPrintString(String str, int type) {
         switch (type) {
             case installString:
@@ -31,22 +31,22 @@ public class UpdaterScriptOperations {
         }
         return "ui_print(\"" + str + "\");\n";
     }
-    
+
     public String addPrintString(String str) {
         return "ui_print(\"" + str + "\");\n";
     }
-    
+
     public String initiateUpdaterScript() {
         return addPrintString("@Starting the install process")
                 + addPrintString("Setting up required tools...");
     }
-    
+
     public String terminateUpdaterScript() {
         return addPrintString("Unmounting Partitions...")
                 + "unmount(\"/data\");\n"
                 + "unmount(\"/system\");\n";
     }
-    
+
     public String addWipeDalvikCacheString() {
         String str = "";
         str += "run_program(\"/sbin/busybox\",\"mount\", \"/data\");\n";
@@ -57,7 +57,7 @@ public class UpdaterScriptOperations {
         str += "unmount(\"/data\");\n";
         return str;
     }
-    
+
     public String getMountMethod(int type) {
         switch (type) {
             case 1:
@@ -70,7 +70,7 @@ public class UpdaterScriptOperations {
         }
         return "";
     }
-    
+
     public String predefinedGroupScript(GroupNode node) {
         String str = "";
         if (node.isCheckBox()) {
@@ -94,7 +94,7 @@ public class UpdaterScriptOperations {
         }
         return str;
     }
-    
+
     public String deleteTempFiles() {
         String str = "";
         for (String path : Project.getTempFilesList()) {
@@ -102,7 +102,7 @@ public class UpdaterScriptOperations {
         }
         return str;
     }
-    
+
     public String predefinedSubGroupsScript(GroupNode node) {
         String str = "";
         if (node.isSelectBox()) {
@@ -132,7 +132,7 @@ public class UpdaterScriptOperations {
         }
         return str;
     }
-    
+
     public String customGroupScript(GroupNode node) {
         String str = "";
         if (node.isCheckBox()) {
@@ -198,7 +198,7 @@ public class UpdaterScriptOperations {
         }
         return str;
     }
-    
+
     public String generateUpdaterScript(GroupNode node) {
         switch (node.groupType) {
             //Group of predefined locations
@@ -226,5 +226,22 @@ public class UpdaterScriptOperations {
                 return customGroupScript(node);
         }
         return "";
+    }
+
+    public String getSymlinkScript() {
+        return "#!/system/bin/mksh\n"
+                + "\n"
+                + "mount -o remount rw /system\n"
+                + "cd /preload/symlink/system/app\n"
+                + "\n"
+                + "# Can't create array with /sbin/sh, hence we use mksh\n"
+                + "apk_list=( `ls | grep .apk` )\n"
+                + "odex_list=( `ls | grep .odex` )\n"
+                + "items=${apk_list[*]}\" \"${odex_list[*]}\n"
+                + "\n"
+                + "for item in ${items[@]}\n"
+                + "do\n"
+                + "  ln -s /preload/symlink/system/app/$item /system/app/$item \n"
+                + "done";
     }
 }
