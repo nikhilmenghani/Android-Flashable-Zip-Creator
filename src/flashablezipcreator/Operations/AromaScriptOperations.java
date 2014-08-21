@@ -83,7 +83,7 @@ public class AromaScriptOperations {
         switch (node.groupType) {
             case GroupNode.GROUP_DATA_LOCAL:
             case GroupNode.GROUP_SYSTEM_MEDIA:
-
+            case GroupNode.GROUP_AROMA_KERNEL:
             case GroupNode.GROUP_CUSTOM:
                 //following condition is for custom group
                 if (!node.isSelectBox()) {

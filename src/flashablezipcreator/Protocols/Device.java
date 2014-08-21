@@ -18,14 +18,18 @@ import javax.swing.JOptionPane;
 public class Device {
 
     static Read r = new Read();
-    public static String selected = null;
-    //public static String selected = "LG Optimus L5 (e610)";
+    //public static String selected = null;
+    public static String selected = "Samsung Galaxy R (i9103)";
     public static final int CodeName = 1;
     public static final int NeonCompatibility = 2;
+    public static final int MountPoint = 3;
     public static ArrayList<String> deviceList = new ArrayList<>();
+    public static ArrayList<String> deviceBlackList = new ArrayList<>();//list of device without mountpoint
+    public static ArrayList<String> deviceWhiteList = new ArrayList<>();//list of device with mountpoint
     public static byte[] binary = null;
     public static String codeName = null;
-    public static boolean binaryType;
+    //public static boolean binaryType;
+    public static String mountPoint = null;
 
     //needs to be executed after loading Device
     public static void setSelectedDevice(String device) {
@@ -35,9 +39,31 @@ public class Device {
     //needs to be executed at the start of the program
     public static void loadDeviceList() {
         for (String list : JarOperations.supported_devices.split("\n")) {
+            if(list.contains("xxx")){
+                deviceBlackList.add(list.substring(0, list.indexOf("_")));
+            }else{
+                deviceWhiteList.add(list.substring(0, list.indexOf("_")));
+            }
             list = list.substring(0, list.indexOf("_"));
             deviceList.add(list);
         }
+    }
+    
+    public static boolean isInBlackList(){
+        if(deviceBlackList.contains(selected)){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+    
+    public static boolean isInWhiteList(){
+        return !isInBlackList();
+    }
+    
+    public static String getMountPoint(){
+        return get(MountPoint);
     }
 
     public static String getCodeName() {
@@ -67,12 +93,15 @@ public class Device {
                     case NeonCompatibility:
                         //.equals method strangely not working.
                         String temp[] = list.split("_");
-                        if ((temp[temp.length - 1].indexOf("neon") == 3)) {
+                        if ((temp[temp.length - 1].indexOf("neon") == 4)) {
                             return "nonneon";
                         } else {
                             return "neon";
                         }
+                    case MountPoint:
+                        return list.substring(list.indexOf("_", list.indexOf("_") + 1) + 1, list.indexOf("_", list.indexOf("_", list.indexOf("_") + 1) + 1));
                 }
+                
             }
         }
         return null;

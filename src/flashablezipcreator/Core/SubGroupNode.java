@@ -24,6 +24,7 @@ public class SubGroupNode extends ProjectItemNode{
     public static final int TYPE_SYSTEM_MEDIA = GroupNode.GROUP_SYSTEM_MEDIA;
     public static final int TYPE_DATA_LOCAL = GroupNode.GROUP_DATA_LOCAL;
     public static final int TYPE_CUSTOM = GroupNode.GROUP_CUSTOM;
+    public static final int TYPE_KERNEL = GroupNode.GROUP_AROMA_KERNEL;
     
     public SubGroupNode(String title, int type, GroupNode parent) {
         super(title, ProjectItemNode.NODE_SUBGROUP, parent);
@@ -44,6 +45,7 @@ public class SubGroupNode extends ProjectItemNode{
                 this.location = "data/local";
                 this.permissions = "rwrr";
                 break;
+            case TYPE_KERNEL:
             case TYPE_CUSTOM:
                 //location and permissions shall remain null and let file node override this property.
                 break;

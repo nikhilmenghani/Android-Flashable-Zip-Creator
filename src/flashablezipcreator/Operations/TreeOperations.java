@@ -71,10 +71,12 @@ public class TreeOperations {
                     case GroupNode.GROUP_SYSTEM_FONTS:
                     case GroupNode.GROUP_DATA_LOCAL:
                     case GroupNode.GROUP_SYSTEM_MEDIA:
+                    case GroupNode.GROUP_AROMA_KERNEL:
                         switch (childType) {
                             case SubGroupNode.TYPE_SYSTEM_FONTS:
                             case SubGroupNode.TYPE_SYSTEM_MEDIA:
                             case SubGroupNode.TYPE_DATA_LOCAL:
+                            case SubGroupNode.TYPE_KERNEL:
                                 node.addChild(new SubGroupNode(childTitle, childType, (GroupNode) node), model);
                                 break;
                             case ProjectItemNode.NODE_FILE:
@@ -99,6 +101,7 @@ public class TreeOperations {
                     case SubGroupNode.TYPE_SYSTEM_FONTS:
                     case SubGroupNode.TYPE_SYSTEM_MEDIA:
                     case SubGroupNode.TYPE_DATA_LOCAL:
+                    case SubGroupNode.TYPE_KERNEL:
                         node.addChild(new FileNode(childTitle, (SubGroupNode) node), model);
                         break;
                 }

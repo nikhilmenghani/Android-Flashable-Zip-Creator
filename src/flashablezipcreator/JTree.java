@@ -180,12 +180,13 @@ public class JTree extends JFrame implements TreeSelectionListener {
     }// </editor-fold>                        
 
     private void importButtonActionPerformed(java.awt.event.ActionEvent evt) throws IOException, ParserConfigurationException, TransformerException, SAXException {
+        //Import.fromZip("gapps-jb-20130813-signed.zip", rootNode, ProjectNode.PROJECT_GAPPS, model);
         String fileName = textField.getText().toString();
         if (!fileName.equals("")) {
             if (!fileName.endsWith(".zip")) {
                 fileName += ".zip";
             }
-            Import.fromZip(fileName, rootNode, ProjectNode.PROJECT_ROM, model);
+            Import.fromZip(fileName, rootNode, ProjectNode.PROJECT_AROMA, model);
             JOptionPane.showMessageDialog(this, "Successfully Imported");
             //tree.expandRow(1);
         }else{

@@ -6,6 +6,7 @@
 package flashablezipcreator.Core;
 
 import java.io.File;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -18,7 +19,7 @@ public class FileNode extends ProjectItemNode {
     public String fileDestPath;
     public String installLocation;
     public String belongsToGroup;
-    public String filePermission;
+    public String filePermission = "";
     public String fileDescription;
     public String fileZipPath = "";
 
@@ -27,8 +28,8 @@ public class FileNode extends ProjectItemNode {
         this.installLocation = parent.getLocation();
         setPermissions(parent);
 //        if (parent.groupType == GroupNode.GROUP_AROMA_THEMES) {
-            this.fileDestPath = parent.path + File.separator + (new File(fileSourcePath)).getName();
-            this.fileSourcePath = this.fileDestPath;
+        this.fileDestPath = parent.path + File.separator + (new File(fileSourcePath)).getName();
+        this.fileSourcePath = this.fileDestPath;
 //        } else {
 //            this.fileSourcePath = fileSourcePath;
 //            this.fileDestPath = parent.path + File.separator + (new File(fileSourcePath)).getName();
@@ -141,7 +142,6 @@ public class FileNode extends ProjectItemNode {
                     case GroupNode.GROUP_AROMA_THEMES:
                         return this.fileDestPath.replaceAll("\\\\", "/");
                     //case GroupNode.GROUP_OTHER not needed and
-                    //case GroupNode.GROUP_META_INF not needed.
                 }
                 break;
             case ProjectItemNode.NODE_SUBGROUP:
@@ -154,6 +154,9 @@ public class FileNode extends ProjectItemNode {
                         break;
                     case SubGroupNode.TYPE_DATA_LOCAL:
                         str = "data_local" + File.separator + str;
+                        break;
+                    case SubGroupNode.TYPE_KERNEL:
+                        str = "kernels" + File.separator + str;
                         break;
                     case SubGroupNode.TYPE_CUSTOM:
                         str = "custom" + File.separator + str;

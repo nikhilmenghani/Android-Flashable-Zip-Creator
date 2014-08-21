@@ -157,6 +157,7 @@ public class Import {
         switch (getGroupType(path)) {
             case GroupNode.GROUP_SYSTEM_FONTS:
             case GroupNode.GROUP_SYSTEM_MEDIA:
+            case GroupNode.GROUP_AROMA_KERNEL:
             case GroupNode.GROUP_DATA_LOCAL:
                 return true;
             case GroupNode.GROUP_CUSTOM:
@@ -295,6 +296,8 @@ public class Import {
                 return GroupNode.GROUP_DATA_LOCAL;
             case "custom":
                 return GroupNode.GROUP_CUSTOM;
+            case "kernels":
+                return GroupNode.GROUP_AROMA_KERNEL;
             case "Other":
                 return GroupNode.GROUP_OTHER;
             default:

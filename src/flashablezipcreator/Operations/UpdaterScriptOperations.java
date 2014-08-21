@@ -9,6 +9,7 @@ import flashablezipcreator.Core.FileNode;
 import flashablezipcreator.Core.GroupNode;
 import flashablezipcreator.Core.ProjectItemNode;
 import flashablezipcreator.Core.SubGroupNode;
+import flashablezipcreator.Protocols.Device;
 import flashablezipcreator.Protocols.Project;
 
 /**
@@ -16,11 +17,11 @@ import flashablezipcreator.Protocols.Project;
  * @author Nikhil
  */
 public class UpdaterScriptOperations {
-
+    
     public static final int installString = 1;
     public static final int deleteString = 2;
     public static final int normalString = 3;
-
+    
     public String addPrintString(String str, int type) {
         switch (type) {
             case installString:
@@ -30,22 +31,22 @@ public class UpdaterScriptOperations {
         }
         return "ui_print(\"" + str + "\");\n";
     }
-
+    
     public String addPrintString(String str) {
         return "ui_print(\"" + str + "\");\n";
     }
-
+    
     public String initiateUpdaterScript() {
         return addPrintString("@Starting the install process")
                 + addPrintString("Setting up required tools...");
     }
-
+    
     public String terminateUpdaterScript() {
         return addPrintString("Unmounting Partitions...")
                 + "unmount(\"/data\");\n"
                 + "unmount(\"/system\");\n";
     }
-
+    
     public String addWipeDalvikCacheString() {
         String str = "";
         str += "run_program(\"/sbin/busybox\",\"mount\", \"/data\");\n";
@@ -56,7 +57,7 @@ public class UpdaterScriptOperations {
         str += "unmount(\"/data\");\n";
         return str;
     }
-
+    
     public String getMountMethod(int type) {
         switch (type) {
             case 1:
@@ -69,7 +70,7 @@ public class UpdaterScriptOperations {
         }
         return "";
     }
-
+    
     public String predefinedGroupScript(GroupNode node) {
         String str = "";
         if (node.isCheckBox()) {
@@ -93,7 +94,7 @@ public class UpdaterScriptOperations {
         }
         return str;
     }
-
+    
     public String deleteTempFiles() {
         String str = "";
         for (String path : Project.getTempFilesList()) {
@@ -101,7 +102,7 @@ public class UpdaterScriptOperations {
         }
         return str;
     }
-
+    
     public String predefinedSubGroupsScript(GroupNode node) {
         String str = "";
         if (node.isSelectBox()) {
@@ -121,6 +122,9 @@ public class UpdaterScriptOperations {
                             str += "package_extract_file(\"" + ((FileNode) file).getZipPath() + "\", \"" + ((FileNode) file).installLocation + "/" + "bootanimation.zip" + "\");\n";
                             str += "set_perm(" + ((FileNode) file).filePermission + ");\n";
                             break;
+                        case GroupNode.GROUP_AROMA_KERNEL:
+                            str += "assert(package_extract_file(\"" + ((FileNode) file).getZipPath() + "\", \"" + Device.getMountPoint() + "\"));\n";
+                            break;
                     }
                 }
                 str += "endif;\n";
@@ -128,7 +132,7 @@ public class UpdaterScriptOperations {
         }
         return str;
     }
-
+    
     public String customGroupScript(GroupNode node) {
         String str = "";
         if (node.isCheckBox()) {
@@ -194,7 +198,7 @@ public class UpdaterScriptOperations {
         }
         return str;
     }
-
+    
     public String generateUpdaterScript(GroupNode node) {
         switch (node.groupType) {
             //Group of predefined locations
@@ -215,6 +219,7 @@ public class UpdaterScriptOperations {
             case GroupNode.GROUP_SYSTEM_FONTS:
             case GroupNode.GROUP_DATA_LOCAL:
             case GroupNode.GROUP_SYSTEM_MEDIA:
+            case GroupNode.GROUP_AROMA_KERNEL:
                 return predefinedSubGroupsScript(node);
             //Group of custom location.
             case GroupNode.GROUP_CUSTOM:

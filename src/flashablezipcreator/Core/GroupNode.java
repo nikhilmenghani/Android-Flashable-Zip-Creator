@@ -38,6 +38,7 @@ public class GroupNode extends ProjectItemNode {
     public static final int GROUP_CUSTOM = 16;
     public static final int GROUP_OTHER = 17;
     public static final int GROUP_AROMA_THEMES = 18;
+    public static final int GROUP_AROMA_KERNEL = 19;
 
     public GroupNode(String title, int type, ProjectNode parent) {
         super(title, ProjectItemNode.NODE_GROUP, parent);
@@ -129,6 +130,12 @@ public class GroupNode extends ProjectItemNode {
                 this.prop = "themes.prop";
                 this.isSelectBox = true;
                 super.path = "META-INF/com/google/android/aroma/themes" + File.separator + title;
+                break;
+            case GROUP_AROMA_KERNEL:
+                this.location = "";
+                this.permissions = "";
+                this.prop = getProp("kernels");
+                this.isSelectBox = true;
         }
     }
 
