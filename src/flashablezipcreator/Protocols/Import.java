@@ -86,8 +86,11 @@ public class Import {
                     continue;
                 } else if (filePath.contains("META-INF/com/google/android/aroma")) {
                     continue;
-                } else if (name.equals(Xml.path)) {
+                } else if (name.equals(Xml.custom_path)) {
                     Xml.originalData = rz.getStringFromFile(in);
+                    continue;
+                }else if (name.equals(Xml.delete_path)) {
+                    Xml.deleteData = rz.getStringFromFile(in);
                     continue;
                 }
                 file = addFileToTree(fileName, groupName, groupType, projectName, projectType, model);
@@ -101,8 +104,9 @@ public class Import {
             rz.writeFileFromZip(in, file.fileSourcePath);
         }
         Xml.terminate();
-        Xml.parseXml(rootNode);
-
+        Xml.parseXml(GroupNode.GROUP_CUSTOM, rootNode, model);//this sets values of custom group/subGroup
+        Xml.parseXml(GroupNode.GROUP_DELETE_FILES, rootNode, model);//this creates new file objects of delete group
+        JOptionPane.showMessageDialog(null, Xml.deleteData);
     }
 
     public static FileNode addFileToTree(String fileName, String subGroupName, int subGroupType, String groupName, int groupType, String projectName, int projectType, DefaultTreeModel model) {
@@ -274,6 +278,8 @@ public class Import {
                 return GroupNode.GROUP_SYSTEM_PRIV_APK;
             case "system_csc":
                 return GroupNode.GROUP_SYSTEM_CSC;
+            case "dpi":
+                return GroupNode.GROUP_DPI;
             case "system_etc":
                 return GroupNode.GROUP_SYSTEM_ETC;
             case "system_lib":

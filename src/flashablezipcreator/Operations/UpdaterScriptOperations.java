@@ -11,6 +11,7 @@ import flashablezipcreator.Core.ProjectItemNode;
 import flashablezipcreator.Core.SubGroupNode;
 import flashablezipcreator.Protocols.Device;
 import flashablezipcreator.Protocols.Project;
+import static flashablezipcreator.Protocols.UpdaterScript.symlinkScriptPath;
 
 /**
  *
@@ -77,20 +78,40 @@ public class UpdaterScriptOperations {
             int count = 1;
             str += "if (file_getprop(\"/tmp/aroma/" + node.prop + "\", \"item.1." + count++ + "\")==\"1\") then \n";
             for (ProjectItemNode file : node.children) {
-                str += addPrintString(((FileNode) file).title, installString);
-                str += "package_extract_file(\"" + ((FileNode) file).getZipPath() + "\", \"" + ((FileNode) file).installLocation + "/" + ((FileNode) file).title + "\");\n";
-                str += "set_perm(" + ((FileNode) file).filePermission + ");\n";
+                if (node.groupType == GroupNode.GROUP_DELETE_FILES) {
+                    str += addPrintString(((FileNode) file).title, deleteString);
+                    str += "delete(\"/" + ((FileNode) file).getDeleteLocation() + "\");\n";
+                } else {
+                    str += addPrintString(((FileNode) file).title, installString);
+                    str += "package_extract_file(\"" + ((FileNode) file).getZipPath() + "\", \"" + ((FileNode) file).installLocation + "/" + ((FileNode) file).title + "\");\n";
+                    str += "set_perm(" + ((FileNode) file).filePermission + ");\n";
+                }
             }
             str += "endif;\n";
             for (ProjectItemNode file : node.children) {
-                str += "if (file_getprop(\"/tmp/aroma/" + node.prop + "\", \"item.1." + count++ + "\")==\"1\") then \n"
-                        + addPrintString(((FileNode) file).title, installString)
-                        + "package_extract_file(\"" + ((FileNode) file).getZipPath() + "\", \"" + ((FileNode) file).installLocation + "/" + ((FileNode) file).title + "\");\n";
-                str += "set_perm(" + ((FileNode) file).filePermission + ");\n";
+                str += "if (file_getprop(\"/tmp/aroma/" + node.prop + "\", \"item.1." + count++ + "\")==\"1\") then \n";
+                if (node.groupType == GroupNode.GROUP_DELETE_FILES) {
+                    str += addPrintString(((FileNode) file).title, deleteString);
+                    str += "delete(\"/" + ((FileNode) file).getDeleteLocation() + "\");\n";
+                } else {
+                    str += addPrintString(((FileNode) file).title, installString);
+                    str += "package_extract_file(\"" + ((FileNode) file).getZipPath() + "\", \"" + ((FileNode) file).installLocation + "/" + ((FileNode) file).title + "\");\n";
+                    str += "set_perm(" + ((FileNode) file).filePermission + ");\n";
+                }
+                str += "endif;\n";
+            }
+        } else if (node.isSelectBox() && node.groupType == GroupNode.GROUP_DPI) {
+            int count = 2;
+            for (ProjectItemNode file : node.children) {
+                str += "if (file_getprop(\"/tmp/aroma/" + node.prop + "\", \"selected.1\")==\"" + count++ + "\") then \n";
+                str += addPrintString("Changing dpi to " + ((FileNode) file).title);
+                str += "package_extract_file(\"" + ((FileNode) file).getZipPath() + "\", \"/tmp/dpi_script\");\n"
+                        + "set_perm(0, 0, 0777, \"/tmp/dpi_script\");\n"
+                        + "run_program(\"/tmp/dpi_script\");\n";
                 str += "endif;\n";
             }
         } else {
-            System.out.println("This Group doesn't support selectBox");
+            System.out.println("This Group not support");
         }
         return str;
     }
@@ -214,6 +235,8 @@ public class UpdaterScriptOperations {
             case GroupNode.GROUP_DATA_APP:
             case GroupNode.GROUP_PRELOAD_SYMLINK_SYSTEM_APP:
             case GroupNode.GROUP_SYSTEM_FRAMEWORK:
+            case GroupNode.GROUP_DELETE_FILES:
+            case GroupNode.GROUP_DPI:
                 return predefinedGroupScript(node);
             //Group of predefined locations that need subgroups
             case GroupNode.GROUP_SYSTEM_FONTS:
@@ -243,5 +266,10 @@ public class UpdaterScriptOperations {
                 + "do\n"
                 + "  ln -s /preload/symlink/system/app/$item /system/app/$item \n"
                 + "done";
+    }
+
+    public String getDpiScript(String dpi) {
+        return "#!/sbin/sh\n"
+                + "sed -i '/ro.sf.lcd_density=/s/240/" + dpi + "/g' /system/build.prop";
     }
 }

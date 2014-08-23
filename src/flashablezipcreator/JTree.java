@@ -187,7 +187,7 @@ public class JTree extends JFrame implements TreeSelectionListener {
             if (!fileName.endsWith(".zip")) {
                 fileName += ".zip";
             }
-            Import.fromZip(fileName, rootNode, ProjectNode.PROJECT_ROM, model);
+            Import.fromZip(fileName, rootNode, ProjectNode.PROJECT_AROMA, model);
             JOptionPane.showMessageDialog(this, "Successfully Imported");
             //tree.expandRow(1);
         }else{

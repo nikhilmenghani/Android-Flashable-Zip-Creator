@@ -14,8 +14,8 @@ import java.io.File;
 public class GroupNode extends ProjectItemNode {
 
     public String groupName;
-    public String location;
-    public String permissions;
+    public String location = "";
+    public String permissions = "";
     public int groupType;
     public String prop;
     public boolean isSelectBox = false;
@@ -39,6 +39,8 @@ public class GroupNode extends ProjectItemNode {
     public static final int GROUP_OTHER = 17;
     public static final int GROUP_AROMA_THEMES = 18;
     public static final int GROUP_AROMA_KERNEL = 19;
+    public static final int GROUP_DELETE_FILES = 20;
+    public static final int GROUP_DPI = 21;
 
     public GroupNode(String title, int type, ProjectNode parent) {
         super(title, ProjectItemNode.NODE_GROUP, parent);
@@ -111,31 +113,40 @@ public class GroupNode extends ProjectItemNode {
                 this.prop = getProp("data_local");
                 this.isSelectBox = true;
                 break;
+            case GROUP_AROMA_KERNEL:
+//                this.location = "";
+//                this.permissions = "";
+                this.prop = getProp("kernels");
+                this.isSelectBox = true;
+                break;
             case GROUP_CUSTOM:
-                this.location = "/custom";
-                this.permissions = "";
+//                this.location = "/custom";
+//                this.permissions = "";
                 this.prop = getProp("custom");
                 this.isSelectBox = false;
                 break;
             case GROUP_OTHER:
-                this.location = "";
-                this.permissions = "";
+//                this.location = "";
+//                this.permissions = "";
                 //following properties not needed but added.
                 this.prop = getProp("other");
                 this.isSelectBox = false;
                 break;
             case GROUP_AROMA_THEMES:
-                this.location = "";
-                this.permissions = "";
+//                this.location = "";
+//                this.permissions = "";
                 this.prop = "themes.prop";
                 this.isSelectBox = true;
                 super.path = "META-INF/com/google/android/aroma/themes" + File.separator + title;
                 break;
-            case GROUP_AROMA_KERNEL:
-                this.location = "";
-                this.permissions = "";
-                this.prop = getProp("kernels");
+            case GROUP_DELETE_FILES:
+                this.prop = getProp("delete");
+                this.isSelectBox = false;
+                break;
+            case GROUP_DPI:
+                this.prop = getProp("dpi");
                 this.isSelectBox = true;
+                break;
         }
     }
 
@@ -147,6 +158,10 @@ public class GroupNode extends ProjectItemNode {
         return !isSelectBox;
     }
 
+    public void setLocation(String location){
+        this.location = location;
+    }
+    
     public String getLocation() {
         return location;
     }

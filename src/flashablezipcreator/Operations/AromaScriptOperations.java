@@ -84,6 +84,7 @@ public class AromaScriptOperations {
             case GroupNode.GROUP_DATA_LOCAL:
             case GroupNode.GROUP_SYSTEM_MEDIA:
             case GroupNode.GROUP_AROMA_KERNEL:
+            case GroupNode.GROUP_DPI:
             case GroupNode.GROUP_CUSTOM:
                 //following condition is for custom group
                 if (!node.isSelectBox()) {
@@ -175,6 +176,7 @@ public class AromaScriptOperations {
             case GroupNode.GROUP_PRELOAD_SYMLINK_SYSTEM_APP:
             case GroupNode.GROUP_SYSTEM_FRAMEWORK:
             case GroupNode.GROUP_CUSTOM:
+            case GroupNode.GROUP_DELETE_FILES:
                 //following condition is for custom group
                 if (!node.isCheckBox()) {
                     break;

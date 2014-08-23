@@ -27,13 +27,8 @@ public class FileNode extends ProjectItemNode {
         super((new File(fileSourcePath)).getName(), ProjectItemNode.NODE_FILE, parent);
         this.installLocation = parent.getLocation();
         setPermissions(parent);
-//        if (parent.groupType == GroupNode.GROUP_AROMA_THEMES) {
         this.fileDestPath = parent.path + File.separator + (new File(fileSourcePath)).getName();
         this.fileSourcePath = this.fileDestPath;
-//        } else {
-//            this.fileSourcePath = fileSourcePath;
-//            this.fileDestPath = parent.path + File.separator + (new File(fileSourcePath)).getName();
-//        }
         fileZipPath = getZipPath();
     }
 
@@ -144,6 +139,12 @@ public class FileNode extends ProjectItemNode {
                         break;
                     case GroupNode.GROUP_AROMA_THEMES:
                         return this.fileDestPath.replaceAll("\\\\", "/");
+                    case GroupNode.GROUP_DELETE_FILES:
+                        //Export.java will handle
+                        break;
+                    case GroupNode.GROUP_DPI:
+                        str = "dpi" + File.separator + str;
+                        break;
                     //case GroupNode.GROUP_OTHER not needed and
                 }
                 break;
@@ -173,6 +174,10 @@ public class FileNode extends ProjectItemNode {
         return str;
     }
 
+    public String getDeleteLocation(){
+        return ((GroupNode)parent).getLocation() + "/" + title;
+    }
+    
     public void setPermissions(String i, String j, String k, String path) {
         this.filePermission = i + ", " + j + ", " + k + ", \"" + path + "\"";
     }

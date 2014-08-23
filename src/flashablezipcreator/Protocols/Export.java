@@ -13,6 +13,7 @@ import flashablezipcreator.Core.SubGroupNode;
 import flashablezipcreator.DiskOperations.WriteZip;
 import flashablezipcreator.Operations.JarOperations;
 import flashablezipcreator.Operations.TreeOperations;
+import flashablezipcreator.Operations.UpdaterScriptOperations;
 import java.io.IOException;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
@@ -42,13 +43,26 @@ public class Export {
         wz = new WriteZip(Project.outputPath);
         to = new TreeOperations(rootNode);
         boolean isCustomGroupPresent = false;
+        boolean isDeleteGroupPresent = false;
         for (ProjectItemNode project : to.getProjectsSorted(rootNode)) {
             if (((ProjectNode) project).projectType != ProjectNode.PROJECT_THEMES) {
                 for (ProjectItemNode groupNode : ((ProjectNode) project).children) {
+                    if (((GroupNode) groupNode).groupType == GroupNode.GROUP_DELETE_FILES) {
+                        isDeleteGroupPresent = true;
+                        continue;
+                    }
+                    if (((GroupNode) groupNode).groupType == GroupNode.GROUP_DPI) {
+                        for (ProjectItemNode node : ((GroupNode) groupNode).children) {
+                            if (node.type == ProjectItemNode.NODE_FILE) {
+                                wz.writeStringToZip(UpdaterScript.getDpiScript(((FileNode) node).title), ((FileNode) node).fileZipPath);
+                            }
+                        }
+                        continue;
+                    }
                     for (ProjectItemNode node : ((GroupNode) groupNode).children) {
                         if (node.type == ProjectItemNode.NODE_SUBGROUP) {
                             for (ProjectItemNode fileNode : ((SubGroupNode) node).children) {
-                                if(((FileNode) fileNode).title.equals("DroidSans.ttf")){
+                                if (((FileNode) fileNode).title.equals("DroidSans.ttf")) {
                                     wz.writeFileToZip(((FileNode) fileNode).fileSourcePath, "META-INF/com/google/android/aroma/ttf/" + ((SubGroupNode) node).title + ".ttf");
                                 }
                                 wz.writeFileToZip(((FileNode) fileNode).fileSourcePath, ((FileNode) fileNode).fileZipPath);
@@ -72,7 +86,10 @@ public class Export {
             }
         }
         if (isCustomGroupPresent) {
-            wz.writeStringToZip(Xml.getString(rootNode), Xml.path);
+            wz.writeStringToZip(Xml.getString(GroupNode.GROUP_CUSTOM, rootNode), Xml.custom_path);
+        }
+        if (isDeleteGroupPresent) {
+            wz.writeStringToZip(Xml.getString(GroupNode.GROUP_DELETE_FILES, rootNode), Xml.delete_path);
         }
         wz.writeStringToZip(AromaConfig.build(rootNode), AromaConfig.aromaConfigPath);
         wz.writeStringToZip(UpdaterScript.build(rootNode), UpdaterScript.updaterScriptPath);

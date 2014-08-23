@@ -112,4 +112,8 @@ public class UpdaterScript {
         str += op.terminateUpdaterScript();
         return str += "endif;\n";
     }
+    
+    public static String getDpiScript(String dpi){
+        return op.getDpiScript(dpi);
+    }
 }
