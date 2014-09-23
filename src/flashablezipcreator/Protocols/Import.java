@@ -34,12 +34,10 @@ public class Import {
     static ReadZip rz;
     static TreeOperations to;
     static String exisingUpdaterScript = "";
-    static ArrayList<String> repeatList = null;
     static String fileName = "";
     static int zipType;
 
     public static void fromZip(String path, ProjectItemNode rootNode, int type, DefaultTreeModel model) throws IOException, ParserConfigurationException, TransformerException, SAXException {
-        repeatList = new ArrayList<>();//this will handle files with same name but different location.
         zipType = Identify.scanZip(path);//this will automatically detect zip type.
         
         boolean containsDeleteXml = false;
@@ -67,7 +65,7 @@ public class Import {
             
             String filePath = name;
             String projectName = Identify.getProjectName(name);
-            int projectType = zipType;//this has to be same as zip type.
+            int projectType = Identify.getProjectType(filePath);
             String groupName = Identify.getGroupName(filePath);
             int groupType = Identify.getGroupType(filePath);
             boolean hasSubGroup = Identify.hasSubGroup(filePath);
@@ -77,7 +75,7 @@ public class Import {
             FileNode file = null;
 
             if (hasSubGroup) {
-                file = addFileToTree(fileName, subGroupName, subGroupType, groupName, groupType, projectName, projectType, rootNode, model);
+                file = to.addFileToTree(fileName, subGroupName, subGroupType, groupName, groupType, projectName, projectType, rootNode, model);
                 if (subGroupType == SubGroupNode.TYPE_CUSTOM) {
                     Xml.addFileDataToSubGroup(file);
                 }
@@ -122,7 +120,7 @@ public class Import {
                     containsDataXml = true;
                     continue;
                 }
-                file = addFileToTree(fileName, groupName, groupType, projectName, projectType, rootNode, model);
+                file = to.addFileToTree(fileName, groupName, groupType, projectName, projectType, rootNode, model);
                 if (groupType == GroupNode.GROUP_OTHER) {
                     file.fileZipPath = filePath;
                 } else if (groupType == GroupNode.GROUP_CUSTOM) {
@@ -145,59 +143,5 @@ public class Import {
             Xml.parseXml(0, rootNode, model);
         }
         JOptionPane.showMessageDialog(null, "Successfully Imported");
-    }
-
-    public static FileNode addFileToTree(String fileName, String subGroupName, int subGroupType, String groupName, int groupType, String projectName, int projectType,
-            ProjectItemNode rootNode, DefaultTreeModel model) {
-        if (to.getProjectNode(projectName, projectType) == null) {
-            to.addChildTo(rootNode, projectName, projectType, model);
-            System.out.println("Added project " + projectName + " project type " + projectType);
-        }
-        if (to.getGroupNode(groupName, groupType, projectName) == null) {
-            to.addChildTo(to.getProjectNode(projectName, projectType), groupName, groupType, model);
-        }
-        if (to.getSubGroupNode(subGroupName, groupType, groupName, projectName) == null) {
-            to.addChildTo(to.getGroupNode(groupName, groupType, projectName), subGroupName, subGroupType, model);
-        }
-        if (subGroupType == SubGroupNode.TYPE_CUSTOM) {
-            to.addChildTo(to.getSubGroupNode(subGroupName, subGroupType, groupName, projectName), fileName, "", "", model);
-        } else {
-            to.addChildTo(to.getSubGroupNode(subGroupName, subGroupType, groupName, projectName), fileName, ProjectItemNode.NODE_FILE, model);
-        }
-        return to.getFileNode(fileName, subGroupName, groupName, projectName);
-    }
-
-    public static FileNode addFileToTree(String fileName, String groupName, int groupType, String projectName, int projectType, ProjectItemNode rootNode, DefaultTreeModel model) {
-        if (to.getProjectNode(projectName, projectType) == null) {
-            to.addChildTo(rootNode, projectName, projectType, model);
-            System.out.println("Added project " + projectName + " project type " + projectType);
-        }
-        if (to.getGroupNode(groupName, groupType, projectName) == null) {
-            to.addChildTo(to.getProjectNode(projectName, projectType), groupName, groupType, model);
-        }
-        if (to.getFileNode(fileName, groupName, projectName) != null) {
-            if (groupType == GroupNode.GROUP_OTHER) {
-                fileName += "_1";
-                fileName = getUniqueName(fileName);
-            }
-        }
-        if (groupType == GroupNode.GROUP_CUSTOM) {
-            to.addChildTo(to.getGroupNode(groupName, groupType, projectName), fileName, "", "", model);
-        } else {
-            to.addChildTo(to.getGroupNode(groupName, groupType, projectName), fileName, ProjectItemNode.NODE_FILE, model);
-        }
-        return to.getFileNode(fileName, groupName, projectName);
-    }
-
-    /*files with same name and located at multiple places are unique inspite of having same name.
-     this is to prevent them from skipping.*/
-    public static String getUniqueName(String fileName) {
-        if (repeatList.contains(fileName)) {
-            fileName += "_1";
-            return getUniqueName(fileName);
-        } else {
-            repeatList.add(fileName);
-            return fileName;
-        }
     }
 }

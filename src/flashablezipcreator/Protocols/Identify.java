@@ -55,7 +55,6 @@ public class Identify {
                 return zipType;
             }
         }
-        JOptionPane.showMessageDialog(null, zipType + " ..");
         return zipType;
     }
 

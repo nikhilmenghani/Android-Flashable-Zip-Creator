@@ -28,6 +28,7 @@ public class ProjectNode extends ProjectItemNode {
     public String androidVersion = "I Don't Know Version";
     public String gappsType = "I Don't Know Type";
     public String gappsDate = "I Don't Know Date";
+    public String releaseVersion = "I Don't Know Version";
 
     public static final int PROJECT_NORMAL = 1;
     public static final int PROJECT_AROMA = 2;

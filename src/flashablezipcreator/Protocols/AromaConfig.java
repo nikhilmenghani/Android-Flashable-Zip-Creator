@@ -60,6 +60,8 @@ public class AromaConfig {
         String str = "";
         str += op.addMenuBox(project);
         str += "if prop(\"" + project.title + ".prop\",\"selected\")==\"1\" then\n";
+        str += op.addInitString(project);
+        str += op.addWelcomeString(project);
         for (ProjectItemNode group : to.getNodeList(ProjectItemNode.NODE_GROUP)) {
             if (((ProjectNode) group.parent).projectType == ProjectNode.PROJECT_AROMA) {
                 str += op.addCheckBox((GroupNode) group);

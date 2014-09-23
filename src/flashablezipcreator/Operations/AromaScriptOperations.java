@@ -65,7 +65,7 @@ public class AromaScriptOperations {
     public String addFontsViewBoxString() {
         String str = "";
         str = "\nviewbox(\"Preview\","
-                + "\"\\nThe font \"+getvar(\"fontname\")+\"... looks like this\\n\\n\"+"
+                + "\"\\nThe font \"+getvar(\"fontname\")+\" looks like this\\n\\n\"+"
                 + "\"Preview:\\n\\n\"+\"AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz.,1234567890\\n\\n\"+\"Are you sure you want to continue installing this font?\",\n"
                 + "\"@update\");\n";
         return str;
@@ -111,7 +111,7 @@ public class AromaScriptOperations {
 
     public String configCustomGroup(GroupNode node, boolean flag) {
         String str = "";
-        if (flag) {
+        if (flag) {//flag is to separate selectbox and checkbox.
             str += "\nselectbox(\"" + node.title + " List\",\"Select from " + node.title + "\",\"@personalize\",\"" + node.prop + "\",\n"
                     + "\"Select one from the list\", \"\", 2,\n"
                     + "\"Select None\",\"Skip this Group.\", 1";
@@ -143,36 +143,33 @@ public class AromaScriptOperations {
 
     public String configFonts(GroupNode node) {
         String str = "";
-        int count = 1;
-        str += "\nselectbox(\"" + node.title + " List\",\"Select from " + node.title + " List For Preview\",\"@info\",\"" + node.prop + "\"";
+        str += "\nselectbox(\"" + node.title + " List\",\"Select from " + node.title + " List For Preview\",\"@info\",\"" + node.prop + "\""
+                + ",\n\"Select None\",\"Skip this Group.\", 1";
         for (int i = 0; i < node.getChildCount(); i++) {
-            str += ",\n\"" + node.getChildAt(i).toString() + "\", \"" + ((SubGroupNode) node.getChildAt(i)).description + "\", " + count + "";
-            count = 0;
+            str += ",\n\"" + node.getChildAt(i).toString() + "\", \"" + ((SubGroupNode) node.getChildAt(i)).description + "\", " + 0 + "";
         }
         str += ");\n";
+        str += "writetmpfile(\"" + node.prop.replace(".prop", "_temp.prop") + "\",\"init=no\\n\");\n";//initialize temp.prop.
+        
+        str += "if prop(\"" + node.prop + "\", \"selected.0\")==\"" + 1 + "\" then\n";
+        str += "setvar(\"fontname\",\"" + "default" + "\");\n";
+        str += "endif;\n";
+        
         if (node.groupType == GroupNode.GROUP_SYSTEM_FONTS) {
             for (int i = 0; i < node.getChildCount(); i++) {
                 SubGroupNode sgnode = (SubGroupNode) node.getChildAt(i);
-                str += "if prop(\"" + node.prop + "\", \"selected.0\")==\"" + (i + 1) + "\" then\n";
+                str += "if prop(\"" + node.prop + "\", \"selected.0\")==\"" + (i + 2) + "\" then\n";
                 for (int j = 0; j < sgnode.getChildCount(); j++) {
                     FileNode fnode = (FileNode) sgnode.getChildAt(j);
                     if (((FileNode) fnode).title.equals("DroidSans.ttf")) {
-                        str += "fontresload(\"0\", \"ttf/" + sgnode.toString() + ".ttf;\", \"12\");\n";
+                        str += "fontresload(\"0\", \"ttf/" + sgnode.toString() + ".ttf;\", \"15\");\n";
                     }
                 }
                 str += "setvar(\"fontname\",\"" + sgnode.toString() + "\");\n";
+                str += "writetmpfile(\"" + node.prop.replace(".prop", "_temp.prop") + "\",\"" + sgnode + "=yes\\n\");\n";
                 str += "endif;\n";
             }
             str += addFontsViewBoxString();
-            str += addFontsString();
-            str += "\nselectbox(\"" + node.title + " List\",\"Select from " + node.title + "\",\"@personalize\",\"" + node.prop + "\",\n"
-                    + "\"Select one from the list\", \"\", 2,\n"
-                    + "\"Select None\",\"Skip this Group.\", 1";
-            for (int i = 0; i < node.getChildCount(); i++) {
-                str += ",\n\"" + node.getChildAt(i).toString() + "\", \"" + ((SubGroupNode) node.getChildAt(i)).description + "\", 0";
-            }
-            str += ");\n";
-            str += "writetmpfile(\"" + node.prop + "\",readtmpfile(\"" + node.prop + "\"));\n";
             str += addFontsString();
         }
         return str;
@@ -225,6 +222,11 @@ public class AromaScriptOperations {
                         + "setvar(\"gapps_date\",\"" + project.gappsDate + "\");\n"
                         + "setvar(\"file_creator\",\"" + Project.zipCreator + "\");\n";
                 break;
+            case ProjectNode.PROJECT_AROMA:
+                str += "setvar(\"release_version\",\"" + project.releaseVersion + "\");\n"
+                        + "setvar(\"android_version\",\"" + project.androidVersion + "\");\n"
+                        + "setvar(\"file_creator\",\"" + Project.zipCreator + "\");\n";
+                break;
         }
         return str;
     }
@@ -258,6 +260,19 @@ public class AromaScriptOperations {
                         + "\"Android Version\\t: <b><#selectbg_g>\"+getvar(\"android_version\")+\"</#></b>\\n\"+\n"
                         + "\"Gapps Type\\t:      <b><#selectbg_g>\"+getvar(\"gapps_type\")+\"</#></b>\\n\"+\n"
                         + "\"Gapps Date\\t:      <b><#selectbg_g>\"+getvar(\"gapps_date\")+\"</#></b>\\n\\n\\n\"+\n"
+                        + "\"File Created By\\t: <b><#selectbg_g>\"+getvar(\"file_creator\")+\"</#></b>\\n\\n\\n\"+\n"
+                        + "\n"
+                        + "\"Press Next to Continue ...\",\n"
+                        + "\"@welcome\"\n"
+                        + ");\n";
+                break;
+            case ProjectNode.PROJECT_AROMA:
+                str += "\nviewbox(\n"
+                        + "\"Welcome\",\n"
+                        + "\"You are about to make additional changes to your device.\\n\\n<b>\"+\n"
+                        + "\n"
+                        + "\"Android Version\\t: <b><#selectbg_g>\"+getvar(\"android_version\")+\"</#></b>\\n\"+\n"
+                        + "\"Release Version\\t: <b><#selectbg_g>\"+getvar(\"release_version\")+\"</#></b>\\n\"+\n"
                         + "\"File Created By\\t: <b><#selectbg_g>\"+getvar(\"file_creator\")+\"</#></b>\\n\\n\\n\"+\n"
                         + "\n"
                         + "\"Press Next to Continue ...\",\n"

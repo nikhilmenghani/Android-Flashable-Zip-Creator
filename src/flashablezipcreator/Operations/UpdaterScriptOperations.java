@@ -26,9 +26,9 @@ public class UpdaterScriptOperations {
     public String addPrintString(String str, int type) {
         switch (type) {
             case installString:
-                return "ui_print(\"Installing " + str + "\");\n";
+                return "ui_print(\"@Installing " + str + "\");\n";
             case deleteString:
-                return "ui_print(\"Deleting " + str + "\");\n";
+                return "ui_print(\"@Deleting " + str + "\");\n";
         }
         return "ui_print(\"" + str + "\");\n";
     }
@@ -104,7 +104,7 @@ public class UpdaterScriptOperations {
             int count = 2;
             for (ProjectItemNode file : node.children) {
                 str += "if (file_getprop(\"/tmp/aroma/" + node.prop + "\", \"selected.1\")==\"" + count++ + "\") then \n";
-                str += addPrintString("Running script : " + ((FileNode) file).title);
+                str += addPrintString("@Running script : " + ((FileNode) file).title);
                 str += "package_extract_file(\"" + ((FileNode) file).getZipPath() + "\", \"/tmp/script\");\n"
                         + "set_perm(0, 0, 0777, \"/tmp/script\");\n"
                         + "run_program(\"/tmp/script\");\n"
@@ -130,7 +130,11 @@ public class UpdaterScriptOperations {
         if (node.isSelectBox()) {
             int count = 2;
             for (ProjectItemNode subGroup : node.children) {
-                str += "if (file_getprop(\"/tmp/aroma/" + node.prop + "\", \"selected.1\")==\"" + count++ + "\") then \n";
+                if (node.groupType == GroupNode.GROUP_SYSTEM_FONTS) {
+                    str += "if (file_getprop(\"/tmp/aroma/" + node.prop.replace(".prop", "_temp.prop") + "\", \"" + subGroup.toString() + "\")==\"" + "yes" + "\") then \n";
+                } else {
+                    str += "if (file_getprop(\"/tmp/aroma/" + node.prop + "\", \"selected.1\")==\"" + count++ + "\") then \n";
+                }
                 str += addPrintString(((SubGroupNode) subGroup).title, installString);
                 for (ProjectItemNode file : subGroup.children) {
                     switch (node.groupType) {

@@ -29,6 +29,7 @@ public class TreeOperations {
     ArrayList<ProjectItemNode> groupList = new ArrayList<>();
     ArrayList<ProjectItemNode> subGroupList = new ArrayList<>();
     ArrayList<ProjectItemNode> fileList = new ArrayList<>();
+    ArrayList<String> repeatList = new ArrayList<>();//for files that have same names and different location in zip.
 
     ProjectItemNode rootNode;
 
@@ -124,6 +125,60 @@ public class TreeOperations {
         node.removeChild(node, model);
     }
 
+    public FileNode addFileToTree(String fileName, String subGroupName, int subGroupType, String groupName, int groupType, String projectName, int projectType,
+            ProjectItemNode rootNode, DefaultTreeModel model) {
+        if (getProjectNode(projectName, projectType) == null) {
+            addChildTo(rootNode, projectName, projectType, model);
+            System.out.println("Added project " + projectName + " project type " + projectType);
+        }
+        if (getGroupNode(groupName, groupType, projectName) == null) {
+            addChildTo(getProjectNode(projectName, projectType), groupName, groupType, model);
+        }
+        if (getSubGroupNode(subGroupName, groupType, groupName, projectName) == null) {
+            addChildTo(getGroupNode(groupName, groupType, projectName), subGroupName, subGroupType, model);
+        }
+        if (subGroupType == SubGroupNode.TYPE_CUSTOM) {
+            addChildTo(getSubGroupNode(subGroupName, subGroupType, groupName, projectName), fileName, "", "", model);
+        } else {
+            addChildTo(getSubGroupNode(subGroupName, subGroupType, groupName, projectName), fileName, ProjectItemNode.NODE_FILE, model);
+        }
+        return getFileNode(fileName, subGroupName, groupName, projectName);
+    }
+
+    public FileNode addFileToTree(String fileName, String groupName, int groupType, String projectName, int projectType, ProjectItemNode rootNode, DefaultTreeModel model) {
+        if (getProjectNode(projectName, projectType) == null) {
+            addChildTo(rootNode, projectName, projectType, model);
+            System.out.println("Added project " + projectName + " project type " + projectType);
+        }
+        if (getGroupNode(groupName, groupType, projectName) == null) {
+            addChildTo(getProjectNode(projectName, projectType), groupName, groupType, model);
+        }
+        if (getFileNode(fileName, groupName, projectName) != null) {
+            if (groupType == GroupNode.GROUP_OTHER) {
+                fileName += "_1";
+                fileName = getUniqueName(fileName);
+            }
+        }
+        if (groupType == GroupNode.GROUP_CUSTOM) {
+            addChildTo(getGroupNode(groupName, groupType, projectName), fileName, "", "", model);
+        } else {
+            addChildTo(getGroupNode(groupName, groupType, projectName), fileName, ProjectItemNode.NODE_FILE, model);
+        }
+        return getFileNode(fileName, groupName, projectName);
+    }
+
+    /*files with same name and located at multiple places are unique inspite of having same name.
+     this is to prevent them from skipping.*/
+    public String getUniqueName(String fileName) {
+        if (repeatList.contains(fileName)) {
+            fileName += "_1";
+            return getUniqueName(fileName);
+        } else {
+            repeatList.add(fileName);
+            return fileName;
+        }
+    }
+    
     public void buildDirectory() throws IOException {
         buildDirectory(this.rootNode);
     }

@@ -10,7 +10,6 @@ import flashablezipcreator.Core.GroupNode;
 import flashablezipcreator.Core.ProjectItemNode;
 import flashablezipcreator.Core.ProjectNode;
 import flashablezipcreator.Core.SubGroupNode;
-import static flashablezipcreator.Protocols.Import.getUniqueName;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -127,28 +126,29 @@ public class XmlOperations {
 //        transformer.transform(new DOMSource(document), new StreamResult(new File(path)));
 //        JOptionPane.showMessageDialog(null, "File saved to specified path");
 //    }
-    public static FileNode addFileToTree(String fileName, String groupName, int groupType, String projectName, int projectType,
-            ProjectItemNode rootNode, DefaultTreeModel model, TreeOperations to) {
-        if (to.getProjectNode(projectName, projectType) == null) {
-            to.addChildTo(rootNode, projectName, projectType, model);
-        }
-        if (to.getGroupNode(groupName, groupType, projectName) == null) {
-            to.addChildTo(to.getProjectNode(projectName, projectType), groupName, groupType, model);
-            JOptionPane.showMessageDialog(null, groupName + " imported");
-        }
-        if (to.getFileNode(fileName, groupName, projectName) != null) {
-            if (groupType == GroupNode.GROUP_OTHER) {
-                fileName += "_1";
-                fileName = getUniqueName(fileName);
-            }
-        }
-        if (groupType == GroupNode.GROUP_CUSTOM) {
-            to.addChildTo(to.getGroupNode(groupName, groupType, projectName), fileName, "", "", model);
-        } else {
-            to.addChildTo(to.getGroupNode(groupName, groupType, projectName), fileName, ProjectItemNode.NODE_FILE, model);
-        }
-        return to.getFileNode(fileName, groupName, projectName);
-    }
+    
+//    public static FileNode addFileToTree(String fileName, String groupName, int groupType, String projectName, int projectType,
+//            ProjectItemNode rootNode, DefaultTreeModel model, TreeOperations to) {
+//        if (to.getProjectNode(projectName, projectType) == null) {
+//            to.addChildTo(rootNode, projectName, projectType, model);
+//        }
+//        if (to.getGroupNode(groupName, groupType, projectName) == null) {
+//            to.addChildTo(to.getProjectNode(projectName, projectType), groupName, groupType, model);
+//            JOptionPane.showMessageDialog(null, groupName + " imported");
+//        }
+//        if (to.getFileNode(fileName, groupName, projectName) != null) {
+//            if (groupType == GroupNode.GROUP_OTHER) {
+//                fileName += "_1";
+//                fileName = getUniqueName(fileName);
+//            }
+//        }
+//        if (groupType == GroupNode.GROUP_CUSTOM) {
+//            to.addChildTo(to.getGroupNode(groupName, groupType, projectName), fileName, "", "", model);
+//        } else {
+//            to.addChildTo(to.getGroupNode(groupName, groupType, projectName), fileName, ProjectItemNode.NODE_FILE, model);
+//        }
+//        return to.getFileNode(fileName, groupName, projectName);
+//    }
 
     //following will create file objects of delete file group.
     public void parseXML(String original, ProjectItemNode rootNode, DefaultTreeModel model) throws ParserConfigurationException, SAXException, IOException {
@@ -162,11 +162,11 @@ public class XmlOperations {
             if (fileNode.getParentNode().getNodeName().equals("GroupData")) {
                 if (fileNode.getNodeType() == Node.ELEMENT_NODE) {
                     Element element = (Element) fileNode;
-                    addFileToTree(element.getAttribute("name"),
+                    to.addFileToTree(element.getAttribute("name"),
                             element.getElementsByTagName("GroupName").item(0).getTextContent(),
                             Integer.parseInt(element.getElementsByTagName("GroupType").item(0).getTextContent()),
                             element.getElementsByTagName("ProjectName").item(0).getTextContent(),
-                            Integer.parseInt(element.getElementsByTagName("ProjectType").item(0).getTextContent()), rootNode, model, to);
+                            Integer.parseInt(element.getElementsByTagName("ProjectType").item(0).getTextContent()), rootNode, model);
                 }
             }
         }
