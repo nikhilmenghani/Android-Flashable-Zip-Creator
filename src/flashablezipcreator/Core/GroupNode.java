@@ -40,7 +40,7 @@ public class GroupNode extends ProjectItemNode {
     public static final int GROUP_AROMA_THEMES = 18;
     public static final int GROUP_AROMA_KERNEL = 19;
     public static final int GROUP_DELETE_FILES = 20;
-    public static final int GROUP_DPI = 21;
+    public static final int GROUP_SCRIPT = 21;
 
     public GroupNode(String title, int type, ProjectNode parent) {
         super(title, ProjectItemNode.NODE_GROUP, parent);
@@ -143,7 +143,7 @@ public class GroupNode extends ProjectItemNode {
                 this.prop = getProp("delete");
                 this.isSelectBox = false;
                 break;
-            case GROUP_DPI:
+            case GROUP_SCRIPT:
                 this.prop = getProp("dpi");
                 this.isSelectBox = true;
                 break;

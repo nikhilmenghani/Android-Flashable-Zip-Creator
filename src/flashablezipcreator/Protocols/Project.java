@@ -20,7 +20,8 @@ public class Project {
     public static int gappsCount = 0;
     public static int aromaCount = 0;
     public static int normalCount = 0;
-    public static String outputPath = "demo2.zip";
+    public static String outputPath = "demo.zip";
+    public static String zipCreator = "Nikhil";
 
     static TreeOperations to;
 
@@ -33,6 +34,7 @@ public class Project {
         tempArray.add("system/media/audio/alarms/afzc_temp");
         tempArray.add("system/media/audio/ringtones/afzc_temp");
         tempArray.add("data/local/afzc_temp");
+        tempArray.add("data/app/afzc_temp");
         tempArray.add("preload/symlink/system/app/afzc_temp");
         return tempArray;
     }

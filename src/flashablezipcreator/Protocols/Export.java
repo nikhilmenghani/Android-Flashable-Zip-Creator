@@ -51,10 +51,12 @@ public class Export {
                         isDeleteGroupPresent = true;
                         continue;
                     }
-                    if (((GroupNode) groupNode).groupType == GroupNode.GROUP_DPI) {
+                    if (((GroupNode) groupNode).groupType == GroupNode.GROUP_SCRIPT) {
                         for (ProjectItemNode node : ((GroupNode) groupNode).children) {
                             if (node.type == ProjectItemNode.NODE_FILE) {
-                                wz.writeStringToZip(UpdaterScript.getDpiScript(((FileNode) node).title), ((FileNode) node).fileZipPath);
+                                //not yet tested this
+                                wz.writeFileToZip(((FileNode) node).fileSourcePath, ((FileNode) node).fileZipPath);
+                                //wz.writeStringToZip(UpdaterScript.getDpiScript(((FileNode) node).title), ((FileNode) node).fileZipPath);
                             }
                         }
                         continue;
@@ -91,6 +93,7 @@ public class Export {
         if (isDeleteGroupPresent) {
             wz.writeStringToZip(Xml.getString(GroupNode.GROUP_DELETE_FILES, rootNode), Xml.delete_path);
         }
+        wz.writeStringToZip(Xml.getString(0, rootNode), Xml.data_path);
         wz.writeStringToZip(AromaConfig.build(rootNode), AromaConfig.aromaConfigPath);
         wz.writeStringToZip(UpdaterScript.build(rootNode), UpdaterScript.updaterScriptPath);
         wz.writeByteToFile(Binary.getInstallerBinary(rootNode), Binary.updateBinaryInstallerPath);

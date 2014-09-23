@@ -39,30 +39,29 @@ public class Device {
     //needs to be executed at the start of the program
     public static void loadDeviceList() {
         for (String list : JarOperations.supported_devices.split("\n")) {
-            if(list.contains("xxx")){
+            if (list.contains("xxx")) {
                 deviceBlackList.add(list.substring(0, list.indexOf("_")));
-            }else{
+            } else {
                 deviceWhiteList.add(list.substring(0, list.indexOf("_")));
             }
             list = list.substring(0, list.indexOf("_"));
             deviceList.add(list);
         }
     }
-    
-    public static boolean isInBlackList(){
-        if(deviceBlackList.contains(selected)){
+
+    public static boolean isInBlackList() {
+        if (deviceBlackList.contains(selected)) {
             return true;
-        }
-        else{
+        } else {
             return false;
         }
     }
-    
-    public static boolean isInWhiteList(){
+
+    public static boolean isInWhiteList() {
         return !isInBlackList();
     }
-    
-    public static String getMountPoint(){
+
+    public static String getMountPoint() {
         return get(MountPoint);
     }
 
@@ -93,7 +92,7 @@ public class Device {
                     case NeonCompatibility:
                         //.equals method strangely not working.
                         String temp[] = list.split("_");
-                        if ((temp[temp.length - 1].indexOf("neon") == 4)) {
+                        if ((temp[temp.length - 1].indexOf("neon") == 3)) {
                             return "nonneon";
                         } else {
                             return "neon";
@@ -101,7 +100,6 @@ public class Device {
                     case MountPoint:
                         return list.substring(list.indexOf("_", list.indexOf("_") + 1) + 1, list.indexOf("_", list.indexOf("_", list.indexOf("_") + 1) + 1));
                 }
-                
             }
         }
         return null;

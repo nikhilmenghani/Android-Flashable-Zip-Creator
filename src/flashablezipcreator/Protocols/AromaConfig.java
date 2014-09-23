@@ -49,19 +49,27 @@ public class AromaConfig {
         }
         aromaConfig += op.setNextText("Install");
         aromaConfig += op.addCheckViewBox();
-        aromaConfig += op.setNextText("Finish");
+        aromaConfig += op.setNextText("Next");
         aromaConfig += op.addInstallString();
+        aromaConfig += op.setNextText("Finish");
+        aromaConfig += op.addRebootString();
         return aromaConfig;
     }
 
     public static String buildAromaScript(ProjectNode project) {
         String str = "";
+        str += op.addMenuBox(project);
+        str += "if prop(\"" + project.title + ".prop\",\"selected\")==\"1\" then\n";
         for (ProjectItemNode group : to.getNodeList(ProjectItemNode.NODE_GROUP)) {
             if (((ProjectNode) group.parent).projectType == ProjectNode.PROJECT_AROMA) {
                 str += op.addCheckBox((GroupNode) group);
                 str += op.addSelectBox((GroupNode) group);
             }
         }
+        str += "endif;\n";
+        str += "if prop(\"" + project.title + ".prop\",\"selected\")==\"2\" then\n";
+        str += "writetmpfile(\"" + project.title + ".prop\",\"init=no\\n\");\n";
+        str += "endif;\n";
         return str;
     }
 
@@ -77,6 +85,8 @@ public class AromaConfig {
                 str += "if prop(\"" + project.title + ".prop\",\"selected\")==\"1\" then\n";
                 break;
         }
+        str += op.addInitString(project);
+        str += op.addWelcomeString(project);
         for (ProjectItemNode group : to.getNodeList(ProjectItemNode.NODE_GROUP)) {
             if (((ProjectNode) group.parent).projectType == project.projectType
                     && ((ProjectNode) group.parent).title.equals(project.title)) {

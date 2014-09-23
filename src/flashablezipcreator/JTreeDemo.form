@@ -106,7 +106,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="labelName">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Enter the name of Rom to import:"/>
+        <Property name="text" type="java.lang.String" value="Enter the name of File to import:"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="labelCreateZip">

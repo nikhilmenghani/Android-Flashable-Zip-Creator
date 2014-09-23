@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package flashablezipcreator.Core;
 
 import java.io.File;
@@ -12,27 +11,28 @@ import java.io.File;
  *
  * @author Nikhil
  */
-public class SubGroupNode extends ProjectItemNode{
-    
+public class SubGroupNode extends ProjectItemNode {
+
     String parentNodeName;
     String subGroupName;
-    public String location;
-    public String permissions;
+    public String location = "";
+    public String permissions = "";
     public int subGroupType;
-    
+    public String description = "";
+
     public static final int TYPE_SYSTEM_FONTS = GroupNode.GROUP_SYSTEM_FONTS;
     public static final int TYPE_SYSTEM_MEDIA = GroupNode.GROUP_SYSTEM_MEDIA;
     public static final int TYPE_DATA_LOCAL = GroupNode.GROUP_DATA_LOCAL;
     public static final int TYPE_CUSTOM = GroupNode.GROUP_CUSTOM;
     public static final int TYPE_KERNEL = GroupNode.GROUP_AROMA_KERNEL;
-    
+
     public SubGroupNode(String title, int type, GroupNode parent) {
         super(title, ProjectItemNode.NODE_SUBGROUP, parent);
         super.path = parent.path + File.separator + title;
         subGroupName = title;
         this.subGroupType = type;
         //System.out.println("SubGroup Path is : " + path);
-        switch(type){
+        switch (type) {
             case TYPE_SYSTEM_FONTS:
                 this.location = "system/fonts";
                 this.permissions = "rwrr";
@@ -51,12 +51,16 @@ public class SubGroupNode extends ProjectItemNode{
                 break;
         }
     }
-    
-    public String getLocation(){
+
+    public String getLocation() {
         return location;
     }
-    
-    public String getPermissions(){
+
+    public String getPermissions() {
         return permissions;
+    }
+
+    public void setDescription(String desc) {
+        this.description = desc;
     }
 }

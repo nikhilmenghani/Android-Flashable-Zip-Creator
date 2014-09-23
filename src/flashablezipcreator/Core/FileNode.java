@@ -17,10 +17,10 @@ public class FileNode extends ProjectItemNode {
     public String fileName;
     public String fileSourcePath;
     public String fileDestPath;
-    public String installLocation;
+    public String installLocation = "";
     public String belongsToGroup;
     public String filePermission = "";
-    public String fileDescription;
+    public String description = "";
     public String fileZipPath = "";
 
     public FileNode(String fileSourcePath, GroupNode parent) {
@@ -99,51 +99,65 @@ public class FileNode extends ProjectItemNode {
             case ProjectItemNode.NODE_GROUP:
                 switch (((GroupNode) parent).groupType) {
                     case GroupNode.GROUP_SYSTEM_APK:
-                        str = "system_app" + File.separator + str;
+                        str = getProjectType((ProjectNode) parent.parent) + File.separator + ((ProjectNode) parent.parent).title + File.separator + 
+                                "system_app" + File.separator + str;
                         break;
                     case GroupNode.GROUP_SYSTEM_PRIV_APK:
-                        str = "system_priv_app" + File.separator + str;
+                        str = getProjectType((ProjectNode) parent.parent) + File.separator + ((ProjectNode) parent.parent).title + File.separator + 
+                                "system_priv_app" + File.separator + str;
                         break;
                     case GroupNode.GROUP_SYSTEM_CSC:
-                        str = "system_csc" + File.separator + str;
+                        str = getProjectType((ProjectNode) parent.parent) + File.separator + ((ProjectNode) parent.parent).title + File.separator + 
+                                "system_csc" + File.separator + str;
                         break;
                     case GroupNode.GROUP_SYSTEM_ETC:
-                        str = "system_etc" + File.separator + str;
+                        str = getProjectType((ProjectNode) parent.parent) + File.separator + ((ProjectNode) parent.parent).title + File.separator + 
+                                "system_etc" + File.separator + str;
                         break;
                     case GroupNode.GROUP_SYSTEM_LIB:
-                        str = "system_lib" + File.separator + str;
+                        str = getProjectType((ProjectNode) parent.parent) + File.separator + ((ProjectNode) parent.parent).title + File.separator + 
+                                "system_lib" + File.separator + str;
                         break;
                     case GroupNode.GROUP_SYSTEM_MEDIA_AUDIO_ALARMS:
-                        str = "system_media_alarms" + File.separator + str;
+                        str = getProjectType((ProjectNode) parent.parent) + File.separator + ((ProjectNode) parent.parent).title + File.separator + 
+                                "system_media_alarms" + File.separator + str;
                         break;
                     case GroupNode.GROUP_SYSTEM_MEDIA_AUDIO_NOTIFICATIONS:
-                        str = "system_media_notifications" + File.separator + str;
+                        str = getProjectType((ProjectNode) parent.parent) + File.separator + ((ProjectNode) parent.parent).title + File.separator + 
+                                "system_media_notifications" + File.separator + str;
                         break;
                     case GroupNode.GROUP_SYSTEM_MEDIA_AUDIO_RINGTONES:
-                        str = "system_media_ringtones" + File.separator + str;
+                        str = getProjectType((ProjectNode) parent.parent) + File.separator + ((ProjectNode) parent.parent).title + File.separator + 
+                                "system_media_ringtones" + File.separator + str;
                         break;
                     case GroupNode.GROUP_SYSTEM_MEDIA_AUDIO_UI:
-                        str = "system_media_ui" + File.separator + str;
+                        str = getProjectType((ProjectNode) parent.parent) + File.separator + ((ProjectNode) parent.parent).title + File.separator + 
+                                "system_media_ui" + File.separator + str;
                         break;
                     case GroupNode.GROUP_DATA_APP:
-                        str = "data_app" + File.separator + str;
+                        str = getProjectType((ProjectNode) parent.parent) + File.separator + ((ProjectNode) parent.parent).title + File.separator + 
+                                "data_app" + File.separator + str;
                         break;
                     case GroupNode.GROUP_PRELOAD_SYMLINK_SYSTEM_APP:
-                        str = "system_preload" + File.separator + str;
+                        str = getProjectType((ProjectNode) parent.parent) + File.separator + ((ProjectNode) parent.parent).title + File.separator + 
+                                "system_preload" + File.separator + str;
                         break;
                     case GroupNode.GROUP_SYSTEM_FRAMEWORK:
-                        str = "system_framework" + File.separator + str;
+                        str = getProjectType((ProjectNode) parent.parent) + File.separator + ((ProjectNode) parent.parent).title + File.separator + 
+                                "system_framework" + File.separator + str;
                         break;
                     case GroupNode.GROUP_CUSTOM:
-                        str = "custom" + File.separator + str;
+                        str = getProjectType((ProjectNode) parent.parent) + File.separator + ((ProjectNode) parent.parent).title + File.separator + 
+                                "custom" + File.separator + str;
                         break;
                     case GroupNode.GROUP_AROMA_THEMES:
                         return this.fileDestPath.replaceAll("\\\\", "/");
                     case GroupNode.GROUP_DELETE_FILES:
                         //Export.java will handle
                         break;
-                    case GroupNode.GROUP_DPI:
-                        str = "dpi" + File.separator + str;
+                    case GroupNode.GROUP_SCRIPT:
+                        str = getProjectType((ProjectNode) parent.parent) + File.separator + ((ProjectNode) parent.parent).title + File.separator + 
+                                "script" + File.separator + str;
                         break;
                     //case GroupNode.GROUP_OTHER not needed and
                 }
@@ -151,19 +165,24 @@ public class FileNode extends ProjectItemNode {
             case ProjectItemNode.NODE_SUBGROUP:
                 switch (((SubGroupNode) parent).subGroupType) {
                     case SubGroupNode.TYPE_SYSTEM_FONTS:
-                        str = "system_fonts" + File.separator + str;
+                        str = getProjectType((ProjectNode) parent.parent.parent) + File.separator + ((ProjectNode) parent.parent.parent).title + File.separator + 
+                                "system_fonts" + File.separator + str;
                         break;
                     case SubGroupNode.TYPE_SYSTEM_MEDIA:
-                        str = "system_media" + File.separator + str;
+                        str = getProjectType((ProjectNode) parent.parent.parent) + File.separator + ((ProjectNode) parent.parent.parent).title + File.separator + 
+                                "system_media" + File.separator + str;
                         break;
                     case SubGroupNode.TYPE_DATA_LOCAL:
-                        str = "data_local" + File.separator + str;
+                        str = getProjectType((ProjectNode) parent.parent.parent) + File.separator + ((ProjectNode) parent.parent.parent).title + File.separator + 
+                                "data_local" + File.separator + str;
                         break;
                     case SubGroupNode.TYPE_KERNEL:
-                        str = "kernels" + File.separator + str;
+                        str = getProjectType((ProjectNode) parent.parent.parent) + File.separator + ((ProjectNode) parent.parent.parent).title + File.separator + 
+                                "kernels" + File.separator + str;
                         break;
                     case SubGroupNode.TYPE_CUSTOM:
-                        str = "custom" + File.separator + str;
+                        str = getProjectType((ProjectNode) parent.parent.parent) + File.separator + ((ProjectNode) parent.parent.parent).title + File.separator + 
+                                "custom" + File.separator + str;
                         break;
                 }
                 break;
@@ -174,12 +193,30 @@ public class FileNode extends ProjectItemNode {
         return str;
     }
 
-    public String getDeleteLocation(){
-        return ((GroupNode)parent).getLocation() + "/" + title;
+    public String getDeleteLocation() {
+        return ((GroupNode) parent).getLocation() + "/" + title;
     }
-    
+
     public void setPermissions(String i, String j, String k, String path) {
         this.filePermission = i + ", " + j + ", " + k + ", \"" + path + "\"";
     }
 
+    public String getProjectType(ProjectNode project) {
+        switch (project.projectType) {
+            case ProjectNode.PROJECT_ROM:
+                return "rom";
+            case ProjectNode.PROJECT_GAPPS:
+                return "gapps";
+            case ProjectNode.PROJECT_AROMA:
+                return "aroma";
+            case ProjectNode.PROJECT_NORMAL:
+                return "normal";
+        }
+        return null;
+    }
+
+    public void setDescription(String desc){
+        this.description = desc;
+    }
+    
 }

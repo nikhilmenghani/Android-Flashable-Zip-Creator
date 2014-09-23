@@ -82,6 +82,7 @@ public class XmlOperations {
                 addChildNode("ProjectType", ((ProjectNode) fileNode.parent.parent).projectType + "", file);
                 addChildNode("GroupName", fileNode.parent.title, file);
                 addChildNode("GroupType", ((GroupNode) fileNode.parent).groupType + "", file);
+                addChildNode("Description", fileNode.description, file);
                 addChildNode("InstallLocation", fileNode.installLocation, file);
                 addChildNode("Permissions", fileNode.filePermission, file);
                 addChildNode("ZipPath", fileNode.fileZipPath, file);
@@ -93,6 +94,7 @@ public class XmlOperations {
                 addChildNode("GroupType", ((GroupNode) fileNode.parent.parent).groupType + "", file);
                 addChildNode("SubGroupName", fileNode.parent.title, file);
                 addChildNode("SubGroupType", ((SubGroupNode) fileNode.parent).subGroupType + "", file);
+                addChildNode("Description", ((SubGroupNode) fileNode.parent).description, file);
                 addChildNode("InstallLocation", fileNode.installLocation, file);
                 addChildNode("Permissions", fileNode.filePermission, file);
                 addChildNode("ZipPath", fileNode.fileZipPath, file);
@@ -116,15 +118,15 @@ public class XmlOperations {
         return writer.getBuffer().toString();
     }
 
-    public void writeXML(String path) throws TransformerConfigurationException, TransformerException {
-        TransformerFactory transformerFactory = TransformerFactory.newInstance();
-        Transformer transformer = transformerFactory.newTransformer();
-        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-        transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
-        transformer.transform(new DOMSource(document), new StreamResult(new File(path)));
-        JOptionPane.showMessageDialog(null, "File saved to specified path");
-    }
-
+    //following function not used
+//    public void writeXML(String path) throws TransformerConfigurationException, TransformerException {
+//        TransformerFactory transformerFactory = TransformerFactory.newInstance();
+//        Transformer transformer = transformerFactory.newTransformer();
+//        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+//        transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
+//        transformer.transform(new DOMSource(document), new StreamResult(new File(path)));
+//        JOptionPane.showMessageDialog(null, "File saved to specified path");
+//    }
     public static FileNode addFileToTree(String fileName, String groupName, int groupType, String projectName, int projectType,
             ProjectItemNode rootNode, DefaultTreeModel model, TreeOperations to) {
         if (to.getProjectNode(projectName, projectType) == null) {
@@ -165,6 +167,36 @@ public class XmlOperations {
                             Integer.parseInt(element.getElementsByTagName("GroupType").item(0).getTextContent()),
                             element.getElementsByTagName("ProjectName").item(0).getTextContent(),
                             Integer.parseInt(element.getElementsByTagName("ProjectType").item(0).getTextContent()), rootNode, model, to);
+                }
+            }
+        }
+    }
+
+    //following is to set description of files.
+    public void parseDataXML(ProjectItemNode rootNode, String data) throws SAXException, IOException, ParserConfigurationException {
+        TreeOperations to = new TreeOperations(rootNode);
+        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+        Document genDoc = dBuilder.parse(new InputSource(new StringReader(data)));
+        NodeList fileList = genDoc.getElementsByTagName("FileData");
+        for (int j = 0; j < fileList.getLength(); j++) {
+            Node fileNode = fileList.item(j);
+            if (fileNode.getParentNode().getNodeName().equals("GroupData")) {
+                if (fileNode.getNodeType() == Node.ELEMENT_NODE) {
+                    Element element = (Element) fileNode;
+                    FileNode file = to.getFileNode(element.getAttribute("name"),
+                            element.getElementsByTagName("GroupName").item(0).getTextContent(),
+                            element.getElementsByTagName("ProjectName").item(0).getTextContent());
+                    setFileValues(file, element);
+                }
+            } else if (fileNode.getParentNode().getNodeName().equals("SubGroupData")) {
+                if (fileNode.getNodeType() == Node.ELEMENT_NODE) {
+                    Element element = (Element) fileNode;
+                    FileNode file = to.getFileNode(element.getAttribute("name"),
+                            element.getElementsByTagName("SubGroupName").item(0).getTextContent(),
+                            element.getElementsByTagName("GroupName").item(0).getTextContent(),
+                            element.getElementsByTagName("ProjectName").item(0).getTextContent());
+                    setFileValues(file, element);
                 }
             }
         }
@@ -223,6 +255,7 @@ public class XmlOperations {
                         && fileNode.getElementsByTagName("ProjectType").item(0).getTextContent().equals(((ProjectNode) file.parent.parent).projectType + "")) {
                     file.installLocation = fileNode.getElementsByTagName("InstallLocation").item(0).getTextContent();
                     file.filePermission = fileNode.getElementsByTagName("Permissions").item(0).getTextContent();
+                    file.description = fileNode.getElementsByTagName("Description").item(0).getTextContent();
                 }
                 break;
             case ProjectItemNode.NODE_SUBGROUP:
@@ -235,6 +268,8 @@ public class XmlOperations {
                         && fileNode.getElementsByTagName("ProjectType").item(0).getTextContent().equals(((ProjectNode) file.parent.parent.parent).projectType + "")) {
                     file.installLocation = fileNode.getElementsByTagName("InstallLocation").item(0).getTextContent();
                     file.filePermission = fileNode.getElementsByTagName("Permissions").item(0).getTextContent();
+                    file.description = fileNode.getElementsByTagName("Description").item(0).getTextContent();
+                    ((SubGroupNode) file.parent).description = fileNode.getElementsByTagName("Description").item(0).getTextContent();
                 }
                 break;
         }

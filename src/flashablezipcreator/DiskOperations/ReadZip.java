@@ -39,9 +39,9 @@ public final class ReadZip {
     public ReadZip(String filePath) throws FileNotFoundException, IOException {
         xo = new XmlOperations();
         try {
-            zf = new ZipFile(filePath);
+            zf = new ZipFile((new File(filePath)).getAbsoluteFile());
         } catch (IOException e1) {
-            System.out.println("Sorry we couldn't find the file");
+            System.out.println("Sorry we couldn't find the file at path : " + (new File(filePath)).getAbsoluteFile());
             e1.printStackTrace();
         }
 //        this.zis = getZip(filePath);

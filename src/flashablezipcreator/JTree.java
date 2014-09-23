@@ -78,11 +78,12 @@ public class JTree extends JFrame implements TreeSelectionListener {
         uso = new UpdaterScriptOperations();
 
         //comment following lines if running from netbeans.
-        Jar.addThemesToTree(rootNode, model);
-        Device.loadDeviceList();
+        if (Jar.isExecutingThrough()) {
+            Jar.addThemesToTree(rootNode, model);
+            Device.loadDeviceList();
+        }
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        
 
         addButton.setText("For Non Neon Device");
         addButton.addActionListener(new java.awt.event.ActionListener() {
@@ -114,7 +115,7 @@ public class JTree extends JFrame implements TreeSelectionListener {
             }
         });
 
-        labelName.setText("Enter the name of Rom to import:");
+        labelName.setText("Enter the name of File to import:");
 
         labelCreateZip.setText("Create Zip File");
 
@@ -176,6 +177,7 @@ public class JTree extends JFrame implements TreeSelectionListener {
                                 .addComponent(labelCreateZip))
                         .addGap(23, 23, 23))
         );
+
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>                        
@@ -183,14 +185,26 @@ public class JTree extends JFrame implements TreeSelectionListener {
     private void importButtonActionPerformed(java.awt.event.ActionEvent evt) throws IOException, ParserConfigurationException, TransformerException, SAXException {
         //Import.fromZip("gapps-jb-20130813-signed.zip", rootNode, ProjectNode.PROJECT_GAPPS, model);
         String fileName = textField.getText().toString();
+        int projectType = ProjectNode.PROJECT_AROMA;
         if (!fileName.equals("")) {
             if (!fileName.endsWith(".zip")) {
+                if (fileName.endsWith("_r")) {
+                    //projectType = ProjectNode.PROJECT_ROM;
+                    fileName = fileName.substring(0, fileName.lastIndexOf("_"));
+                } else if (fileName.endsWith("_g")) {
+                    //projectType = ProjectNode.PROJECT_GAPPS;
+                    fileName = fileName.substring(0, fileName.lastIndexOf("_"));
+                } else if (fileName.endsWith("_a")) {
+                    //projectType = ProjectNode.PROJECT_AROMA;
+                    fileName = fileName.substring(0, fileName.lastIndexOf("_"));
+                }
                 fileName += ".zip";
             }
-            Import.fromZip(fileName, rootNode, ProjectNode.PROJECT_AROMA, model);
-            JOptionPane.showMessageDialog(this, "Successfully Imported");
+            //fileName = "Flash.zip";
+            Import.fromZip(fileName, rootNode, projectType, model);
+            //JOptionPane.showMessageDialog(this, "Successfully Imported");
             //tree.expandRow(1);
-        }else{
+        } else {
             JOptionPane.showMessageDialog(this, "Enter name first");
         }
     }
@@ -202,19 +216,23 @@ public class JTree extends JFrame implements TreeSelectionListener {
         String fileName = textField.getText().toString();
         if (!fileName.equals("")) {
             if (!fileName.endsWith(".zip")) {
-                fileName += ".zip";
+                if (fileName.endsWith("_r") || fileName.endsWith("_g") || fileName.endsWith("_a")) {
+                    fileName = fileName.substring(0, fileName.lastIndexOf("_"));
+                }
+                //fileName += ".zip";
             }
-            Project.outputPath = (new File(textField.getText().toString())).getName() + "_NonNeon_AROMA.zip";
-        }else {
+            Project.outputPath = fileName + "_aroma.zip";
+        } else {
             Project.outputPath = "NonNeon.zip";
         }
-        
-        File f = new File(fileName);
-        if (f.exists()) {
-            Export.zip(rootNode);
-        } else {
-            JOptionPane.showMessageDialog(this, "File Doesn't Exist");
-        }
+
+        File f = new File(fileName + ".zip");
+        Export.zip(rootNode);
+//        if (f.exists()) {
+//            Export.zip(rootNode);
+//        } else {
+//            JOptionPane.showMessageDialog(this, "File Doesn't Exist");
+//        }
 
 //        switch (node.type) {
 //            case ProjectItemNode.NODE_GROUP:
@@ -246,13 +264,16 @@ public class JTree extends JFrame implements TreeSelectionListener {
         String fileName = textField.getText().toString();
         if (!fileName.equals("")) {
             if (!fileName.endsWith(".zip")) {
-                fileName += ".zip";
+                if (fileName.endsWith("_r") || fileName.endsWith("_g") || fileName.endsWith("_a")) {
+                    fileName = fileName.substring(0, fileName.lastIndexOf("_"));
+                }
+                //fileName += ".zip";
             }
-            Project.outputPath = (new File(textField.getText().toString())).getName() + "_Neon_AROMA.zip";
-        }else {
+            Project.outputPath = fileName + "_neon_aroma.zip";
+        } else {
             Project.outputPath = "Neon.zip";
         }
-        File f = new File(fileName);
+        File f = new File(fileName + ".zip");
         if (f.exists()) {
             Export.zip(rootNode);
         } else {

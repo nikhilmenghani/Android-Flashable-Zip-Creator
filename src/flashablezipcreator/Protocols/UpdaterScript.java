@@ -61,7 +61,9 @@ public class UpdaterScript {
 
     public static String buildAromaScript(ProjectNode project) {
         String str = "";
+        str += "if (file_getprop(\"/tmp/aroma/" + project.title + ".prop\", \"selected\")==\"1\") then\n";
         str += op.getMountMethod(1);
+        str += op.getExtractDataString();
         str += "set_progress(0);\n";
         for (ProjectItemNode group : to.getNodeList(ProjectItemNode.NODE_GROUP)) {
             if (((ProjectNode) group.parent).projectType == project.projectType
@@ -76,7 +78,7 @@ public class UpdaterScript {
         }
         str += "set_progress(1);\n";
         str += op.terminateUpdaterScript();
-        return str;
+        return str += "endif;\n";
     }
 
     public static String buildAdvancedScript(ProjectNode project) {

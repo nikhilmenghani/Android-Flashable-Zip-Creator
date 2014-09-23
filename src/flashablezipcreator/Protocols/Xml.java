@@ -13,6 +13,7 @@ import flashablezipcreator.Core.SubGroupNode;
 import flashablezipcreator.Operations.XmlOperations;
 import static flashablezipcreator.Protocols.Export.to;
 import java.io.IOException;
+import javax.swing.JOptionPane;
 import javax.swing.tree.DefaultTreeModel;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -27,8 +28,10 @@ public class Xml {
     static XmlOperations xo;
     static String custom_path = "afzc/custom_data.xml";
     static String delete_path = "afzc/delete_data.xml";
+    static String data_path = "afzc/file_data.xml";
     static String originalData = "";
     static String generatedData = "";
+    static String fileData = "";
     static String deleteData = "";
 
     public static String getString(int type, ProjectItemNode rootNode) throws ParserConfigurationException, TransformerException {
@@ -52,11 +55,27 @@ public class Xml {
                                     }
                                 }
                                 break;
+                            case GroupNode.GROUP_OTHER:
+                                break;
                             case GroupNode.GROUP_DELETE_FILES:
                                 if (node.type == ProjectItemNode.NODE_FILE && ((GroupNode) node.parent).groupType == GroupNode.GROUP_DELETE_FILES) {
                                     xo.addFileNode((FileNode) node, xo.rootGroup);
                                 }
                                 break;
+                            default:
+                                if (node.type == ProjectItemNode.NODE_SUBGROUP) {
+                                    for (ProjectItemNode fileNode : ((SubGroupNode) node).children) {
+                                        if (((SubGroupNode) fileNode.parent).subGroupType != SubGroupNode.TYPE_CUSTOM) {
+                                            xo.addFileNode((FileNode) fileNode, xo.rootSubGroup);
+                                        }
+                                    }
+                                } else if (node.type == ProjectItemNode.NODE_FILE) {
+                                    if (((GroupNode) node.parent).groupType != GroupNode.GROUP_CUSTOM
+                                            && ((GroupNode) node.parent).groupType != GroupNode.GROUP_DELETE_FILES
+                                            && ((GroupNode) node.parent).groupType != GroupNode.GROUP_OTHER) {
+                                        xo.addFileNode((FileNode) node, xo.rootGroup);
+                                    }
+                                }
                         }
                     }
                 }
@@ -66,17 +85,20 @@ public class Xml {
     }
 
     public static void parseXml(int type, ProjectItemNode rootNode, DefaultTreeModel model) throws ParserConfigurationException, SAXException, IOException {
-        switch(type){
+        switch (type) {
             case GroupNode.GROUP_CUSTOM:
-                xo.parseGeneratedXML(rootNode, generatedData, originalData);
+                xo.parseGeneratedXML(rootNode, generatedData, originalData);//generatedData and OriginalData are modified in Import.java.
                 break;
             case GroupNode.GROUP_DELETE_FILES:
                 xo.parseXML(deleteData, rootNode, model);
                 break;
+            default:
+                xo.parseDataXML(rootNode, fileData);//this is for setting description of files.
         }
-        
+
     }
 
+    //following functions are used in generating generatedData in Import.java
     public static void initialize() throws ParserConfigurationException {
         xo = new XmlOperations();
         xo.createXML();

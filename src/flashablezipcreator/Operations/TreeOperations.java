@@ -62,7 +62,7 @@ public class TreeOperations {
                     case GroupNode.GROUP_OTHER:
                     case GroupNode.GROUP_AROMA_THEMES:
                     case GroupNode.GROUP_DELETE_FILES:
-                    case GroupNode.GROUP_DPI:
+                    case GroupNode.GROUP_SCRIPT:
                         if (childType == ProjectItemNode.NODE_FILE) {
                             node.addChild(new FileNode(childTitle, (GroupNode) node), model);
                         } else {

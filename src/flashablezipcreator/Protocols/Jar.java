@@ -14,6 +14,7 @@ import flashablezipcreator.Operations.TreeOperations;
 import static flashablezipcreator.Protocols.Import.to;
 import java.io.IOException;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 import javax.swing.tree.DefaultTreeModel;
 
 /**
@@ -32,7 +33,7 @@ public class Jar {
         JarOperations.setJarFileList();
         for (String theme : JarOperations.themesList) {
             to.addChildTo(to.getProjectNode(projectName, projectType), theme, GroupNode.GROUP_AROMA_THEMES, model);
-            String themePath = "META-INF/com/google/android/aroma/themes/" + theme;
+            String themePath = "META-INF/com/google/android/aroma/themes/" + theme + "/";
             for (String themesPath : JarOperations.themesFileList) {
                 if (themesPath.contains(themePath)) {
                     to.addChildTo(to.getGroupNode(theme, GroupNode.GROUP_AROMA_THEMES, projectName), themesPath, ProjectItemNode.NODE_FILE, model);

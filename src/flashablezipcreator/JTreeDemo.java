@@ -58,7 +58,7 @@ public class JTreeDemo extends javax.swing.JFrame {
             }
         });
 
-        labelName.setText("Enter the name of Rom to import:");
+        labelName.setText("Enter the name of File to import:");
 
         labelCreateZip.setText("Create Zip File");
 

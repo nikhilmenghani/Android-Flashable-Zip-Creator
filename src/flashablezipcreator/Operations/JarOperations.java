@@ -25,8 +25,8 @@ import javax.swing.JOptionPane;
  */
 public class JarOperations {
 
-    public static ArrayList<String> themesList = new ArrayList<>();
-    public static ArrayList<String> themesFileList = new ArrayList<>();
+    public static ArrayList<String> themesList = new ArrayList<>();//list of themes
+    public static ArrayList<String> themesFileList = new ArrayList<>();//list of files in theme
     public static ArrayList<String> otherList = new ArrayList<>();
     public static ArrayList<String> binaryList = new ArrayList<>();
     public static byte[] neon_binary = null;

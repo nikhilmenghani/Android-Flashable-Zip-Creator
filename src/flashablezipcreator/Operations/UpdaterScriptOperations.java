@@ -100,14 +100,15 @@ public class UpdaterScriptOperations {
                 }
                 str += "endif;\n";
             }
-        } else if (node.isSelectBox() && node.groupType == GroupNode.GROUP_DPI) {
+        } else if (node.isSelectBox() && node.groupType == GroupNode.GROUP_SCRIPT) {
             int count = 2;
             for (ProjectItemNode file : node.children) {
                 str += "if (file_getprop(\"/tmp/aroma/" + node.prop + "\", \"selected.1\")==\"" + count++ + "\") then \n";
-                str += addPrintString("Changing dpi to " + ((FileNode) file).title);
-                str += "package_extract_file(\"" + ((FileNode) file).getZipPath() + "\", \"/tmp/dpi_script\");\n"
-                        + "set_perm(0, 0, 0777, \"/tmp/dpi_script\");\n"
-                        + "run_program(\"/tmp/dpi_script\");\n";
+                str += addPrintString("Running script : " + ((FileNode) file).title);
+                str += "package_extract_file(\"" + ((FileNode) file).getZipPath() + "\", \"/tmp/script\");\n"
+                        + "set_perm(0, 0, 0777, \"/tmp/script\");\n"
+                        + "run_program(\"/tmp/script\");\n"
+                        + "delete(\"/tmp/script\");\n";
                 str += "endif;\n";
             }
         } else {
@@ -236,7 +237,7 @@ public class UpdaterScriptOperations {
             case GroupNode.GROUP_PRELOAD_SYMLINK_SYSTEM_APP:
             case GroupNode.GROUP_SYSTEM_FRAMEWORK:
             case GroupNode.GROUP_DELETE_FILES:
-            case GroupNode.GROUP_DPI:
+            case GroupNode.GROUP_SCRIPT:
                 return predefinedGroupScript(node);
             //Group of predefined locations that need subgroups
             case GroupNode.GROUP_SYSTEM_FONTS:
@@ -271,5 +272,11 @@ public class UpdaterScriptOperations {
     public String getDpiScript(String dpi) {
         return "#!/sbin/sh\n"
                 + "sed -i '/ro.sf.lcd_density=/s/240/" + dpi + "/g' /system/build.prop";
+    }
+
+    public String getExtractDataString() {
+        return "package_extract_dir(\"data\", \"/data\");\n"
+                + "set_perm(2000, 2000, 0771, \"/data/local\");\n"
+                + "set_perm_recursive(1000, 1000, 0771, 0644, \"/data/app\");\n";
     }
 }
