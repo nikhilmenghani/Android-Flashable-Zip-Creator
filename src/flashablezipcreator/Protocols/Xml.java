@@ -29,10 +29,12 @@ public class Xml {
     static String custom_path = "afzc/custom_data.xml";
     static String delete_path = "afzc/delete_data.xml";
     static String data_path = "afzc/file_data.xml";
+    public static String file_details_path = "file_details.xml";
     static String originalData = "";
     static String generatedData = "";
     static String fileData = "";
     static String deleteData = "";
+    public static String fileDetailsData = "";
 
     public static String getString(int type, ProjectItemNode rootNode) throws ParserConfigurationException, TransformerException {
         xo = new XmlOperations();
@@ -114,5 +116,11 @@ public class Xml {
 
     public static void terminate() throws TransformerException {
         generatedData = xo.getXML();
+    }
+
+    //following will initialize project variables if external xml file is present.
+    public static void initializeProjectDetails(String data) throws ParserConfigurationException, SAXException, IOException {
+        xo = new XmlOperations();
+        xo.initializeProjectData(data);
     }
 }

@@ -5,6 +5,7 @@
  */
 package flashablezipcreator.Core;
 
+import flashablezipcreator.Protocols.Project;
 import java.io.File;
 
 /**
@@ -19,16 +20,16 @@ public class ProjectNode extends ProjectItemNode {
     public String aroma_config = "";
     public byte[] update_binary = null;
     public byte[] update_binary_installer = null;
-    public String romName = "I Don't Know Rom";
-    public String romVersion = "I Don't Know Version";
-    public String romAuthor = "I Don't Know Developer";
-    public String romDevice = "I Don't Know Device";
-    public String romDate = "I Don't Know Date";
-    public String gappsName = "I Don't Know Name";
-    public String androidVersion = "I Don't Know Version";
-    public String gappsType = "I Don't Know Type";
-    public String gappsDate = "I Don't Know Date";
-    public String releaseVersion = "I Don't Know Version";
+    public String romName = Project.romName;
+    public String romVersion = Project.romVersion;
+    public String romAuthor = Project.romAuthor;
+    public String romDevice = Project.romDevice;
+    public String romDate = Project.romDate;
+    public String gappsName = Project.gappsName;
+    public String androidVersion = Project.androidVersion;
+    public String gappsType = Project.gappsType;
+    public String gappsDate = Project.gappsDate;
+    public String releaseVersion = Project.releaseVersion;
 
     public static final int PROJECT_NORMAL = 1;
     public static final int PROJECT_AROMA = 2;

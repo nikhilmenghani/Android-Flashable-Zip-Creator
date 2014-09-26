@@ -10,6 +10,7 @@ import flashablezipcreator.Core.GroupNode;
 import flashablezipcreator.Core.ProjectItemNode;
 import flashablezipcreator.Core.ProjectNode;
 import flashablezipcreator.Core.SubGroupNode;
+import flashablezipcreator.Protocols.Project;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -34,6 +35,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 /**
  *
@@ -126,7 +128,6 @@ public class XmlOperations {
 //        transformer.transform(new DOMSource(document), new StreamResult(new File(path)));
 //        JOptionPane.showMessageDialog(null, "File saved to specified path");
 //    }
-    
 //    public static FileNode addFileToTree(String fileName, String groupName, int groupType, String projectName, int projectType,
 //            ProjectItemNode rootNode, DefaultTreeModel model, TreeOperations to) {
 //        if (to.getProjectNode(projectName, projectType) == null) {
@@ -149,6 +150,58 @@ public class XmlOperations {
 //        }
 //        return to.getFileNode(fileName, groupName, projectName);
 //    }
+    //following is to initialize details of project (like rom name, version, etc) from external xml file.
+    public void initializeProjectData(String data) throws ParserConfigurationException, SAXException, IOException {
+        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+        try {
+            Document genDoc = dBuilder.parse(new InputSource(new StringReader(data)));
+            NodeList romList = genDoc.getElementsByTagName("Rom");
+            for (int i = 0; i < romList.getLength(); i++) {
+                Node romNode = romList.item(i);
+                if (romNode.getNodeType() == Node.ELEMENT_NODE) {
+                    Element element = (Element) romNode;
+                    Project.romName = element.getElementsByTagName("Name").item(0).getTextContent();
+                    Project.romVersion = element.getElementsByTagName("Version").item(0).getTextContent();
+                    Project.romAuthor = element.getElementsByTagName("Author").item(0).getTextContent();
+                    Project.romDevice = element.getElementsByTagName("Device").item(0).getTextContent();
+                    Project.romDate = element.getElementsByTagName("Date").item(0).getTextContent();
+                }
+            }
+
+            NodeList gappsList = genDoc.getElementsByTagName("Gapps");
+            for (int i = 0; i < gappsList.getLength(); i++) {
+                Node gappsNode = gappsList.item(i);
+                if (gappsNode.getNodeType() == Node.ELEMENT_NODE) {
+                    Element element = (Element) gappsNode;
+                    Project.gappsName = element.getElementsByTagName("Name").item(0).getTextContent();
+                    Project.gappsType = element.getElementsByTagName("Type").item(0).getTextContent();
+                    Project.gappsDate = element.getElementsByTagName("Date").item(0).getTextContent();
+                }
+            }
+
+            NodeList modList = genDoc.getElementsByTagName("Mod");
+            for (int i = 0; i < modList.getLength(); i++) {
+                Node modNode = modList.item(i);
+                if (modNode.getNodeType() == Node.ELEMENT_NODE) {
+                    Element element = (Element) modNode;
+                    Project.androidVersion = element.getElementsByTagName("AndroidVersion").item(0).getTextContent();
+                    Project.releaseVersion = element.getElementsByTagName("ReleaseVersion").item(0).getTextContent();
+                }
+            }
+
+            NodeList creatorList = genDoc.getElementsByTagName("Creator");
+            for (int i = 0; i < creatorList.getLength(); i++) {
+                Node creatorNode = creatorList.item(i);
+                if (creatorNode.getNodeType() == Node.ELEMENT_NODE) {
+                    Element element = (Element) creatorNode;
+                    Project.zipCreator = element.getElementsByTagName("Name").item(0).getTextContent();
+                }
+            }
+        } catch (SAXParseException ex) {
+            System.out.println("File Details Empty");
+        }
+    }
 
     //following will create file objects of delete file group.
     public void parseXML(String original, ProjectItemNode rootNode, DefaultTreeModel model) throws ParserConfigurationException, SAXException, IOException {

@@ -13,6 +13,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -33,6 +34,8 @@ public class Read {
             } catch (IOException ioe) {
                 System.out.println("Exception caught while reading from File.." + ioe);
             }
+        }else{
+            JOptionPane.showMessageDialog(null, "External xml File Not Found");
         }
         return "";
     }

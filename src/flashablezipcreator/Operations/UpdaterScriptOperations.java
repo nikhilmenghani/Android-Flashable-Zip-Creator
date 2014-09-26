@@ -62,7 +62,7 @@ public class UpdaterScriptOperations {
     public String getMountMethod(int type) {
         switch (type) {
             case 1:
-                return addPrintString("Mounting Partitions...")
+                return addPrintString("@Mounting Partitions...")
                         + "run_program(\"/sbin/busybox\",\"mount\", \"/system\");\n"
                         + "run_program(\"/sbin/busybox\",\"mount\", \"/data\");\n";
             case 2:
@@ -254,6 +254,10 @@ public class UpdaterScriptOperations {
                 return customGroupScript(node);
         }
         return "";
+    }
+
+    public String setProgress(int progress) {
+        return "\nset_progress(" + progress + ");\n";
     }
 
     public String getSymlinkScript() {

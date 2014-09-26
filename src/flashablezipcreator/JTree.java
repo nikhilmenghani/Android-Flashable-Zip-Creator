@@ -10,6 +10,7 @@ import flashablezipcreator.Core.GroupNode;
 import flashablezipcreator.Core.ProjectItemNode;
 import flashablezipcreator.Core.ProjectNode;
 import flashablezipcreator.Core.ProjectTreeBuilder;
+import flashablezipcreator.DiskOperations.Read;
 import flashablezipcreator.Operations.ProjectOperations;
 import flashablezipcreator.Operations.TreeOperations;
 import flashablezipcreator.Operations.UpdaterScriptOperations;
@@ -18,6 +19,7 @@ import flashablezipcreator.Protocols.Export;
 import flashablezipcreator.Protocols.Import;
 import flashablezipcreator.Protocols.Jar;
 import flashablezipcreator.Protocols.Project;
+import flashablezipcreator.Protocols.Xml;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -77,10 +79,20 @@ public class JTree extends JFrame implements TreeSelectionListener {
         this.to = new TreeOperations(rootNode);
         uso = new UpdaterScriptOperations();
 
+        Read r = new Read();
         //comment following lines if running from netbeans.
         if (Jar.isExecutingThrough()) {
             Jar.addThemesToTree(rootNode, model);
             Device.loadDeviceList();
+        } else {
+            Xml.file_details_path = "dist/" + Xml.file_details_path;
+        }
+
+        File f = new File(Xml.file_details_path);
+        if (f.exists()) {
+            Xml.fileDetailsData = r.getFileString(Xml.file_details_path);
+            //JOptionPane.showMessageDialog(this, Xml.fileDetailsData);
+            Xml.initializeProjectDetails(Xml.fileDetailsData);
         }
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
