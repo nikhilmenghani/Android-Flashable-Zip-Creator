@@ -16,7 +16,6 @@ import flashablezipcreator.Operations.TreeOperations;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import javax.swing.JOptionPane;
@@ -37,32 +36,32 @@ public class Import {
     static String fileName = "";
     static int zipType;
 
-    public static void fromZip(String path, ProjectItemNode rootNode, int type, DefaultTreeModel model) throws IOException, ParserConfigurationException, TransformerException, SAXException {
+    public static void fromZip(String path, ProjectItemNode rootNode, DefaultTreeModel model) throws IOException, ParserConfigurationException, TransformerException, SAXException {
         zipType = Identify.scanZip(path);//this will automatically detect zip type.
-        
+
         boolean containsDeleteXml = false;
         boolean containsCustomXml = false;
         boolean containsDataXml = false;
-        
+
         Xml.initialize();
-        
+
         rz = new ReadZip(path);
         to = new TreeOperations(rootNode);
-        
+
         for (Enumeration<? extends ZipEntry> e = rz.zf.entries(); e.hasMoreElements();) {
-            
+
             ZipEntry ze = e.nextElement();
             String name = ze.getName();
             InputStream in = rz.zf.getInputStream(ze);
-            
+
             if (name.endsWith("/")) {
                 continue;
             } else if (Project.getTempFilesList().contains(name)) {
                 continue;
             }
-            
+
             p("\ncurrent file " + name + "\n");
-            
+
             String filePath = name;
             String projectName = Identify.getProjectName(name);
             int projectType = Identify.getProjectType(filePath);
@@ -130,9 +129,9 @@ public class Import {
             file.fileSourcePath = file.fileDestPath;
             rz.writeFileFromZip(in, file.fileSourcePath);
         }
-        
+
         Xml.terminate();
-        
+
         if (containsCustomXml) {
             Xml.parseXml(GroupNode.GROUP_CUSTOM, rootNode, model);//this sets values of custom group/subGroup
         }

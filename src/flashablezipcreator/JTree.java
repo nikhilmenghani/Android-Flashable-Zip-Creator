@@ -8,11 +8,13 @@ package flashablezipcreator;
 import flashablezipcreator.Core.FileNode;
 import flashablezipcreator.Core.GroupNode;
 import flashablezipcreator.Core.ProjectItemNode;
+import flashablezipcreator.Core.ProjectMouseAdapter;
 import flashablezipcreator.Core.ProjectNode;
 import flashablezipcreator.Core.ProjectTreeBuilder;
 import flashablezipcreator.DiskOperations.Read;
 import flashablezipcreator.Operations.ProjectOperations;
 import flashablezipcreator.Operations.TreeOperations;
+import flashablezipcreator.Operations.UIOperations;
 import flashablezipcreator.Operations.UpdaterScriptOperations;
 import flashablezipcreator.Protocols.Device;
 import flashablezipcreator.Protocols.Export;
@@ -20,15 +22,23 @@ import flashablezipcreator.Protocols.Import;
 import flashablezipcreator.Protocols.Jar;
 import flashablezipcreator.Protocols.Project;
 import flashablezipcreator.Protocols.Xml;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPopupMenu;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreePath;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import org.xml.sax.SAXException;
@@ -47,6 +57,7 @@ public class JTree extends JFrame implements TreeSelectionListener {
     UpdaterScriptOperations uso;
     ProjectOperations po = new ProjectOperations();
     ProjectItemNode rootNode;
+    UIOperations uio = new UIOperations();
 
     public JTree() throws IOException, ParserConfigurationException, TransformerException, SAXException {
         initComponents();
@@ -61,24 +72,26 @@ public class JTree extends JFrame implements TreeSelectionListener {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
     private void initComponents() throws IOException, ParserConfigurationException, TransformerException, SAXException {
 
-        jScrollPane1 = new javax.swing.JScrollPane();
+        SP_tree = new javax.swing.JScrollPane();
         tree = new javax.swing.JTree();
-        textField = new javax.swing.JTextField();
-        addButton = new javax.swing.JButton();
-        removeButton = new javax.swing.JButton();
-        labelName = new javax.swing.JLabel();
-        labelCreateZip = new javax.swing.JLabel();
-        importButton = new javax.swing.JButton();
+        btnCreateZip = new javax.swing.JButton();
+        btnImportZip = new javax.swing.JButton();
+        panel_logo = new javax.swing.JPanel();
+        lbl_logo = new javax.swing.JLabel();
 
         //tree configurations
         tree = ProjectTreeBuilder.buildTree();
         model = ProjectTreeBuilder.buildModel();
-        jScrollPane1 = ProjectTreeBuilder.buildScrollPane();
+        SP_tree = ProjectTreeBuilder.buildScrollPane();
         tree.addTreeSelectionListener(this);
         rootNode = ProjectTreeBuilder.rootNode;
         this.to = new TreeOperations(rootNode);
         uso = new UpdaterScriptOperations();
 
+        //mouse click configurations
+        ProjectMouseAdapter ma =new ProjectMouseAdapter();
+        tree.addMouseListener(ma);
+        
         Read r = new Read();
         //comment following lines if running from netbeans.
         if (Jar.isExecutingThrough()) {
@@ -97,11 +110,11 @@ public class JTree extends JFrame implements TreeSelectionListener {
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        addButton.setText("For Non Neon Device");
-        addButton.addActionListener(new java.awt.event.ActionListener() {
+        btnCreateZip.setText("Create Zip");
+        btnCreateZip.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 try {
-                    addButtonActionPerformed(evt);
+                    btnCreateZipActionPerformed(evt);
                 } catch (IOException ex) {
                     Logger.getLogger(JTree.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (ParserConfigurationException ex) {
@@ -112,30 +125,11 @@ public class JTree extends JFrame implements TreeSelectionListener {
             }
         });
 
-        removeButton.setText("For Neon Device");
-        removeButton.addActionListener(new java.awt.event.ActionListener() {
+        btnImportZip.setText("Import Zip");
+        btnImportZip.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 try {
-                    removeButtonActionPerformed(evt);
-                } catch (IOException ex) {
-                    Logger.getLogger(JTree.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (ParserConfigurationException ex) {
-                    Logger.getLogger(JTree.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (TransformerException ex) {
-                    Logger.getLogger(JTree.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        });
-
-        labelName.setText("Enter the name of File to import:");
-
-        labelCreateZip.setText("Create Zip File");
-
-        importButton.setText("Import");
-        importButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                try {
-                    importButtonActionPerformed(evt);
+                    btnImportZipActionPerformed(evt);
                 } catch (IOException ex) {
                     Logger.getLogger(JTree.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (ParserConfigurationException ex) {
@@ -148,97 +142,104 @@ public class JTree extends JFrame implements TreeSelectionListener {
             }
         });
 
+        panel_logo.setBackground(new java.awt.Color(255, 255, 255));
+        panel_logo.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
+        lbl_logo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/flashablezipcreator/res/logo4.png"))); // NOI18N
+
+        javax.swing.GroupLayout panel_logoLayout = new javax.swing.GroupLayout(panel_logo);
+        panel_logo.setLayout(panel_logoLayout);
+        panel_logoLayout.setHorizontalGroup(
+                panel_logoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(lbl_logo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        panel_logoLayout.setVerticalGroup(
+                panel_logoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(lbl_logo, javax.swing.GroupLayout.PREFERRED_SIZE, 156, Short.MAX_VALUE)
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
                 layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(panel_logo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addGroup(layout.createSequentialGroup()
-                                        .addGap(0, 0, Short.MAX_VALUE)
-                                        .addComponent(labelCreateZip, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(removeButton, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(22, 22, 22)
-                                        .addComponent(addButton))
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                        .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                                .addComponent(labelName)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                .addComponent(textField, javax.swing.GroupLayout.PREFERRED_SIZE, 222, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                .addComponent(importButton))))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                        .addComponent(btnImportZip, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(btnCreateZip, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(SP_tree))
+                        .addGap(0, 10, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
                 layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
-                        .addGap(21, 21, 21)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(labelName, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(textField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(importButton))
+                        .addContainerGap()
+                        .addComponent(panel_logo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 303, Short.MAX_VALUE)
-                        .addGap(18, 18, 18)
+                        .addComponent(SP_tree, javax.swing.GroupLayout.PREFERRED_SIZE, 264, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(addButton)
-                                .addComponent(removeButton)
-                                .addComponent(labelCreateZip))
-                        .addGap(23, 23, 23))
+                                .addComponent(btnCreateZip, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(btnImportZip, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap())
         );
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>                        
 
-    private void importButtonActionPerformed(java.awt.event.ActionEvent evt) throws IOException, ParserConfigurationException, TransformerException, SAXException {
+    private void btnImportZipActionPerformed(java.awt.event.ActionEvent evt) throws IOException, ParserConfigurationException, TransformerException, SAXException {
         //Import.fromZip("gapps-jb-20130813-signed.zip", rootNode, ProjectNode.PROJECT_GAPPS, model);
-        String fileName = textField.getText().toString();
-        int projectType = ProjectNode.PROJECT_AROMA;
-        if (!fileName.equals("")) {
-            if (!fileName.endsWith(".zip")) {
-                if (fileName.endsWith("_r")) {
-                    //projectType = ProjectNode.PROJECT_ROM;
-                    fileName = fileName.substring(0, fileName.lastIndexOf("_"));
-                } else if (fileName.endsWith("_g")) {
-                    //projectType = ProjectNode.PROJECT_GAPPS;
-                    fileName = fileName.substring(0, fileName.lastIndexOf("_"));
-                } else if (fileName.endsWith("_a")) {
-                    //projectType = ProjectNode.PROJECT_AROMA;
-                    fileName = fileName.substring(0, fileName.lastIndexOf("_"));
-                }
-                fileName += ".zip";
-            }
-            //fileName = "Flash.zip";
-            Import.fromZip(fileName, rootNode, projectType, model);
-            //JOptionPane.showMessageDialog(this, "Successfully Imported");
-            //tree.expandRow(1);
-        } else {
-            JOptionPane.showMessageDialog(this, "Enter name first");
+        //String fileName = textField.getText().toString();
+        //int projectType = ProjectNode.PROJECT_AROMA;
+//        if (!fileName.equals("")) {
+//            if (!fileName.endsWith(".zip")) {
+//                if (fileName.endsWith("_r")) {
+//                    //projectType = ProjectNode.PROJECT_ROM;
+//                    fileName = fileName.substring(0, fileName.lastIndexOf("_"));
+//                } else if (fileName.endsWith("_g")) {
+//                    //projectType = ProjectNode.PROJECT_GAPPS;
+//                    fileName = fileName.substring(0, fileName.lastIndexOf("_"));
+//                } else if (fileName.endsWith("_a")) {
+//                    //projectType = ProjectNode.PROJECT_AROMA;
+//                    fileName = fileName.substring(0, fileName.lastIndexOf("_"));
+//                }
+//                fileName += ".zip";
+//            }
+        //fileName = "Flash.zip";
+        try {
+            Import.fromZip(uio.browseZipDestination(), rootNode, model);
+        } catch (NullPointerException npe) {
+            //JOptionPane.showMessageDialog(this, "cancelled by user");
         }
+        //JOptionPane.showMessageDialog(this, "Successfully Imported");
+        //tree.expandRow(1);
+//        } else {
+//            JOptionPane.showMessageDialog(this, "Enter name first");
+//        }
     }
 
-    private void addButtonActionPerformed(java.awt.event.ActionEvent evt) throws IOException, ParserConfigurationException, TransformerException {
+    private void btnCreateZipActionPerformed(java.awt.event.ActionEvent evt) throws IOException, ParserConfigurationException, TransformerException {
         ProjectItemNode node = (ProjectItemNode) tree.getLastSelectedPathComponent();
         System.out.println();
-        Device.selected = "Samsung Galaxy R (i9103)";
-        String fileName = textField.getText().toString();
-        if (!fileName.equals("")) {
-            if (!fileName.endsWith(".zip")) {
-                if (fileName.endsWith("_r") || fileName.endsWith("_g") || fileName.endsWith("_a")) {
-                    fileName = fileName.substring(0, fileName.lastIndexOf("_"));
-                }
-                //fileName += ".zip";
-            }
-            Project.outputPath = fileName + "_aroma.zip";
-        } else {
-            Project.outputPath = "NonNeon.zip";
-        }
+        Device.selected = "NonNeon";
+//        String fileName = textField.getText().toString();
+//        if (!fileName.equals("")) {
+//            if (!fileName.endsWith(".zip")) {
+//                if (fileName.endsWith("_r") || fileName.endsWith("_g") || fileName.endsWith("_a")) {
+//                    fileName = fileName.substring(0, fileName.lastIndexOf("_"));
+//                }
+//                //fileName += ".zip";
+//            }
+//            Project.outputPath = "Output.zip";
+//        } else {
+//            Project.outputPath = "NonNeon.zip";
+//        }
 
-        File f = new File(fileName + ".zip");
+        //File f = new File(fileName + ".zip");
         Export.zip(rootNode);
 //        if (f.exists()) {
 //            Export.zip(rootNode);
@@ -272,35 +273,33 @@ public class JTree extends JFrame implements TreeSelectionListener {
         //JOptionPane.showMessageDialog(null, JarOperations.getJarFileName());
 //        Export e = new Export();
 //        e.zip(rootNode);
-        Device.selected = "LG Optimus L5 (e610)";
-        String fileName = textField.getText().toString();
-        if (!fileName.equals("")) {
-            if (!fileName.endsWith(".zip")) {
-                if (fileName.endsWith("_r") || fileName.endsWith("_g") || fileName.endsWith("_a")) {
-                    fileName = fileName.substring(0, fileName.lastIndexOf("_"));
-                }
-                //fileName += ".zip";
-            }
-            Project.outputPath = fileName + "_neon_aroma.zip";
-        } else {
-            Project.outputPath = "Neon.zip";
-        }
-        File f = new File(fileName + ".zip");
-        if (f.exists()) {
-            Export.zip(rootNode);
-        } else {
-            JOptionPane.showMessageDialog(this, "File Doesn't Exist");
-        }
+        Device.selected = "Neon";
+//        String fileName = textField.getText();
+//        if (!fileName.equals("")) {
+//            if (!fileName.endsWith(".zip")) {
+//                if (fileName.endsWith("_r") || fileName.endsWith("_g") || fileName.endsWith("_a")) {
+//                    fileName = fileName.substring(0, fileName.lastIndexOf("_"));
+//                }
+//                //fileName += ".zip";
+//            }
+//            Project.outputPath = fileName + "_neon_aroma.zip";
+//        } else {
+//            Project.outputPath = "Neon.zip";
+//        }
+        //File f = new File(fileName + ".zip");
+        //if (f.exists()) {
+        Export.zip(rootNode);
+        //} else {
+        //    JOptionPane.showMessageDialog(this, "File Doesn't Exist");
+        //}
         //e.createZip(to.getNodeList(ProjectItemNode.NODE_FILE));
     }
 
-    private javax.swing.JButton addButton;
-    private javax.swing.JButton importButton;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JLabel labelCreateZip;
-    private javax.swing.JLabel labelName;
-    private javax.swing.JButton removeButton;
-    private javax.swing.JTextField textField;
+    private javax.swing.JButton btnCreateZip;
+    private javax.swing.JButton btnImportZip;
+    private javax.swing.JScrollPane SP_tree;
+    private javax.swing.JLabel lbl_logo;
+    private javax.swing.JPanel panel_logo;
     private javax.swing.JTree tree;
 
     @Override
@@ -319,4 +318,31 @@ public class JTree extends JFrame implements TreeSelectionListener {
 
         //JOptionPane.showMessageDialog(this, "You have selected: " + node);
     }
+
+    private void treeMouseClicked(java.awt.event.MouseEvent evt) {
+        System.out.println("Mouse clicked");
+    }
+
+//        public String browseZipDestination() {
+//        JFileChooser fileChooser = new JFileChooser();
+//        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+//        fileChooser.removeChoosableFileFilter(fileChooser.getFileFilter());
+//        FileFilter filter = new FileNameExtensionFilter(".zip", "zip");
+//        fileChooser.addChoosableFileFilter(filter);
+//        int returnVal = fileChooser.showOpenDialog(importButton);
+//        if (returnVal == JFileChooser.APPROVE_OPTION) {
+//            File file = fileChooser.getSelectedFile();
+//            System.out.println("Zip File Destination Location : " + file.getAbsolutePath());
+//            if (!file.getAbsolutePath().endsWith(".zip")) {
+//                textField.setText(file.getAbsolutePath() + ".zip");
+//                return file.getAbsolutePath() + ".zip";
+//            } else {
+//                textField.setText(file.getAbsolutePath());
+//                return file.getAbsolutePath();
+//            }
+//        } else {
+//            System.out.println("File access cancelled by user.");
+//        }
+//        return null;
+//    }
 }

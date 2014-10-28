@@ -10,6 +10,7 @@ import flashablezipcreator.DiskOperations.Read;
 import flashablezipcreator.DiskOperations.ReadZip;
 import flashablezipcreator.DiskOperations.Write;
 import flashablezipcreator.DiskOperations.WriteZip;
+import flashablezipcreator.Operations.JarOperations;
 import flashablezipcreator.Operations.XmlOperations;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -101,7 +102,6 @@ public class FlashableZipCreator {
 //        }
         //ReadZip rz = new ReadZip("test.zip");
         //XmlOperations xo = new XmlOperations();
-
 //        while(rz.ze!=null){
 //            p(rz.ze.getName());
 //            
@@ -139,12 +139,23 @@ public class FlashableZipCreator {
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
          */
         try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Windows".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
+            if (JarOperations.getSystemOS().equals("Windows")) {
+                for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                    if ("Windows".equals(info.getName())) {
+                        javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                        break;
+                    }
+                }
+            } else {
+                for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                    if ("GTK+".equals(info.getName())) {
+                        javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                        break;
+                    }
+
                 }
             }
+
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             JOptionPane.showMessageDialog(null, "intoMultiCatch");
             java.util.logging.Logger.getLogger(JTreeDemo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);

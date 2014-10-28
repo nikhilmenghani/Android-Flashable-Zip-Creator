@@ -20,7 +20,7 @@ public class Project {
     public static int gappsCount = 0;
     public static int aromaCount = 0;
     public static int normalCount = 0;
-    public static String outputPath = "demo.zip";
+    public static String outputPath = "Output.zip";
     public static String romName = "I Don't Know Rom";
     public static String romVersion = "I Don't Know Version";
     public static String romAuthor = "I Don't Know Developer";

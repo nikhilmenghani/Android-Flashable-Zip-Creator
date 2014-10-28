@@ -30,44 +30,52 @@ public class JTreeDemo extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jScrollPane1 = new javax.swing.JScrollPane();
+        SP_tree = new javax.swing.JScrollPane();
         tree = new javax.swing.JTree();
-        textField = new javax.swing.JTextField();
-        addButton = new javax.swing.JButton();
-        removeButton = new javax.swing.JButton();
-        labelName = new javax.swing.JLabel();
-        labelCreateZip = new javax.swing.JLabel();
-        importButton = new javax.swing.JButton();
+        btnCreateZip = new javax.swing.JButton();
+        btnImportZip = new javax.swing.JButton();
+        panel_logo = new javax.swing.JPanel();
+        lbl_logo = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         tree.setModel(new FileSystemModel(new File("src")));
-        jScrollPane1.setViewportView(tree);
+        tree.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                treeMouseClicked(evt);
+            }
+        });
+        SP_tree.setViewportView(tree);
 
-        addButton.setText("For Non Neon Device");
-        addButton.addActionListener(new java.awt.event.ActionListener() {
+        btnCreateZip.setText("Create Zip");
+        btnCreateZip.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addButtonActionPerformed(evt);
+                btnCreateZipActionPerformed(evt);
             }
         });
 
-        removeButton.setText("For Neon Device");
-        removeButton.addActionListener(new java.awt.event.ActionListener() {
+        btnImportZip.setText("Import Zip");
+        btnImportZip.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                removeButtonActionPerformed(evt);
+                btnImportZipActionPerformed(evt);
             }
         });
 
-        labelName.setText("Enter the name of File to import:");
+        panel_logo.setBackground(new java.awt.Color(255, 255, 255));
+        panel_logo.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
-        labelCreateZip.setText("Create Zip File");
+        lbl_logo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/flashablezipcreator/res/logo4.png"))); // NOI18N
 
-        importButton.setText("Import");
-        importButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                importButtonActionPerformed(evt);
-            }
-        });
+        javax.swing.GroupLayout panel_logoLayout = new javax.swing.GroupLayout(panel_logo);
+        panel_logo.setLayout(panel_logoLayout);
+        panel_logoLayout.setHorizontalGroup(
+            panel_logoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(lbl_logo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        panel_logoLayout.setVerticalGroup(
+            panel_logoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(lbl_logo, javax.swing.GroupLayout.PREFERRED_SIZE, 156, Short.MAX_VALUE)
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -75,56 +83,43 @@ public class JTreeDemo extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(panel_logo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(labelCreateZip, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(removeButton, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(22, 22, 22)
-                        .addComponent(addButton))
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                            .addComponent(labelName)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addComponent(textField, javax.swing.GroupLayout.PREFERRED_SIZE, 222, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addComponent(importButton))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(btnImportZip, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnCreateZip, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(SP_tree))
+                .addGap(0, 10, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(21, 21, 21)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(labelName, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(textField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(importButton))
+                .addContainerGap()
+                .addComponent(panel_logo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 303, Short.MAX_VALUE)
-                .addGap(18, 18, 18)
+                .addComponent(SP_tree, javax.swing.GroupLayout.PREFERRED_SIZE, 264, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(addButton)
-                    .addComponent(removeButton)
-                    .addComponent(labelCreateZip))
-                .addGap(23, 23, 23))
+                    .addComponent(btnCreateZip, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnImportZip, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
+    private void btnCreateZipActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateZipActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_addButtonActionPerformed
+    }//GEN-LAST:event_btnCreateZipActionPerformed
 
-    private void removeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeButtonActionPerformed
+    private void btnImportZipActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImportZipActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_removeButtonActionPerformed
+    }//GEN-LAST:event_btnImportZipActionPerformed
 
-    private void importButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_importButtonActionPerformed
+    private void treeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_treeMouseClicked
         // TODO add your handling code here:
-    }//GEN-LAST:event_importButtonActionPerformed
+    }//GEN-LAST:event_treeMouseClicked
 
     /**
      * @param args the command line arguments
@@ -162,13 +157,11 @@ public class JTreeDemo extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton addButton;
-    private javax.swing.JButton importButton;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JLabel labelCreateZip;
-    private javax.swing.JLabel labelName;
-    private javax.swing.JButton removeButton;
-    private javax.swing.JTextField textField;
+    private javax.swing.JScrollPane SP_tree;
+    private javax.swing.JButton btnCreateZip;
+    private javax.swing.JButton btnImportZip;
+    private javax.swing.JLabel lbl_logo;
+    private javax.swing.JPanel panel_logo;
     private javax.swing.JTree tree;
     // End of variables declaration//GEN-END:variables
 }

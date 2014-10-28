@@ -161,11 +161,11 @@ public class XmlOperations {
                 Node romNode = romList.item(i);
                 if (romNode.getNodeType() == Node.ELEMENT_NODE) {
                     Element element = (Element) romNode;
-                    Project.romName = element.getElementsByTagName("Name").item(0).getTextContent();
-                    Project.romVersion = element.getElementsByTagName("Version").item(0).getTextContent();
-                    Project.romAuthor = element.getElementsByTagName("Author").item(0).getTextContent();
-                    Project.romDevice = element.getElementsByTagName("Device").item(0).getTextContent();
-                    Project.romDate = element.getElementsByTagName("Date").item(0).getTextContent();
+                    Project.romName = element.getElementsByTagName("RName").item(0).getTextContent();
+                    Project.romVersion = element.getElementsByTagName("RVersion").item(0).getTextContent();
+                    Project.romAuthor = element.getElementsByTagName("RAuthor").item(0).getTextContent();
+                    Project.romDevice = element.getElementsByTagName("RDevice").item(0).getTextContent();
+                    Project.romDate = element.getElementsByTagName("RDate").item(0).getTextContent();
                 }
             }
 
@@ -174,9 +174,10 @@ public class XmlOperations {
                 Node gappsNode = gappsList.item(i);
                 if (gappsNode.getNodeType() == Node.ELEMENT_NODE) {
                     Element element = (Element) gappsNode;
-                    Project.gappsName = element.getElementsByTagName("Name").item(0).getTextContent();
-                    Project.gappsType = element.getElementsByTagName("Type").item(0).getTextContent();
-                    Project.gappsDate = element.getElementsByTagName("Date").item(0).getTextContent();
+                    Project.gappsName = element.getElementsByTagName("GName").item(0).getTextContent();
+                    Project.gappsType = element.getElementsByTagName("GType").item(0).getTextContent();
+                    Project.gappsDate = element.getElementsByTagName("GDate").item(0).getTextContent();
+                    Project.androidVersion = element.getElementsByTagName("GAndroidVersion").item(0).getTextContent();
                 }
             }
 
@@ -185,8 +186,7 @@ public class XmlOperations {
                 Node modNode = modList.item(i);
                 if (modNode.getNodeType() == Node.ELEMENT_NODE) {
                     Element element = (Element) modNode;
-                    Project.androidVersion = element.getElementsByTagName("AndroidVersion").item(0).getTextContent();
-                    Project.releaseVersion = element.getElementsByTagName("ReleaseVersion").item(0).getTextContent();
+                    Project.releaseVersion = element.getElementsByTagName("MReleaseVersion").item(0).getTextContent();
                 }
             }
 
@@ -195,7 +195,7 @@ public class XmlOperations {
                 Node creatorNode = creatorList.item(i);
                 if (creatorNode.getNodeType() == Node.ELEMENT_NODE) {
                     Element element = (Element) creatorNode;
-                    Project.zipCreator = element.getElementsByTagName("Name").item(0).getTextContent();
+                    Project.zipCreator = element.getElementsByTagName("CName").item(0).getTextContent();
                 }
             }
         } catch (SAXParseException ex) {

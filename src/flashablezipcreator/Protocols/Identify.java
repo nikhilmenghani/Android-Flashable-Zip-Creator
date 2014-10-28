@@ -13,7 +13,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.zip.ZipEntry;
-import javax.swing.JOptionPane;
 
 /**
  *
@@ -46,18 +45,33 @@ public class Identify {
         aromaList.add("customize/aroma/");
     }
 
+    public static int scanCompleteZip(String path) throws IOException {
+        fileName = getFileName(path);
+        rz = new ReadZip(path);
+        int projectType = -1;
+        init();
+        for (Enumeration<? extends ZipEntry> e = rz.zf.entries(); e.hasMoreElements();) {
+            String entry = e.nextElement().getName();
+            if ((zipType = check(entry)) != -1 && projectType == -1) {
+                projectType = zipType;
+            }
+        }
+        return projectType;
+    }
+
     public static int scanZip(String path) throws IOException {
         fileName = getFileName(path);
         rz = new ReadZip(path);
         init();
         for (Enumeration<? extends ZipEntry> e = rz.zf.entries(); e.hasMoreElements();) {
-            if ((zipType = check(e.nextElement().getName())) != -1) {
+            String entry = e.nextElement().getName();
+            if ((zipType = check(entry)) != -1) {
                 return zipType;
             }
         }
         return zipType;
     }
-
+    
     public static int check(String name) {
         if (isRom(name)) {
             rom = true;
@@ -92,7 +106,7 @@ public class Identify {
 
     public static boolean isAroma(String name) {
         for (String list : aromaList) {
-            if (list.startsWith(name)) {
+            if (name.startsWith(list)) {
                 return true;
             }
         }

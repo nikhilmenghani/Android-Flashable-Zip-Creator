@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Root>
+    <Rom>
+      <RName>Unknown</RName>
+      <RVersion>Unknown</RVersion>
+      <RAuthor>Unknown</RAuthor>
+      <RDevice>Unknown</RDevice>
+      <RDate>Unknown</RDate>
+    </Rom>
+    <Gapps>
+      <GName>pa_gapps-modular-mini-4.4.2-20140930</GName>
+      <GType>Modular Mini</GType>
+      <GDate>30 Sept 2014</GDate>
+      <GAndroidVersion>4.4.4</GAndroidVersion>
+    </Gapps>
+    <Mod>
+      <MReleaseVersion>1.0</MReleaseVersion>
+    </Mod>
+    <Creator>
+      <CName>Nikhil</CName>
+    </Creator>
+</Root>

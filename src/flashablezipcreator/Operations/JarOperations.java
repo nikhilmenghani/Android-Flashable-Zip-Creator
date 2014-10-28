@@ -79,10 +79,10 @@ public class JarOperations {
     }
 
     //this will be shifted to appropriate class later.
-    public void getSystemOS() {
+    public static String getSystemOS() {
         String OS = "";
         if (Jar.isExecutingThrough()) {
-            String path[] = this.getClass().getResource("META-INF/com/google/android/Supported Devices").getPath().split("!");
+            String path[] = FlashableZipCreator.class.getResource("META-INF/com/google/android/Supported Devices").getPath().split("!");
             if (path[0].startsWith("file:/home") || path[0].startsWith("file:/media")) {
                 OS = "Linux";
             } else {
@@ -97,6 +97,7 @@ public class JarOperations {
             }
         }
         System.out.println(OS + " Operating System Found..!!");
+        return OS;
     }
 
     public String getKernelMountPoint() {
